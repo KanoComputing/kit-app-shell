@@ -1,0 +1,33 @@
+{
+  "name": "@kano/kit-app-shell-common",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha **/*.test.js --ui tdd"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "mock-fs": "^4.7.0",
+    "mock-require": "^3.0.2"
+  },
+  "dependencies": {
+    "acorn": "^6.0.4",
+    "acorn-walk": "^6.1.1",
+    "chai-fs": "^2.0.0",
+    "html-autoprefixer": "^0.3.8",
+    "html-minifier": "^3.5.21",
+    "mkdirp": "^0.5.1",
+    "parse5": "^5.1.0",
+    "requirejs": "^2.3.6",
+    "resolve-from": "^4.0.0",
+    "rollup": "^0.67.3",
+    "rollup-plugin-inject": "^2.2.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-polyfill": "^2.0.1",
+    "rollup-plugin-re": "^1.0.7",
+    "rollup-plugin-virtual": "^1.0.1",
+    "walk-parse5": "^1.0.0"
+  }
+}

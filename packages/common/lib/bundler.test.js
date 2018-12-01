@@ -1,0 +1,48 @@
+const path = require('path');
+const fs = require('fs');
+const mock = require('mock-fs');
+const Bundler = require('./bundler');
+const chai = require('chai');
+chai.use(require('chai-fs'));
+
+const { assert } = chai;
+
+suite('Bundler', () => {
+    test('bundleHtml', () => {
+        const transformed = Bundler.bundleHtml(path.join(__dirname, '../test/resources/bundler/index.html'), { test: '<div>Test</div>' });
+        assert.equal(transformed, `<html lang="en"><div>Test</div><head><script src="/require.js"></script></head><body></body></html>`)
+    });
+    test('bundleSources', () => {
+        // Test too simple, but this only uses rollup and plugin. No need to test 3rd party software
+        return Bundler.bundleSources(path.join(__dirname, '../test/resources/bundler/index.js'), {
+            APP_SRC: '',
+        })
+            .then((output) => {
+                assert(output[0].code.indexOf('KitAppShellConfig = {') !== -1, 'Config was not injected');
+            });
+    });
+    test('write', () => {
+        const bundle = {
+            html: {
+                fileName: 'index.html',
+                code: 'html-test',
+            },
+            js: [{
+                fileName: 'index.js',
+                code: 'js-test',
+            }],
+            appJs: [{
+                fileName: 'index.js',
+                code: 'app-js-test',
+            }],
+        };
+        mock();
+        Bundler.write(bundle, '/')
+            .then(() => {
+                assert.fileContent('/index.html', 'html-test');
+                assert.fileContent('/index.js', 'js-test');
+                assert.fileContent('/www/index.js', 'app-js-test');
+                mock.restore();
+            });
+    });
+});
