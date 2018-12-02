@@ -46,6 +46,6 @@ p
                 document.body.appendChild(app.root);
             },
         };
-        import(window.KitAppShellConfig.APP_SRC || config.APP_SRC);
+        import(window.KitAppShellConfig ? window.KitAppShellConfig.APP_SRC : config.APP_SRC);
     });
 

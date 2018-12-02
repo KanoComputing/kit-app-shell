@@ -20,7 +20,7 @@ module.exports = (root, config = {}) => {
         })
         .use(cors())
         .use(history())
-        .use(namedResolutionMiddleware({ modulesDir: root }))
+        .use('/www', namedResolutionMiddleware({ root }))
         .use(serveStatic(path.join(__dirname, '../www')), { fallthrough: true })
         .use('/www', serveStatic(root));
 };

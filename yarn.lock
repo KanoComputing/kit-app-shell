@@ -2,19 +2,19 @@
 # yarn lockfile v1
 
 
-"@kano/es6-resolution@^1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@kano/es6-resolution/-/es6-resolution-1.0.10.tgz#c8b687cafa2598c9c89a27655392e386fdec76c8"
-  integrity sha512-JC3YcrJ3YNpCq4xH1uf0APANYCfZvficBSEc1gM1S5Iw7Qi7cU0QOpL5hCNBJCp9G/Mb47zDZjPud9EeCLQlmQ==
+"@kano/es6-resolution@^1.0.12":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@kano/es6-resolution/-/es6-resolution-1.0.12.tgz#ec4e224615e9c377df83364468c2eb63ff574902"
+  integrity sha512-XCWJ9dQsUfbTg4cTgk1PVB/fpn07LKEzCP7+PTc1c5vR3LeKrnUlIA1e1d9TTVgC8l8B+MIN9bhyRaGxe3HPSg==
   dependencies:
     resolve "^1.7.1"
 
-"@kano/es6-server@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@kano/es6-server/-/es6-server-1.0.0.tgz#c414c7fbfcf25df6ab5859999158dca4c45a703c"
-  integrity sha512-fi75fdEWa70yTWysRW/m1C5kED1m4nF/R/W3brUodTmGCTGgUD7A940gAArzvyCfDtulq0+bXQs3zcTuWJWq8w==
+"@kano/es6-server@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@kano/es6-server/-/es6-server-1.0.1.tgz#34985a9bfebfc1dcc2f552255451d116a5fda4f1"
+  integrity sha512-9toa1U+EzJcnUX8+feExzKAXsHaR2FzwGrKKB1tcpiXAcboIPkiJMrVt6NXbBSzho65sPbRTIv3W79qvpIAgLg==
   dependencies:
-    "@kano/es6-resolution" "^1.0.10"
+    "@kano/es6-resolution" "^1.0.12"
     colors "^1.3.2"
     connect "^3.6.6"
     mime "^2.3.1"
