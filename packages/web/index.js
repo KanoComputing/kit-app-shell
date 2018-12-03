@@ -1,7 +1,10 @@
-const serve = require('./lib/serve');
+const run = require('./lib/run');
 const build = require('./lib/build');
 
 module.exports = {
-    serve,
+    run,
     build,
+    config(y) {
+        console.log(y.option('profile').argv);
+    }
 };
