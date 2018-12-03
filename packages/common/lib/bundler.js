@@ -1,3 +1,4 @@
+const glob = require('glob');
 const fs = require('fs');
 const rollup = require('rollup');
 const path = require('path');
@@ -26,6 +27,19 @@ function write(file, outputDir) {
     });
 }
 
+function writeStatic(root, file, outputDir) {
+    const filePath = path.join(root, file);
+    const outDirFile = path.join(outputDir, file);
+    const outDir = path.dirname(outDirFile);
+    mkdirp(outDir);
+    return new Promise((resolve, reject) => {
+        fs.createReadStream(filePath)
+            .pipe(fs.createWriteStream(outDirFile))
+            .on('error', reject)
+            .on('finish', () => resolve());
+    });
+}
+
 class Bundler {
     static write(bundle, outputDir) {
         const tasks = [];
@@ -35,6 +49,12 @@ class Bundler {
         tasks.push(write(bundle.html, outputDir));
         bundle.js.forEach(file => tasks.push(write(file, outputDir)));
         bundle.appJs.forEach(file => tasks.push(write(file, appOutputDir)));
+        const { root, files } = bundle.appStatic;
+        // Write assets in series
+        // TODO: Move all this to a module that could run in a separate thread
+        let p = Promise.resolve();
+        files.forEach(file => p = p.then(writeStatic(root, file, appOutputDir)));
+        tasks.push(p);
         return Promise.all(tasks);
     }
     static bundle(html, js, appSrc, config, opts = {}) {
@@ -50,6 +70,7 @@ class Bundler {
         return Promise.all([
             Bundler.bundleSources(js, config, Object.assign({}, opts.js || {}, { appSrcName })),
             Bundler.bundleSources(appSrc, config, opts.appJs),
+            Bundler.bundleStatic(opts.appJs.resources, path.dirname(appSrc)),
         ]).then((results) => {
             pkg.js = results[0];
             pkg.js.unshift({
@@ -57,6 +78,7 @@ class Bundler {
                 code: fs.readFileSync(require.resolve('requirejs/require.js'), 'utf-8'),
             });
             pkg.appJs = results[1];
+            pkg.appStatic = results[2];
             return pkg;
         });
     }
@@ -68,23 +90,17 @@ class Bundler {
             return replacements[g0] || '';
         });
     }
-    static bundleSources(input, config, { polyfills = [], moduleContext, appSrcName = 'index.js' } = {}) {
+    static bundleSources(input, config, { polyfills = [], moduleContext = {}, replaces = {}, appSrcName = 'index.js' } = {}) {
         // Generate future config path
         const inputRoot = path.dirname(input);
         const configPath = path.join(inputRoot, 'config.js');
-        return rollup.rollup({
+        const defaultOptions = {
             input: [input],
             experimentalCodeSplitting: true,
             plugins: [
                 replace({
                     replaces: {
-                        'module.exports == freeExports': 'true',
-                        'var twemoji=function()': 'var twemoji=window.twemoji=function()',
-                        'typeof define': '"undefined"',
-                        'typeof exports': '"undefined"',
-                        'if (typeof module === "object") {': 'if (false) {',
-                        'root.punycode = punycode;': 'module.exports = punycode;',
-                        '}(this, (function (exports) {': '}(window, (function (exports) {',
+                        ...replaces,
                         'window.KitAppShellConfig.APP_SRC': `'./www/${appSrcName}'`,
                     },
                 }),
@@ -102,7 +118,9 @@ class Bundler {
                 nodeResolve(),
             ],
             moduleContext,
-        })
+        };
+        log.trace('ROLLUP OPTIONS', defaultOptions);
+        return rollup.rollup(defaultOptions)
             .then(bundle => bundle.generate({ format: 'amd' }))
             .then(({ output }) => {
                 return Object.keys(output).map((id) => {
@@ -112,6 +130,14 @@ class Bundler {
                     };
                 });
             });
+    }
+    static bundleStatic(patterns, appRoot) {
+        const fileList = patterns
+            .reduce((acc, pattern) => acc.concat(glob.sync(pattern, { cwd: appRoot, nodir: true })), []);
+        return {
+            root: appRoot,
+            files: fileList,
+        };
     }
 }
 
