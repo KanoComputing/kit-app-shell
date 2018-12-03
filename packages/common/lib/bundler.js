@@ -8,6 +8,7 @@ const inject = require('rollup-plugin-inject');
 const virtual = require('rollup-plugin-virtual');
 const mkdirp = require('mkdirp');
 const { replaceIndex, addRequirejs } = require('./html');
+const log = require('./log');
 
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -37,10 +38,9 @@ class Bundler {
         return Promise.all(tasks);
     }
     static bundle(html, js, appSrc, config, opts = {}) {
+        log.info(`Bundling app at ${appSrc}...`);
         const pkg = {};
         const appSrcName = path.basename(appSrc);
-        const htmlDir = path.dirname(html);
-        const relJs = `./${path.relative(htmlDir, js)}`;
         const htmlOutput = Bundler.bundleHtml(html, opts.html || {});
         const stage1 = replaceIndex(html, js, htmlOutput);
         pkg.html = {

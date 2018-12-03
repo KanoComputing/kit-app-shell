@@ -4,7 +4,18 @@ const build = require('./lib/build');
 module.exports = {
     run,
     build,
-    config(y) {
-        console.log(y.option('profile').argv);
+    cli(command) {
+        switch (command) {
+            case 'run': {
+                return {
+                    alias: {
+                        port: ['p'],
+                    },
+                };
+            }
+            default: {
+                return {};
+            }
+        }
     }
 };
