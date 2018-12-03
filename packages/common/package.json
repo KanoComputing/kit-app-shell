@@ -16,6 +16,7 @@
     "acorn": "^6.0.4",
     "acorn-walk": "^6.1.1",
     "chai-fs": "^2.0.0",
+    "glob": "^7.1.3",
     "html-autoprefixer": "^0.3.8",
     "html-minifier": "^3.5.21",
     "mkdirp": "^0.5.1",
