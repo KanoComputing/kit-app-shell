@@ -1,7 +1,7 @@
 const { Bundler } = require('@kano/kit-app-shell-common');
 const path = require('path');
 
-function build({ app, config = {}, out }, { resources = [], polyfills = [], moduleContext = {} } = {}) {
+function build({ app, config = {}, out }, { resources = [], polyfills = [], moduleContext = {}, replaces = {} } = {}) {
     return Bundler.bundle(
         __dirname + '/../www/index.html',
         __dirname + '/../www/shell.js',
@@ -12,6 +12,7 @@ function build({ app, config = {}, out }, { resources = [], polyfills = [], modu
                 resources,
                 polyfills,
                 moduleContext,
+                replaces,
             },
         })
         .then(bundle => Bundler.write(bundle, out));

@@ -26,7 +26,7 @@ class App {
 
         Object.assign(this.config, getPlatformData());
 
-        const postProcess = this.config.MODULE_TYPE === 'es' ? postProcessFactory(appDir) : null;
+        const postProcess = this.config.BUNDLED ? postProcessFactory(appDir) : null;
 
         const icon = process.platform !== 'darwin' ? path.join(appDir, this.config.ICONS.WINDOWS) : null;
 

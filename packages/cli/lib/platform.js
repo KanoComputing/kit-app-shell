@@ -9,6 +9,7 @@ function loadPlatform(name) {
         loaded = require(`@kano/kit-app-shell-${name}`);
     } catch (e) {
         log.error(e);
+        // TODO: Detect if it is a module loading error
         throw new Error(`Could load platform: '${name}' was not installed`);
     }
     return loaded;

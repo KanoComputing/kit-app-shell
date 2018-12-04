@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "bin": {
-    "kit-app-shell": "bin/cli.js"
+    "kit-app-shell": "bin/cli.js",
+    "kash": "bin/cli.js"
   },
   "scripts": {
     "test": "mocha **/*.test.js --ui tdd"

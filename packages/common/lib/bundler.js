@@ -3,13 +3,14 @@ const fs = require('fs');
 const rollup = require('rollup');
 const path = require('path');
 const nodeResolve = require('rollup-plugin-node-resolve');
-const replace = require('rollup-plugin-re');
+const replace = require('rollup-plugin-replace');
 const polyfill = require('rollup-plugin-polyfill');
 const inject = require('rollup-plugin-inject');
 const virtual = require('rollup-plugin-virtual');
 const mkdirp = require('mkdirp');
 const { replaceIndex, addRequirejs } = require('./html');
 const log = require('./log');
+const { copy } = require('./util');
 
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -29,15 +30,8 @@ function write(file, outputDir) {
 
 function writeStatic(root, file, outputDir) {
     const filePath = path.join(root, file);
-    const outDirFile = path.join(outputDir, file);
-    const outDir = path.dirname(outDirFile);
-    mkdirp(outDir);
-    return new Promise((resolve, reject) => {
-        fs.createReadStream(filePath)
-            .pipe(fs.createWriteStream(outDirFile))
-            .on('error', reject)
-            .on('finish', () => resolve());
-    });
+    const outFile = path.join(outputDir, file);
+    return copy(filePath, outFile);
 }
 
 class Bundler {
@@ -92,6 +86,7 @@ class Bundler {
     }
     static bundleSources(input, config, { polyfills = [], moduleContext = {}, replaces = {}, appSrcName = 'index.js' } = {}) {
         // Generate future config path
+        // TODO: This does not work on non root files, figure out a solution
         const inputRoot = path.dirname(input);
         const configPath = path.join(inputRoot, 'config.js');
         const defaultOptions = {
@@ -99,14 +94,14 @@ class Bundler {
             experimentalCodeSplitting: true,
             plugins: [
                 replace({
-                    replaces: {
+                    values: {
                         ...replaces,
                         'window.KitAppShellConfig.APP_SRC': `'./www/${appSrcName}'`,
                     },
                 }),
                 virtual({
                     // Config is external, let rollup import it
-                    [configPath]: `export default ${JSON.stringify(config)}`,
+                    [configPath]: `export default Object.assign(${JSON.stringify(config)}, window.KitAppShellConfig || {});`,
                 }),
                 inject({
                     modules: {

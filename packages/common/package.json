@@ -28,6 +28,7 @@
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-polyfill": "^2.0.1",
     "rollup-plugin-re": "^1.0.7",
+    "rollup-plugin-replace": "^2.1.0",
     "rollup-plugin-virtual": "^1.0.1",
     "walk-parse5": "^1.0.0"
   }
