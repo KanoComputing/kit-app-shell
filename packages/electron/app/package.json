@@ -7,10 +7,11 @@
     "electron": "3.0.10"
   },
   "dependencies": {
-    "@kano/desktop-shell": "^1.0.5",
+    "@kano/common": "^1.0.2",
+    "@kano/desktop-shell": "^1.0.7",
     "@kano/devices-sdk": "git+ssh://git@github.com:KanoComputing/kano-devices-sdk#^1.0.30",
     "@kano/electron-updater": "^1.0.0",
-    "@kano/es6-resolution": "^1.0.8",
+    "@kano/es6-resolution": "^1.0.13",
     "electron": "^3.0.10",
     "minimist": "^1.2.0",
     "noble": "^1.9.1"

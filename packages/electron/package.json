@@ -7,7 +7,6 @@
     "postinstall": "cd app && yarn"
   },
   "dependencies": {
-    "electron": "^3.0.10",
-    "electroner": "^4.0.7"
+    "electron": "^3.0.10"
   }
 }

@@ -6,36 +6,29 @@ const path = require('path');
 const CONTENT_SCHEME = 'kit-app';
 const CONTENT_ROOT = path.join(__dirname, '../');
 
-const loadConfig = require('./config');
-
 const Devices = require('@kano/devices-sdk/platforms/nodejs');
 const BusAdapter = require('@kano/devices-sdk/bus-adapter');
 const ElectronIpcBus = require('@kano/devices-sdk/bus-adapter/bus/electron-ipc');
 
 const postProcessFactory = require('./post-process');
+const getPlatformData = require('./platform');
 
 class App {
-    constructor(entryArg, args) {
-        this.config;
-
-        if (!entryArg) {
-            try {
-                this.config = loadConfig(path.join(__dirname, '../www'));
-            } catch (e) {
-                throw new Error('The shell requires an entry');
-            }
-        } else {
-            const entry = path.resolve(entryArg);
-            this.config = loadConfig(entry);
-        }
+    constructor(appDir, config, args) {
+        this.config = require(config);
 
         if (args.profile) {
             this.config.PROFILE = args.profile;
         }
 
-        const postProcess = this.config.MODULE_TYPE === 'es' ? postProcessFactory(this.config.ENTRY) : null;
+        this.config.APP_SRC = 'kit-app://app/index.js';
+        this.config.UI_ROOT = 'kit-app://app/';
 
-        const icon = process.platform !== 'darwin' ? path.join(this.config.ENTRY, this.config.ICONS.WINDOWS) : null;
+        Object.assign(this.config, getPlatformData());
+
+        const postProcess = this.config.MODULE_TYPE === 'es' ? postProcessFactory(appDir) : null;
+
+        const icon = process.platform !== 'darwin' ? path.join(appDir, this.config.ICONS.WINDOWS) : null;
 
         this.shell = new Shell({
             name: this.config.APP_NAME,
@@ -50,7 +43,13 @@ class App {
             menuTransform(menu) {
                 return menu;
             },
-            server: { postProcess },
+            server: {
+                postProcess,
+                authorities: {
+                    // An authority of 'app' will resolve to the appDir
+                    app: appDir,
+                },
+            },
             log: {
                 level: 'warn',
                 file: {

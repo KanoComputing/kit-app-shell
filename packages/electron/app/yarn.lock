@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@kano/common/-/common-1.0.2.tgz#84f12d7e924a0b20434bc2d27ee8690b208777a3"
   integrity sha512-D0k6UzNWkHQel5MpBbOXpJcAHKPHDumwaELlaJUm8VBqgURP6iYPPO7SX6E6Q0vGqKnkZX0xvFvazrf6oulG9w==
 
-"@kano/desktop-shell@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@kano/desktop-shell/-/desktop-shell-1.0.5.tgz#2bc31c3aaefd5228fad45caeda409b183c194142"
-  integrity sha512-QB0aiSFg+hkm5oB7mYef8VN9Ari18fDYUTszDPXygWs7sldLFMwbz2unELNld1hsFcuxL8Yl2cn8RFhlL76bpQ==
+"@kano/desktop-shell@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@kano/desktop-shell/-/desktop-shell-1.0.7.tgz#a9c6c9d6bdcf1060f287bd3ed488e8d35552d198"
+  integrity sha512-1ycQLosZxBizsNZJ7LlZ8e7Y8DhLMnDepWHGbTBVb3tci0PITCc1Oz7XNYa+9PTwpp4hBfUm0Hg6OYOfzCVSCA==
   dependencies:
     bunyan "^1.8.12"
     bunyan-debug-stream "^1.0.8"
@@ -34,10 +34,10 @@
   resolved "https://registry.yarnpkg.com/@kano/electron-updater/-/electron-updater-1.0.0.tgz#451f39286c70869483253f858654eb3da5603bca"
   integrity sha1-RR85KGxwhpSDJT+FhlTrPaVgO8o=
 
-"@kano/es6-resolution@^1.0.8":
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/@kano/es6-resolution/-/es6-resolution-1.0.12.tgz#ec4e224615e9c377df83364468c2eb63ff574902"
-  integrity sha512-XCWJ9dQsUfbTg4cTgk1PVB/fpn07LKEzCP7+PTc1c5vR3LeKrnUlIA1e1d9TTVgC8l8B+MIN9bhyRaGxe3HPSg==
+"@kano/es6-resolution@^1.0.13":
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/@kano/es6-resolution/-/es6-resolution-1.0.13.tgz#5a17eb19a768ce9fdd6ecc22c277bce374e1a394"
+  integrity sha512-zYoXP19woL79cpZ3+oy2o5nmPK+fW4t3QZIrjtCub9TCNkoKyAy7y+brRXAwjDMftVZAfuxcvDaXSwNVdBKd0w==
   dependencies:
     resolve "^1.7.1"
 
@@ -895,22 +895,6 @@ node-addon-api@^1.1.0:
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-1.6.2.tgz#d8aad9781a5cfc4132cc2fecdbdd982534265217"
   integrity sha512-479Bjw9nTE5DdBSZZWprFryHGjUaQC31y1wHo19We/k0BZlrmhqQitWoUL0cD8+scljCbIUL+E58oRDEakdGGA==
-
-node-pre-gyp@*:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.12.0.tgz#39ba4bb1439da030295f899e3b520b7785766149"
-  integrity sha512-4KghwV8vH5k+g2ylT+sLTjy5wmUOb9vPhnM8NHvRf9dHmnW/CndrFXy2aRPaPST6dugXSdHXfeaHQm77PIz/1A==
-  dependencies:
-    detect-libc "^1.0.2"
-    mkdirp "^0.5.1"
-    needle "^2.2.1"
-    nopt "^4.0.1"
-    npm-packlist "^1.1.6"
-    npmlog "^4.0.2"
-    rc "^1.2.7"
-    rimraf "^2.6.1"
-    semver "^5.3.0"
-    tar "^4"
 
 node-pre-gyp@^0.10.0:
   version "0.10.3"
