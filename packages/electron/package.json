@@ -1,0 +1,13 @@
+{
+  "name": "@kano/kit-app-shell-electron",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "postinstall": "cd app && yarn"
+  },
+  "dependencies": {
+    "electron": "^3.0.10",
+    "electroner": "^4.0.7"
+  }
+}

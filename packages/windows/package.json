@@ -1,0 +1,6 @@
+{
+  "name": "@kano/kit-app-shell-windows",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT"
+}
