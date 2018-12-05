@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@kano/kit-app-shell-common": "^1.0.0",
+    "@kano/kit-app-shell-core": "^1.0.0",
     "@kano/kit-app-shell-electron": "^1.0.0",
     "command-exists": "^1.2.8",
     "debian-packaging": "^0.1.5",

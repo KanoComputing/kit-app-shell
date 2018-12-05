@@ -19,7 +19,7 @@ function setup(processState) {
     });
 
     processState.on('failure', ({ message = '' }) => {
-        getSpinner().fail(message);
+        getSpinner().fail(message.stack);
     });
 
     processState.on('warning', ({ message = '' }) => {

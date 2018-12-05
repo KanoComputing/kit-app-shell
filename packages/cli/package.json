@@ -11,7 +11,7 @@
     "test": "mocha **/*.test.js --ui tdd"
   },
   "dependencies": {
-    "@kano/kit-app-shell-common": "^1.0.0",
+    "@kano/kit-app-shell-core": "^1.0.0",
     "@kano/kit-app-shell-windows": "^1.0.0",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",

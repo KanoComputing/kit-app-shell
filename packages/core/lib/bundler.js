@@ -53,6 +53,7 @@ class Bundler {
         return Promise.all(tasks)
             .then(() => {
                 processState.setSuccess('Bundled app');
+                return outputDir;
             });
     }
     static bundle(html, js, appSrc, config, opts = {}) {

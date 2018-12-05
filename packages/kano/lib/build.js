@@ -1,4 +1,4 @@
-const { processState, copy } = require('@kano/kit-app-shell-common');
+const { processState, copy } = require('@kano/kit-app-shell-core');
 const { build } = require('@kano/kit-app-shell-electron');
 const path = require('path');
 const os = require('os');
@@ -139,11 +139,11 @@ function kanoBuild({ app, config = {}, out }, commandOpts) {
     return checkEnv(commandOpts.skipAr)
         // Bundle app in tmp dir
         .then(() => build({ app, config, out: BUILD_DIR }, commandOpts))
-        .then(() => {
+        .then((buildOut) => {
             processState.setStep('Creating linux app');
             // Create executable for linux using electron-packager
             const packagerOptions = {
-                dir: BUILD_DIR,
+                dir: buildOut,
                 packageManager: 'yarn',
                 overwrite: true,
                 out: APP_DIR,
@@ -156,13 +156,14 @@ function kanoBuild({ app, config = {}, out }, commandOpts) {
                 arch: 'armv7l',
                 quiet: true,
             };
-            return packager(packagerOptions);
+            return packager(packagerOptions)
+                .then(() => APP_DIR);
         })
-        .then(() => {
+        .then((appDir) => {
             // Move the generated linux app to the debian structure
             mkdirp.sync(APP_RESOURCES_DIR);
             fs.renameSync(
-                path.join(APP_DIR, `${appName}-linux-armv7l`),
+                path.join(appDir, `${appName}-linux-armv7l`),
                 path.join(APP_RESOURCES_DIR, kebab(config.APP_NAME)),
             );
             processState.setSuccess('Created linux app');

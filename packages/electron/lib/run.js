@@ -1,5 +1,5 @@
 
-const { ConfigLoader } = require('@kano/kit-app-shell-common');
+const { ConfigLoader } = require('@kano/kit-app-shell-core');
 const { spawn } = require('child_process');
 const electronPath = require('electron');
 const path = require('path');

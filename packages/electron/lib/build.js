@@ -1,4 +1,4 @@
-const { Bundler, copy, processState } = require('@kano/kit-app-shell-common');
+const { Bundler, copy, processState } = require('@kano/kit-app-shell-core');
 const path = require('path');
 const glob = require('glob');
 const fs = require('fs');
@@ -96,7 +96,11 @@ function build({ app, config = {}, out }, { resources = [], polyfills = [], modu
             .then(bundle => Bundler.write(bundle, out))
     ];
     return Promise.all(tasks)
-        .then(() => processState.setStep(`Created electron app '${config.APP_NAME}'`));
+        .then((results) => {
+            processState.setStep(`Created electron app '${config.APP_NAME}'`);
+            // Return bundle outputDir
+            return results[2];
+        });
 }
 
 module.exports = build;

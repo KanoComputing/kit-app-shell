@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@kano/kit-app-shell-common": "^1.0.0",
+    "@kano/kit-app-shell-core": "^1.0.0",
     "@kano/kit-app-shell-electron": "^1.0.0",
     "electron-packager": "^13.0.0",
     "mkdirp": "^0.5.1",

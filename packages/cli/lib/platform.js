@@ -1,4 +1,4 @@
-const { log } = require('@kano/kit-app-shell-common');
+const { log } = require('@kano/kit-app-shell-core');
 
 function loadPlatform(name) {
     if (name === 'common' || name === 'cli') {

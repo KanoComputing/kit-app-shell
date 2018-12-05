@@ -1,4 +1,4 @@
-const { processState } = require('@kano/kit-app-shell-common');
+const { processState } = require('@kano/kit-app-shell-core');
 const { build } = require('@kano/kit-app-shell-windows');
 const path = require('path');
 const os = require('os');
@@ -23,7 +23,7 @@ function createAppx(dir, config, out) {
         publisher: WINDOWS_STORE.PUBLISHER,
         publisherDisplayName: WINDOWS_STORE.PUBLISHER_DISPLAY_NAME,
         deploy: false,
-    });
+    }).then(() => out);
 }
 
 function storeBuild({ app, config = {}, out }, commandOpts) {
@@ -31,12 +31,13 @@ function storeBuild({ app, config = {}, out }, commandOpts) {
     rimraf.sync(TMP_DIR);
     mkdirp.sync(TMP_DIR);
     return build({ app, config, out: TMP_DIR, skipInstaller: true }, commandOpts)
-        .then(() => {
+        .then((buildDir) => {
             processState.setStep(`Creating appx`);
-            return createAppx(TMP_DIR, config, out);
+            return createAppx(buildDir, config, out);
         })
-        .then(() => {
+        .then((outDir) => {
             processState.setSuccess('Created appx');
+            return outDir;
         });
 }
 

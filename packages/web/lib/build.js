@@ -1,4 +1,4 @@
-const { Bundler } = require('@kano/kit-app-shell-common');
+const { Bundler } = require('@kano/kit-app-shell-core');
 const path = require('path');
 
 function build({ app, config = {}, out }, { resources = [], polyfills = [], moduleContext = {}, replaces = {} } = {}) {

@@ -1,4 +1,4 @@
-const { processState } = require('@kano/kit-app-shell-common');
+const { processState } = require('@kano/kit-app-shell-core');
 const { build } = require('@kano/kit-app-shell-electron');
 const path = require('path');
 const os = require('os');
@@ -51,13 +51,14 @@ function windowsBuild({ app, config = {}, out, skipInstaller = false }, commandO
     mkdirp.sync(BUILD_DIR);
     mkdirp.sync(PKG_DIR);
     return build({ app, config, out: BUILD_DIR }, commandOpts)
-        .then(() => {
+        .then((buildDir) => {
             processState.setStep(`Creating windows application`);
+            const targetDir = skipInstaller ? out : PKG_DIR;
             const packagerOptions = {
-                dir: BUILD_DIR,
+                dir: buildDir,
                 packageManager: 'yarn',
                 overwrite: true,
-                out: skipInstaller ? out : PKG_DIR,
+                out: targetDir,
                 prune: true,
                 // TODO: use asar package. This does not work at the moment as it causes an issue with the PIXI loader
                 // XHR maybe?
@@ -73,21 +74,25 @@ function windowsBuild({ app, config = {}, out, skipInstaller = false }, commandO
                 icon: path.join(app, config.ICONS.WINDOWS),
                 quiet: true,
             };
-            return packager(packagerOptions);
+            return packager(packagerOptions)
+                .then(() => targetDir);
         })
-        .then(() => {
+        .then((pkgDir) => {
             processState.setSuccess('Created windows application');
             if (skipInstaller) {
-                return;
+                return out;
             }
             processState.setStep('Creating windows installer');
             return createInstaller({
-                dir: PKG_DIR,
+                dir: pkgDir,
                 app,
                 config,
                 out,
             })
-            .then(() => processState.setSuccess('Created windows installer'));
+            .then(() => {
+                processState.setSuccess('Created windows installer');
+                return out;
+            });
         });
 }
 

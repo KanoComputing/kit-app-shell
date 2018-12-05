@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const path = require('path');
 const parser = require('yargs-parser');
-const { ConfigLoader, log, processState } = require('@kano/kit-app-shell-common');
+const { ConfigLoader, log, processState } = require('@kano/kit-app-shell-core');
 const { loadPlatform } = require('../lib/platform');
 const spinner = require('../lib/spinner');
 const output = require('../lib/output');

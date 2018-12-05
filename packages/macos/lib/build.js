@@ -1,4 +1,4 @@
-const { processState } = require('@kano/kit-app-shell-common');
+const { processState } = require('@kano/kit-app-shell-core');
 const { build } = require('@kano/kit-app-shell-electron');
 const path = require('path');
 const os = require('os');
@@ -11,10 +11,10 @@ function macosBuild({ app, config = {}, out }, commandOpts) {
     rimraf.sync(TMP_DIR);
     mkdirp.sync(TMP_DIR);
     return build({ app, config, out: TMP_DIR }, commandOpts)
-        .then(() => {
+        .then((buildDir) => {
             processState.setStep('Creating macOS app');
             const packagerOptions = {
-                dir: TMP_DIR,
+                dir: buildDir,
                 packageManager: 'yarn',
                 overwrite: true,
                 out,
@@ -33,6 +33,7 @@ function macosBuild({ app, config = {}, out }, commandOpts) {
         })
         .then(() => {
             processState.setSuccess('Created macOS app');
+            return out;
         });
 }
 
