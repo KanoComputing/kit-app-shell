@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 const path = require('path');
 const parser = require('yargs-parser');
-const { ConfigLoader, log } = require('@kano/kit-app-shell-common');
+const { ConfigLoader, log, processState } = require('@kano/kit-app-shell-common');
 const { loadPlatform } = require('../lib/platform');
+const spinner = require('../lib/spinner');
+const output = require('../lib/output');
 
 function parseCommon(y) {
     return y
@@ -36,8 +38,8 @@ function loadRc(app) {
 
 function agregateArgv(platform, argv, command) {
     const platformOpts = parser(process.argv.slice(2), platform.cli(command));
-    // Remove all the keys that are in the global options from the command options
-    Object.keys(argv).forEach(k => delete platformOpts[k]);
+    // Remove the flat args
+    delete platformOpts._;
     const config = ConfigLoader.load(argv.app, argv.env);
     // Load config file
     const rcOpts = loadRc(argv.app);
@@ -52,18 +54,28 @@ function agregateArgv(platform, argv, command) {
     };
 }
 
+function end() {
+    spinner.stop();
+}
+
 function runCommand(command, argv) {
     const platform = loadPlatform(argv.platform);
     const { opts, commandOpts } = agregateArgv(platform, argv, command);
     log.trace('OPTIONS', opts);
     log.trace('COMMAND OPTIONS', commandOpts);
-    const result = platform[command](opts, commandOpts);
-    if (result instanceof Promise) {
-        result.catch(e => log.error(e));
-    }
+    // About to start the big boy tasks. Let the process breathe and setup its CLI interface
+    process.nextTick(() => {
+        const result = platform[command](opts, commandOpts);
+        if (result instanceof Promise) {
+            result.catch(e => processState.setFailure(e))
+                .then(() => end());
+        } else {
+            end();
+        }
+    });
 }
 
-require('yargs') // eslint-disable-line
+const argv = require('yargs') // eslint-disable-line
     .command('run <platform> [app]', 'run the application', (yargs) => {
         parseCommon(yargs);
     }, (argv) => {
@@ -82,7 +94,19 @@ require('yargs') // eslint-disable-line
     }, (argv) => {
         runCommand('build', argv);
     })
+    .option('quiet', {
+        alias: 'q',
+        default: false,
+    })
     .option('verbose', {
         alias: 'v',
         default: false
     }).argv;
+
+if (!argv.quiet) {
+    if (process.stdout.isTTY) {
+        spinner.setup(processState);
+    } else {
+        output.setup(processState);
+    }
+}

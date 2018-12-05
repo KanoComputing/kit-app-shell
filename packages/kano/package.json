@@ -1,13 +1,15 @@
 {
-  "name": "@kano/kit-app-shell-windows",
+  "name": "@kano/kit-app-shell-kano",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
     "@kano/kit-app-shell-common": "^1.0.0",
     "@kano/kit-app-shell-electron": "^1.0.0",
-    "electron-packager": "^12.2.0",
-    "innosetup-compiler": "^5.5.9",
+    "command-exists": "^1.2.8",
+    "debian-packaging": "^0.1.5",
+    "electron-packager": "^13.0.0",
+    "glob": "^7.1.3",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.2"
   }

@@ -1,0 +1,7 @@
+Package: kit-app
+Version: ${VERSION}
+Section: x11
+Priority: optional
+Architecture: armhf
+Maintainer: Team Kano <dev@kano.me>
+Description: ${APP_DESCRIPTION}

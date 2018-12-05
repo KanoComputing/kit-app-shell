@@ -12,9 +12,11 @@
     "@kano/devices-sdk": "git+ssh://git@github.com:KanoComputing/kano-devices-sdk#^1.0.30",
     "@kano/electron-updater": "^1.0.0",
     "@kano/es6-resolution": "^1.0.14",
-    "electron": "^3.0.10",
     "minimist": "^1.2.0",
     "noble": "^1.9.1"
+  },
+  "devDependencies": {
+    "electron": "^3.0.10"
   },
   "optionalDependencies": {
     "noble-uwp": "^0.6.2"

@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# Wrapper script to selectively launch kit-app applications
+# $1 will refer to an application brand.
+#
+
+python -c "from kano.gtk3.kano_dialog import KanoDialog; KanoDialog(title_text='Coming Soon',description_text='\nCongratulations on being one of the first to get your hands on the\nHarry Potter Kano Coding Kit!\n\nThe Kano OS version of the application, which is limited to 10 challenges\ninspired by the Wizarding World, is not quite ready.\n\nFor the full experience, and to start coding with your kit right today, we\nrecommend pairing the Harry Potter Kano Coding Kit with a compatible\niOS/Android tablet or a Windows/Mac desktop or laptop computer. You\ncan download the app at https://kano.me/app\n').run();"
+exit 0
+
+app_title="${APP_NAME}"
+app_name="$1"
+
+cmdline="/usr/share/${KEBAB_NAME}/${UNDERSCORE_NAME}"
+
+case $app_name in
+
+    "wand")
+        cmdline="$cmdline --profile kano-os-wand"
+        ;;
+
+    "os")
+        cmdline="$cmdline --profile kano-os"
+        ;;
+
+esac
+
+kdesk-hourglass-app "$app_title"
+"$cmdline"

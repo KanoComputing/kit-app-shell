@@ -27,4 +27,14 @@ Kash desktop platform. Runs your app using electron. To build for desktop, use `
 
 Extends the electron platform. Used to build a windows application and create an installer
 
+## [@kano/kit-app-shell-windows-store](./packages/windows-store)
 
+Extends the windows platform and builds an `appx` package instead of a windows installer
+
+## [@kano/kit-app-shell-macos](./packages/macos)
+
+Extends the electron platform. Used to build a macOS application and create a `.app` package
+
+## [@kano/kit-app-shell-kano](./packages/kano)
+
+Extends the electron platform. Used to build a kanoOS application and create a `.deb` package

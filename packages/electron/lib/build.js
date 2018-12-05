@@ -1,4 +1,4 @@
-const { Bundler, copy } = require('@kano/kit-app-shell-common');
+const { Bundler, copy, processState } = require('@kano/kit-app-shell-common');
 const path = require('path');
 const glob = require('glob');
 const fs = require('fs');
@@ -8,6 +8,7 @@ const cleanIgnore = [
     '**/.npmrc',
     '**/*.md',
     '**/*.d.ts',
+    '**/*.d.js',
     '**/.gitignore',
     '**/.gitmodules',
     '**/.eslintrc',
@@ -34,6 +35,12 @@ const cleanIgnore = [
     '**/config.gypi',
     '**/bower.json',
     '**/Gruntfile.js',
+    '**/*.iobj',
+    '**/*.lastbuildstate',
+    '**/*.h',
+    '**/*.cpp',
+    '**/*.c',
+    '**/*.tlog',
 ];
 
 function copyElectronApp(out) {
@@ -69,6 +76,7 @@ function createConfig(config, out) {
 }
 
 function build({ app, config = {}, out }, { resources = [], polyfills = [], moduleContext = {}, replaces = {} } = {}) {
+    processState.setStep(`Creating electron app '${config.APP_NAME}'`);
     const tasks = [
         copyElectronApp(out),
         createConfig(config, out),
@@ -87,7 +95,8 @@ function build({ app, config = {}, out }, { resources = [], polyfills = [], modu
             })
             .then(bundle => Bundler.write(bundle, out))
     ];
-    return Promise.all(tasks);
+    return Promise.all(tasks)
+        .then(() => processState.setStep(`Created electron app '${config.APP_NAME}'`));
 }
 
 module.exports = build;

@@ -13,6 +13,7 @@
     "mock-require": "^3.0.2"
   },
   "dependencies": {
+    "@kano/kit-app-shell-windows": "^1.0.0",
     "acorn": "^6.0.4",
     "acorn-walk": "^6.1.1",
     "chai-fs": "^2.0.0",

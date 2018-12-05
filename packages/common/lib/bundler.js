@@ -11,6 +11,7 @@ const mkdirp = require('mkdirp');
 const { replaceIndex, addRequirejs } = require('./html');
 const log = require('./log');
 const { copy } = require('./util');
+const processState = require('./process-state');
 
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -49,10 +50,13 @@ class Bundler {
         let p = Promise.resolve();
         files.forEach(file => p = p.then(writeStatic(root, file, appOutputDir)));
         tasks.push(p);
-        return Promise.all(tasks);
+        return Promise.all(tasks)
+            .then(() => {
+                processState.setSuccess('Bundled app');
+            });
     }
     static bundle(html, js, appSrc, config, opts = {}) {
-        log.info(`Bundling app at ${appSrc}...`);
+        processState.setStep(`Bundling app at ${appSrc}`);
         const pkg = {};
         const appSrcName = path.basename(appSrc);
         const htmlOutput = Bundler.bundleHtml(html, opts.html || {});
@@ -94,6 +98,7 @@ class Bundler {
             experimentalCodeSplitting: true,
             plugins: [
                 replace({
+                    delimiters: ['', ''],
                     values: {
                         ...replaces,
                         'window.KitAppShellConfig.APP_SRC': `'./www/${appSrcName}'`,
@@ -113,6 +118,8 @@ class Bundler {
                 nodeResolve(),
             ],
             moduleContext,
+            // Silence for now
+            onwarn: () => {},
         };
         log.trace('ROLLUP OPTIONS', defaultOptions);
         return rollup.rollup(defaultOptions)
