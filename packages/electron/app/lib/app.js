@@ -13,9 +13,19 @@ const ElectronIpcBus = require('@kano/devices-sdk/bus-adapter/bus/electron-ipc')
 const postProcessFactory = require('./post-process');
 const getPlatformData = require('./platform');
 
+const DEFAULTS = {
+    APP_NAME: 'Kano Desktop Application',
+};
+
 class App {
+    static getIcon(config) {
+        if (process.platform !== 'darwin' || !config.ICONS || !config.ICONS.WINDOWS) {
+            return null;
+        }
+        return path.join(appDir, this.config.ICONS.WINDOWS);
+    }
     constructor(appDir, config, args) {
-        this.config = require(config);
+        this.config = Object.assign({}, DEFAULTS, require(config));
 
         if (args.profile) {
             this.config.PROFILE = args.profile;
@@ -28,7 +38,7 @@ class App {
 
         const postProcess = this.config.BUNDLED ? null : postProcessFactory(appDir);
 
-        const icon = process.platform !== 'darwin' ? path.join(appDir, this.config.ICONS.WINDOWS) : null;
+        const icon = App.getIcon(config);
 
         this.shell = new Shell({
             name: this.config.APP_NAME,
