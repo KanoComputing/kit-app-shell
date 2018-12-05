@@ -66,7 +66,7 @@ function runCommand(command, argv) {
     // About to start the big boy tasks. Let the process breathe and setup its CLI interface
     process.nextTick(() => {
         const result = platform[command](opts, commandOpts);
-        if (result instanceof Promise) {
+        if (result && 'then' in result && 'catch' in result) {
             result.catch(e => processState.setFailure(e))
                 .then(() => end());
         } else {

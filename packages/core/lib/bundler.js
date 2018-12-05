@@ -134,7 +134,7 @@ class Bundler {
                 });
             });
     }
-    static bundleStatic(patterns, appRoot) {
+    static bundleStatic(patterns = [], appRoot = '/') {
         const fileList = patterns
             .reduce((acc, pattern) => acc.concat(glob.sync(pattern, { cwd: appRoot, nodir: true })), []);
         return {
