@@ -1,0 +1,12 @@
+{
+  "name": "@kano/kit-app-shell-cordova",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@kano/kit-app-shell-core": "^1.0.0",
+    "cordova-lib": "^8.1.1",
+    "mkdirp": "^0.5.1",
+    "rimraf": "^2.6.2"
+  }
+}

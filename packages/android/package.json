@@ -1,0 +1,10 @@
+{
+  "name": "@kano/kit-app-shell-android",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@kano/kit-app-shell-cordova": "^1.0.0",
+    "@kano/kit-app-shell-core": "^1.0.0"
+  }
+}
