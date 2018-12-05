@@ -1,5 +1,4 @@
 const path = require('path');
-const fs = require('fs');
 const mock = require('mock-fs');
 const Bundler = require('./bundler');
 const chai = require('chai');
@@ -18,7 +17,7 @@ suite('Bundler', () => {
             APP_SRC: '',
         })
             .then((output) => {
-                assert(output[0].code.indexOf('KitAppShellConfig = {') !== -1, 'Config was not injected');
+                assert(output[0].code.indexOf('var $inject_window_KitAppShellConfig = ') !== -1, 'Config was not injected');
             });
     });
     test('write', () => {
@@ -35,13 +34,20 @@ suite('Bundler', () => {
                 fileName: 'index.js',
                 code: 'app-js-test',
             }],
+            appStatic: {
+                root: '/static',
+                files: ['a.png']
+            }
         };
-        mock();
+        mock({
+            '/static/a.png': 'static-test',
+        });
         Bundler.write(bundle, '/')
             .then(() => {
                 assert.fileContent('/index.html', 'html-test');
                 assert.fileContent('/index.js', 'js-test');
                 assert.fileContent('/www/index.js', 'app-js-test');
+                assert.fileContent('/www/a.png', 'static-test');
                 mock.restore();
             });
     });

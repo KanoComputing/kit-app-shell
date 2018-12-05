@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "postinstall": "cd app && yarn"
+    "postinstall": "cd app && yarn --runtime=electron --target=3.0.0 --dist-url=https://atom.io/download/atom-shell"
   },
   "dependencies": {
     "@kano/kit-app-shell-common": "^1.0.0",

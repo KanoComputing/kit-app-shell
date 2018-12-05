@@ -1,5 +1,16 @@
 # Kit App Shell Monorepo
 
+## Usage
+
+```
+yarn add @kano/kit-app-shell-cli
+yarn add @kano/kit-app-shell-macos
+
+kash run macos ./ # Current directory being an app directory 
+```
+
+## Development
+
 This repository contains the CLI, common module and platform implementation for the App Shell platform
 
 This repository uses lerna and yarn workspaces to manage dependencies, development and tests of its packages.
