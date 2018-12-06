@@ -11,7 +11,6 @@
     "cordova-android": "^7.1.4",
     "cordova-config": "^0.7.0",
     "cordova-httpd": "git+https://github.com/paulvarache/cordova-httpd.git",
-    "cordova-plugin-proxy": "^1.7.0",
     "cors": "^2.8.5",
     "livereload": "^0.7.0",
     "localtunnel": "^1.9.1",

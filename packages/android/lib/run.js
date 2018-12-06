@@ -8,6 +8,7 @@ const serveStatic = require('serve-static');
 const cors = require('cors');
 const androidPlatform = require('./plugins');
 const { cordova } = require('cordova-lib');
+const { getIPAddress } = require('./ip');
 const livereload = require('livereload');
 
 const namedResolutionMiddleware = require('@kano/es6-server/named-resolution-middleware');
@@ -34,19 +35,14 @@ function setupTunnel(app) {
     const server = serve(app).listen(0);
     const { port } = server.address();
     const lrServer = livereload.createServer();
-    return Promise.all([
-        localtunnel(port),
-        localtunnel(35729),
-    ])
-        .then(([tunnel, lrTunnel]) => {
+    return localtunnel(port)
+        .then((tunnel) => {
             lrServer.watch(app);
             return {
                 tunnel,
-                lrTunnel,
                 stop() {
-                    tunnel.stop();
+                    tunnel.close();
                     server.close();
-                    lrServer.close();
                 },
             };
         });
@@ -75,7 +71,7 @@ module.exports = (opts, commandOpts) => {
                     appJs: {
                         replaces: {
                             TUNNEL_URL: `'${server.tunnel.url}'`,
-                            LR_TUNNEL_URL: `'${server.lrTunnel.url}'`,
+                            LR_URL: `'http://${getIPAddress()}:35729'`,
                         },
                     },
                     js: {
@@ -87,11 +83,11 @@ module.exports = (opts, commandOpts) => {
                 })
                 .then(bundle => Bundler.write(bundle, wwwPath))
                 .then(() => processState.setStep('Starting dev app on device'))
-                .then(() => cordova.run(['android']))
+                .then(() => cordova.run({ platforms: ['android'] }))
                 .then(() => processState.setSuccess('Dev app started'))
                 .then(() => projectPath)
                 .catch((e) => {
-                    server.close();
+                    server.stop();
                     throw e;
                 });
         });

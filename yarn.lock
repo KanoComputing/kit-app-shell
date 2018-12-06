@@ -2174,11 +2174,6 @@ cordova-plugin-device@^2.0.2:
   resolved "https://registry.yarnpkg.com/cordova-plugin-device/-/cordova-plugin-device-2.0.2.tgz#fc08f3722e67eef7b6c67bfc99a83df6add0baba"
   integrity sha1-/Ajzci5n7ve2xnv8mag99q3Quro=
 
-cordova-plugin-proxy@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-proxy/-/cordova-plugin-proxy-1.7.0.tgz#51ab314df5a59745327eda81f76e80cac84aea3a"
-  integrity sha512-UKcuGjrwtS8nMntppFCVlXYpkdvwyFNaCphx3tVhV3WYPU1lCveiYjyF6H4stpqpP3YwCrKMQ0txK8B77yaEdA==
-
 cordova-plugin-splashscreen@^5.0.2:
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/cordova-plugin-splashscreen/-/cordova-plugin-splashscreen-5.0.2.tgz#747e74f56e201cd585bc62d14bca19f6867ff1ed"

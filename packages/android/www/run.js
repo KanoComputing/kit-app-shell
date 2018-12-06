@@ -1,5 +1,5 @@
 const s = document.createElement('script');
-s.src = `${LR_TUNNEL_URL}/livereload.js?snipver=1`;
+s.src = `${LR_URL}/livereload.js?snipver=1`;
 document.body.appendChild(s);
 
 fetch(`${TUNNEL_URL}/_config`)

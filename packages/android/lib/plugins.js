@@ -5,7 +5,6 @@ const { util } = require('@kano/kit-app-shell-cordova');
 const platforms = [util.getModulePath('cordova-android')];
 const plugins = [
     util.getModulePath('cordova-httpd'),
-    util.getModulePath('cordova-plugin-proxy'),
 ];
 
 const hooks = {
