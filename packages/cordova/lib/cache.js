@@ -50,8 +50,19 @@ class ProjectCacheManager {
     }
     setProject(config, projectPath) {
         const hash = ProjectCacheManager.configToHash(config);
-        this._cache[hash] = projectPath;
-        return this.save();
+        return this.load()
+            .then(() => {
+                this._cache[hash] = projectPath;
+                return this.save();
+            });
+    }
+    deleteProject(config) {
+        const hash = ProjectCacheManager.configToHash(config);
+        return this.load()
+            .then(() => {
+                delete this._cache[hash];
+                return this.save();
+            });
     }
 }
 

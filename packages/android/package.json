@@ -4,11 +4,17 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@kano/es6-server": "^1.0.1",
     "@kano/kit-app-shell-cordova": "^1.0.0",
     "@kano/kit-app-shell-core": "^1.0.0",
+    "connect": "^3.6.6",
     "cordova-android": "^7.1.4",
-    "cordova-plugin-bluetoothle": "^4.4.4",
-    "cordova-plugin-device": "^2.0.2",
-    "cordova-plugin-splashscreen": "^5.0.2"
+    "cordova-config": "^0.7.0",
+    "cordova-httpd": "git+https://github.com/paulvarache/cordova-httpd.git",
+    "cordova-plugin-proxy": "^1.7.0",
+    "cors": "^2.8.5",
+    "livereload": "^0.7.0",
+    "localtunnel": "^1.9.1",
+    "serve-static": "^1.13.2"
   }
 }
