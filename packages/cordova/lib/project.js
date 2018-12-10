@@ -1,7 +1,8 @@
-const { processState, util } = require('@kano/kit-app-shell-core');
+const { processState } = require('@kano/kit-app-shell-core');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
+const pascal = require('pascal-case');
 const { promisify } = require('util');
 const mkdirp = promisify(require('mkdirp'));
 const rimraf = promisify(require('rimraf'));
@@ -39,7 +40,7 @@ function createProject(app, hash, config, platforms, plugins, hooks) {
 
     return rimraf(TMP_DIR)
         .then(() => mkdirp(TMP_DIR))
-        .then(() => cordova.create(PROJECT_DIR, config.APP_ID, util.format.pascal(config.APP_NAME)))
+        .then(() => cordova.create(PROJECT_DIR, config.APP_ID, pascal(config.APP_NAME)))
         .then(() => process.chdir(PROJECT_DIR))
         .then(() => {
             const cfg = new Config(path.join(PROJECT_DIR, 'config.xml'));

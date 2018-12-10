@@ -9,6 +9,25 @@ chai.use(chaiFs);
 
 const { assert } = chai;
 
+function mockFsAssertWriteOptions(testOptions) {
+    mockRequire('fs', {
+        createReadStream() {
+            return new Readable({
+                read() {
+                    this.push(null);
+                }
+            });
+        },
+        createWriteStream(a, options) {
+            assert.equal(options, testOptions);
+            return new Writable({
+                write() {}
+            });
+        },
+    });
+    return mockRequire.reRequire('./fs');
+}
+
 suite('fs', () => {
     suite('copy', () => {
         test('create directory', () => {
@@ -48,22 +67,7 @@ suite('fs', () => {
         });
         test('proxy writeOptions to fs bindings', () => {
             const testOptions = Symbol();
-            mockRequire('fs', {
-                createReadStream() {
-                    return new Readable({
-                        read() {
-                            this.push(null);
-                        }
-                    });
-                },
-                createWriteStream(a, options) {
-                    assert.equal(options, testOptions);
-                    return new Writable({
-                        write() {}
-                    });
-                },
-            });
-            const { copy } = mockRequire.reRequire('./fs');
+            const { copy } = mockFsAssertWriteOptions(testOptions);
             return copy('/src/file.txt', '/dest/file.txt', { writeOptions: testOptions });
         });
         teardown(() => {
@@ -71,5 +75,26 @@ suite('fs', () => {
             mock.restore();
         });
     });
-    suite('fromTemplate', () => {});
+    suite('fromTemplate', () => {
+        test('replaces correctly', () => {
+            mock({
+                '/file.tpl.txt': 'Test is ${STATUS}'
+            });
+            return fromTemplate('/file.tpl.txt', '/dest.txt', {
+                STATUS: 'successful',
+            })
+                .then(() => {
+                    assert.fileContent('/dest.txt', 'Test is successful');
+                });
+        });
+        test('proxies writeOptions', () => {
+            const testOptions = Symbol();
+            const { fromTemplate } = mockFsAssertWriteOptions(testOptions);
+            return fromTemplate('/file.tpl.txt', '/dest.txt', {}, testOptions);
+        });
+        teardown(() => {
+            mockRequire.stopAll();
+            mock.restore();
+        });
+    });
 });

@@ -37,13 +37,13 @@ function copy(src, dest, opts) {
     
 }
 
-function fromTemplate(tmpPath, dest, options, writeOpts) {
-    const replaceStream = replace(/\$\{(.*?)\}/g, (match, g1) => {
+function fromTemplate(tmpPath, dest, options, writeOptions) {
+    const transform = replace(/\$\{(.*?)\}/g, (match, g1) => {
         return options[g1] || '';
     });
     return copy(tmpPath, dest, {
-        transform: replaceStream,
-        writeOptions: options,
+        transform,
+        writeOptions,
     });
 }
 

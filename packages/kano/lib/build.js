@@ -4,6 +4,8 @@ const path = require('path');
 const os = require('os');
 const glob = require('glob');
 const fs = require('fs');
+const snake = require('snake-case');
+const kebab = require('dashify');
 const mkdirp = require('mkdirp');
 const rimraf = require('rimraf');
 const packager = require('electron-packager');
@@ -29,8 +31,8 @@ function createControl(out, config) {
         VERSION: version,
         APP_NAME: config.APP_NAME,
         APP_DESCRIPTION: config.DESCRIPTION,
-        KEBAB_NAME: util.format.kebab(config.APP_NAME),
-        SNAKE_NAME: util.format.snake(config.APP_NAME),
+        KEBAB_NAME: kebab(config.APP_NAME),
+        SNAKE_NAME: snake(config.APP_NAME),
     };
     path.join(out, 'control/control')
     path.join(out, 'control/postinst')
@@ -128,7 +130,7 @@ function kanoBuild({ app, config = {}, out }, commandOpts) {
     mkdirp.sync(BUILD_DIR);
     mkdirp.sync(APP_DIR);
     mkdirp.sync(DEB_DIR);
-    const appName = util.format.snake(config.APP_NAME);
+    const appName = snake(config.APP_NAME);
     return checkEnv(commandOpts.skipAr)
         // Bundle app in tmp dir
         .then(() => build({ app, config, out: BUILD_DIR }, commandOpts))
@@ -157,7 +159,7 @@ function kanoBuild({ app, config = {}, out }, commandOpts) {
             mkdirp.sync(APP_RESOURCES_DIR);
             fs.renameSync(
                 path.join(appDir, `${appName}-linux-armv7l`),
-                path.join(APP_RESOURCES_DIR, util.format.kebab(config.APP_NAME)),
+                path.join(APP_RESOURCES_DIR, kebab(config.APP_NAME)),
             );
             processState.setSuccess('Created linux app');
             processState.setStep('Preparing debian package');
