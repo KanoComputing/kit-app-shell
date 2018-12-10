@@ -6,6 +6,10 @@ chai.use(require('chai-fs'));
 
 const { assert } = chai;
 
+function wait(t) {
+    return new Promise((res) => setTimeout(res, t));
+}
+
 suite('Bundler', () => {
     test('bundleHtml', () => {
         const transformed = Bundler.bundleHtml(path.join(__dirname, '../test/resources/bundler/index.html'), { test: '<div>Test</div>' });
@@ -42,13 +46,16 @@ suite('Bundler', () => {
         mock({
             '/static/a.png': 'static-test',
         });
-        Bundler.write(bundle, '/')
+        return Bundler.write(bundle, '/')
+            .then(() => wait(0))) // mock-fs seems to not have all files written after the stream finishes
             .then(() => {
                 assert.fileContent('/index.html', 'html-test');
                 assert.fileContent('/index.js', 'js-test');
                 assert.fileContent('/www/index.js', 'app-js-test');
                 assert.fileContent('/www/a.png', 'static-test');
-                mock.restore();
             });
+        });
+    teardown(() => {
+        mock.restore();
     });
 });

@@ -7321,6 +7321,11 @@ stream-http@^2.0.0:
     to-arraybuffer "^1.0.0"
     xtend "^4.0.0"
 
+stream-replace@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/stream-replace/-/stream-replace-1.0.0.tgz#0acc0bf3275662666e48bc5da22c080700b2690d"
+  integrity sha1-CswL8ydWYmZuSLxdoiwIBwCyaQ0=
+
 stream-shift@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/stream-shift/-/stream-shift-1.0.0.tgz#d5c752825e5367e786f78e18e445ea223a155952"

@@ -1,6 +1,7 @@
 const { ConfigLoader, Bundler, processState } = require('@kano/kit-app-shell-core');
 const { project } = require('@kano/kit-app-shell-cordova');
 const { promisify } = require('util');
+// TODO: Review the choice of locatunnel against ngrok
 const localtunnel = promisify(require('localtunnel'));
 const connect = require('connect');
 const path = require('path');
@@ -34,6 +35,7 @@ function serve(app) {
 function setupTunnel(app) {
     const server = serve(app).listen(0);
     const { port } = server.address();
+    // TODO: Move this to core. It can be re-used to live-reload any platform or project
     const lrServer = livereload.createServer();
     return localtunnel(port)
         .then((tunnel) => {
@@ -49,6 +51,8 @@ function setupTunnel(app) {
 }
 
 module.exports = (opts, commandOpts) => {
+    // TODO: Move this to kit-app-shell-cordova.
+    // It can then be shared and customised across all cordova based platforms
     return Promise.all([
         setupTunnel(opts.app),
         project.getProject({
@@ -77,6 +81,7 @@ module.exports = (opts, commandOpts) => {
                     js: {
                         replaces: {
                             // Avoid jsZip to detect the define from requirejs
+                            // TODO: Move to kit-app-shell-cordova it is valid for all cordova platforms
                             'typeof define': 'undefined',
                         },
                     },

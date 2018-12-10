@@ -10,7 +10,7 @@ exit 0
 app_title="${APP_NAME}"
 app_name="$1"
 
-cmdline="/usr/share/${KEBAB_NAME}/${UNDERSCORE_NAME}"
+cmdline="/usr/share/${KEBAB_NAME}/${SNAKE_NAME}"
 
 case $app_name in
 

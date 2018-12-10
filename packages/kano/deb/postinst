@@ -1,5 +1,5 @@
 #!/bin/sh
 #
 # Set the ble capability on the kit-app binary
-setcap cap_net_raw+eip "/usr/share/${KEBAB_NAME}/${UNDERSCORE_NAME}"
+setcap cap_net_raw+eip "/usr/share/${KEBAB_NAME}/${SNAKE_NAME}"
 ldconfig

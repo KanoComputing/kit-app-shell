@@ -1,4 +1,4 @@
-const { processState, copy } = require('@kano/kit-app-shell-core');
+const { processState, util } = require('@kano/kit-app-shell-core');
 const { build } = require('@kano/kit-app-shell-electron');
 const path = require('path');
 const os = require('os');
@@ -18,13 +18,6 @@ function fileFromTemplate(tmpPath, dest, options, writeOpts) {
     fs.writeFileSync(dest, newContents, writeOpts);
 }
 
-function kebab(name) {
-    return name.toLowerCase().replace(/ /g, '-').replace(/(-)\1+/, '-');
-}
-function underscore(name) {
-    return name.replace(/ /g, '_');
-}
-
 const templateDir = path.join(__dirname, '../deb');
 
 function createControl(out, config) {
@@ -36,8 +29,8 @@ function createControl(out, config) {
         VERSION: version,
         APP_NAME: config.APP_NAME,
         APP_DESCRIPTION: config.DESCRIPTION,
-        KEBAB_NAME: kebab(config.APP_NAME),
-        UNDERSCORE_NAME: underscore(config.APP_NAME),
+        KEBAB_NAME: util.format.kebab(config.APP_NAME),
+        SNAKE_NAME: util.format.snake(config.APP_NAME),
     };
     path.join(out, 'control/control')
     path.join(out, 'control/postinst')
@@ -86,10 +79,10 @@ function copyExtra(app, out, config) {
     const icons = glob.sync('*.png', { cwd: appsPath, nodir: true });
     const apps = glob.sync('*.app', { cwd: appsPath, nodir: true });
     // Copy icons to the icons share
-    const tasks = icons.map(icon => copy(path.join(appsPath, icon), path.join(iconsPath, icon)));
+    const tasks = icons.map(icon => util.deb.copy(path.join(appsPath, icon), path.join(iconsPath, icon)));
     // Copy icons to the desktop share
-    tasks.concat(icons.map(icon => copy(path.join(appsPath, icon), path.join(desktopIconsPath, icon))));
-    tasks.concat(apps.map(app => copy(path.join(appsPath, app), path.join(appsTargetPath, app))));
+    tasks.concat(icons.map(icon => util.deb.copy(path.join(appsPath, icon), path.join(desktopIconsPath, icon))));
+    tasks.concat(apps.map(app => util.deb.copy(path.join(appsPath, app), path.join(appsTargetPath, app))));
     return Promise.all(tasks);
 }
 
@@ -98,7 +91,7 @@ function createDeb(dir, out, config) {
     return debian.createPackage({
         control: path.join(dir, 'control'),
         data: path.join(dir, 'data'),
-        dest: path.join(out, `${kebab(config.APP_NAME)}.deb`),
+        dest: path.join(out, `${util.format.kebab(config.APP_NAME)}.deb`),
     });
 }
 
@@ -135,7 +128,7 @@ function kanoBuild({ app, config = {}, out }, commandOpts) {
     mkdirp.sync(BUILD_DIR);
     mkdirp.sync(APP_DIR);
     mkdirp.sync(DEB_DIR);
-    const appName = underscore(config.APP_NAME);
+    const appName = util.format.snake(config.APP_NAME);
     return checkEnv(commandOpts.skipAr)
         // Bundle app in tmp dir
         .then(() => build({ app, config, out: BUILD_DIR }, commandOpts))
@@ -164,7 +157,7 @@ function kanoBuild({ app, config = {}, out }, commandOpts) {
             mkdirp.sync(APP_RESOURCES_DIR);
             fs.renameSync(
                 path.join(appDir, `${appName}-linux-armv7l`),
-                path.join(APP_RESOURCES_DIR, kebab(config.APP_NAME)),
+                path.join(APP_RESOURCES_DIR, util.format.kebab(config.APP_NAME)),
             );
             processState.setSuccess('Created linux app');
             processState.setStep('Preparing debian package');

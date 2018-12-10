@@ -1,4 +1,4 @@
-const { Bundler, copy, processState } = require('@kano/kit-app-shell-core');
+const { Bundler, util, processState } = require('@kano/kit-app-shell-core');
 const path = require('path');
 const glob = require('glob');
 const fs = require('fs');
@@ -58,7 +58,7 @@ function copyElectronApp(out) {
     const tasks = paths.reduce((p, file) => {
         const src = path.join(cwd, file);
         const dest = path.join(out, file);
-        return p.then(() => copy(src, dest));
+        return p.then(() => util.fs.copy(src, dest));
     }, Promise.resolve());
     return tasks;
 }

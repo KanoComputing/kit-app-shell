@@ -5,13 +5,15 @@ const { cordova } = require('cordova-lib');
 const { getProject } = require('./project');
 
 module.exports = ({ app, config = {}, out, cacheId = 'cordova', platforms = [], plugins = [], hooks = {} }, commandOpts) => {
+    // Catch cordova logs and displays them
+    // TODO: Catch all logs (error, warn, ...)
+    // TODO: Find a console UI to display these logs and any subprocess logs
+    // in parrallel of the spinner
     cordova.on('log', (...args) => {
         console.log(...args);
     });
 
-    // Try to find cordova project matching this config
-    // The config contains the app id, so each app will have its own project
-    // The cache storage uses a cache key specific to platforms using this parent platform
+    // Get a corodva project ready to build
     return getProject({
         app,
         config,
@@ -41,13 +43,12 @@ module.exports = ({ app, config = {}, out, cacheId = 'cordova', platforms = [], 
                 .then(() => projectPath);
         })
         .then((projectPath) => {
-            // A platform path can be provided to use a local, this resolves the name of a potential path
+            // A platform path can be provided to use as a local module, this resolves the name of a potential path
             // to its package name. We then strip the 'cordova-' prefix to extract the platform id
             // This is hacky and could in the future become unreliable.
-            // Maybe we should pass the platforms as ids and resolve their local packages if
+            // TODO: Maybe we should pass the platforms as ids and resolve their local packages if
             // already installed
             const platformIds = platforms.map(platform => path.basename(platform).replace('cordova-', ''));
             return cordova.build(platformIds);
-            // console.log(projectPath);
         });
 };

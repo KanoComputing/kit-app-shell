@@ -1,4 +1,4 @@
-const { processState } = require('@kano/kit-app-shell-core');
+const { processState, util } = require('@kano/kit-app-shell-core');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
@@ -12,16 +12,17 @@ const Config = require('cordova-config');
 
 const exists = promisify(fs.exists);
 
-function pascal(s) {
-    return s.replace(/(\w)(\w*)/g, (g0, g1, g2) => `${g1.toUpperCase()}${g2.toLowerCase()}`).replace(/ /g, '');
-}
-
+/**
+ * Deletes the contents of the www directory of a project
+ */
 function cleanProject(root) {
     const wwwPath = path.join(root, 'www');
     return rimraf(wwwPath)
         .then(() => mkdirp(wwwPath));
 }
-
+/**
+ * Creates a cordova project with the platforms, plugins and hooks provided
+ */
 function createProject(app, hash, config, platforms, plugins, hooks) {
     const TMP_DIR = path.join(os.tmpdir(), 'kash-cordova-build', hash);
     const PROJECT_DIR = path.join(TMP_DIR, 'project');
@@ -38,8 +39,7 @@ function createProject(app, hash, config, platforms, plugins, hooks) {
 
     return rimraf(TMP_DIR)
         .then(() => mkdirp(TMP_DIR))
-        // TODO: Use cordova template!!!!! This is amazing
-        .then(() => cordova.create(PROJECT_DIR, config.APP_ID, pascal(config.APP_NAME)))
+        .then(() => cordova.create(PROJECT_DIR, config.APP_ID, util.format.pascal(config.APP_NAME)))
         .then(() => process.chdir(PROJECT_DIR))
         .then(() => {
             const cfg = new Config(path.join(PROJECT_DIR, 'config.xml'));
@@ -56,25 +56,35 @@ function createProject(app, hash, config, platforms, plugins, hooks) {
         });
 }
 
+/**
+ * Retrieves a previously created project using the config's hash as a key
+ * Will create and cache a project if none was found
+ */
 function getProject({ app, config, cacheId, plugins, platforms, hooks }, commandOpts) {
     const cache = new ProjectCacheManager(cacheId);
 
     processState.setStep('Setting up cordova project');
 
+    // Using a cache can be skipped by setting cache to false
     const getCache = commandOpts.cache ? cache.getProject(config) : Promise.resolve(null);
 
     // Try to find cordova project matching this config
     // The config contains the app id, so each app will have its own project
     // The cache storage uses a cache key specific to platforms using this parent platform
+    // e.g. android will use a different cache than ios even if using the same config
     return getCache
         .then((projectPathOrNull) => {
             if (projectPathOrNull) {
+                // Found a path to an existing project, but said path might
+                // have been deleted
                 return exists(projectPathOrNull)
                     .then((doesExists) => {
                         if (!doesExists) {
+                            // Path does not exists anymore
                             return cache.deleteProject(config)
                                 .then(() => null);
                         }
+                        // Project found
                         return projectPathOrNull;
                     });
             }
@@ -90,7 +100,7 @@ function getProject({ app, config, cacheId, plugins, platforms, hooks }, command
                 return cleanProject(projectPathOrNull)
                     .then(() => projectPathOrNull);
             }
-            // No prject yet, get a hash from the config and create one
+            // No project yet, get a hash from the config and create one
             const hash = ProjectCacheManager.configToHash(config);
             return createProject(app, hash, config, platforms, plugins, hooks)
                 .then((newProjectPath) => {

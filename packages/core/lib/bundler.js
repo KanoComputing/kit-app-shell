@@ -10,7 +10,7 @@ const virtual = require('rollup-plugin-virtual');
 const mkdirp = require('mkdirp');
 const { replaceIndex, addRequirejs } = require('./html');
 const log = require('./log');
-const { copy } = require('./util');
+const util = require('./util');
 const processState = require('./process-state');
 
 function escapeRegExp(string) {
@@ -32,7 +32,7 @@ function write(file, outputDir) {
 function writeStatic(root, file, outputDir) {
     const filePath = path.join(root, file);
     const outFile = path.join(outputDir, file);
-    return copy(filePath, outFile);
+    return util.fs.copy(filePath, outFile);
 }
 
 class Bundler {
