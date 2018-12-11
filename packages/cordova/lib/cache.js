@@ -12,7 +12,6 @@ const writeFile = promisify(fs.writeFile);
  * Caches a cordova project based on an app's config
  * Will always re-use a project to save time
  */
-// TODO: TESTS !!!!!!!!!
 class ProjectCacheManager {
     /**
      * The cacheId is a root key to group cached projects together
