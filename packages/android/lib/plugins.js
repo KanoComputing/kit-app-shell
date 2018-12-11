@@ -9,8 +9,8 @@ const plugins = [
 
 const hooks = {
     before_prepare: [
-        require.resolve('./generate-icons'),
-        require.resolve('./set-content'),
+        require.resolve('./hooks/generate-icons'),
+        require.resolve('./hooks/config'),
     ],
     after_prepare: [
         require.resolve('./hooks/repo-hack'),
