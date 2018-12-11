@@ -1,12 +1,12 @@
 {
   "name": "@kano/kit-app-shell-android",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
     "@kano/es6-server": "^1.0.1",
-    "@kano/kit-app-shell-cordova": "^1.0.0",
-    "@kano/kit-app-shell-core": "^1.0.0",
+    "@kano/kit-app-shell-cordova": "^0.0.1",
+    "@kano/kit-app-shell-core": "^0.0.1",
     "connect": "^3.6.6",
     "cordova-android": "^7.1.4",
     "cordova-config": "^0.7.0",

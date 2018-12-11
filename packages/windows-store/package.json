@@ -1,11 +1,11 @@
 {
   "name": "@kano/kit-app-shell-windows-store",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@kano/kit-app-shell-core": "^1.0.0",
-    "@kano/kit-app-shell-windows": "^1.0.0",
+    "@kano/kit-app-shell-core": "^0.0.1",
+    "@kano/kit-app-shell-windows": "^0.0.1",
     "electron-windows-store": "^2.1.0",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.2"

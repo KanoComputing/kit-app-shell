@@ -1,11 +1,11 @@
 {
   "name": "@kano/kit-app-shell-cordova",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
     "@kano/devices-sdk": "git+ssh://git@github.com:KanoComputing/kano-devices-sdk.git",
-    "@kano/kit-app-shell-core": "^1.0.0",
+    "@kano/kit-app-shell-core": "^0.0.1",
     "cordova-config": "^0.7.0",
     "cordova-lib": "^8.1.1",
     "cordova-plugin-bluetoothle": "^4.4.4",
