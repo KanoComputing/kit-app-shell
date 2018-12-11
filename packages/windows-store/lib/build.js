@@ -2,11 +2,16 @@ const { processState } = require('@kano/kit-app-shell-core');
 const { build } = require('@kano/kit-app-shell-windows');
 const path = require('path');
 const os = require('os');
-const mkdirp = require('mkdirp');
-const rimraf = require('rimraf');
+const { promisify } = require('util');
+const mkdirp = promisify(require('mkdirp'));
+const rimraf = promisify(require('rimraf'));
 const convertToWindowsStore = require('electron-windows-store');
 
 function createAppx(dir, config, out) {
+    // Extract the windows store config from the provided config
+    // It contains essential information that cannot have a default or be infered
+    // throw an error if it is missing
+    // TODO: Check all required keys before continuing. This would provide explicit errors
     const { WINDOWS_STORE } = config;
     if (!WINDOWS_STORE) {
         throw new Error('Could not create appx: Missing WINDOWS_STORE in config');
@@ -26,13 +31,24 @@ function createAppx(dir, config, out) {
     }).then(() => out);
 }
 
-function storeBuild({ app, config = {}, out, bundleOnly }, commandOpts) {
+module.exports = ({ app, config = {}, out, bundleOnly }, commandOpts) => {
+    // Prepare a temp directory for the build
     const TMP_DIR = path.join(os.tmpdir(), 'kash-windows-store-build');
-    rimraf.sync(TMP_DIR);
-    mkdirp.sync(TMP_DIR);
-    return build({ app, config, out: TMP_DIR, skipInstaller: true, bundleOnly }, commandOpts)
+    return rimraf(TMP_DIR)
+        .then(() => mkdirp(TMP_DIR))
+        .then(() => {
+            // Build using the windows platform, skip the installer as we will create an .appx
+            return build({
+                app,
+                config,
+                out: TMP_DIR,
+                skipInstaller: true,
+                bundleOnly,
+            }, commandOpts);
+        })
         .then((buildDir) => {
             processState.setStep(`Creating appx`);
+            // Create the .appx from the bundled app
             return createAppx(buildDir, config, out);
         })
         .then((outDir) => {
@@ -40,5 +56,3 @@ function storeBuild({ app, config = {}, out, bundleOnly }, commandOpts) {
             return outDir;
         });
 }
-
-module.exports = storeBuild;
