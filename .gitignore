@@ -2,3 +2,5 @@ node_modules
 yarn-error.log
 out
 *.tgz
+.nyc_output
+coverage

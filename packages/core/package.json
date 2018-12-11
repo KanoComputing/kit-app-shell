@@ -4,14 +4,16 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "mocha **/*.test.js --ui tdd"
+    "test": "mocha",
+    "coverage": "nyc --reporter=html mocha"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-fs": "^2.0.0",
     "mocha": "^5.2.0",
     "mock-fs": "^4.7.0",
-    "mock-require": "^3.0.2"
+    "mock-require": "^3.0.2",
+    "nyc": "^13.1.0"
   },
   "dependencies": {
     "@babel/core": "^7.2.0",

@@ -14,5 +14,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "250044f792455c30f34f57965c31872beb03cfcb"
+  "gitHead": "250044f792455c30f34f57965c31872beb03cfcb",
+  "devDependencies": {
+    "nyc": "^13.1.0"
+  }
 }

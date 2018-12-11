@@ -15,15 +15,6 @@ suite('Bundler', () => {
         const transformed = Bundler.bundleHtml(path.join(__dirname, '../test/resources/bundler/index.html'), { test: '<div>Test</div>' });
         assert.equal(transformed, `<html lang="en"><div>Test</div><head><script src="/require.js"></script></head><body></body></html>`)
     });
-    test('bundleSources', () => {
-        // Test too simple, but this only uses rollup and plugin. No need to test 3rd party software
-        return Bundler.bundleSources(path.join(__dirname, '../test/resources/bundler/index.js'), {
-            APP_SRC: '',
-        })
-            .then((output) => {
-                assert(output[0].code.indexOf('var $inject_window_KitAppShellConfig = ') !== -1, 'Config was not injected');
-            });
-    });
     test('write', () => {
         const bundle = {
             html: {
@@ -47,7 +38,7 @@ suite('Bundler', () => {
             '/static/a.png': 'static-test',
         });
         return Bundler.write(bundle, '/')
-            .then(() => wait(0))) // mock-fs seems to not have all files written after the stream finishes
+            .then(() => wait(0)) // mock-fs seems to not have all files written after the stream finishes
             .then(() => {
                 assert.fileContent('/index.html', 'html-test');
                 assert.fileContent('/index.js', 'js-test');

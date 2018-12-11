@@ -16,6 +16,9 @@ const log = require('./log');
 const util = require('./util');
 const processState = require('./process-state');
 const ProgressTracker = require('./progress');
+const { promisify } = require('util');
+
+const writeFile = promisify(fs.writeFile);
 
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -23,14 +26,7 @@ function escapeRegExp(string) {
 
 function write(file, outputDir) {
     const filePath = path.join(outputDir, file.fileName);
-    return new Promise((resolve, reject) => {
-        fs.writeFile(filePath, file.code, (err) => {
-            if (err) {
-                return reject(err);
-            }
-            return resolve();
-        });
-    });
+    return writeFile(filePath, file.code);
 }
 
 function writeStatic(root, file, outputDir) {

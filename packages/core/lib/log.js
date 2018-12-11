@@ -1,11 +1,14 @@
+const logging = require('./logging');
+
 const { DEBUG } = process.env;
 
 function noop() {}
 
+// Use logging as console. Reliably stub it during tests
 module.exports = {
-    trace: DEBUG ? console.log : noop,
-    debug: DEBUG ? console.log : noop,
-    info: console.log,
-    warn: console.warn,
-    error: console.error,
+    trace: DEBUG ? logging.log : noop,
+    debug: DEBUG ? logging.log : noop,
+    info: logging.log,
+    warn: logging.warn,
+    error: logging.error,
 };
