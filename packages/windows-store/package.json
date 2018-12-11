@@ -9,5 +9,8 @@
     "electron-windows-store": "^2.1.0",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.2"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

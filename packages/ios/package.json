@@ -10,5 +10,8 @@
     "cordova-plugin-add-swift-support": "^1.7.2",
     "cordova-plugin-blob-constructor-polyfill": "^1.0.2",
     "cordova-plugin-ios-ble-permissions": "^1.0.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

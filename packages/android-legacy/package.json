@@ -8,5 +8,8 @@
     "@kano/kit-app-shell-cordova": "^0.0.1",
     "@kano/kit-app-shell-core": "^0.0.1",
     "cordova-plugin-crosswalk-webview": "^2.4.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -14,5 +14,8 @@
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.2",
     "snake-case": "^2.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

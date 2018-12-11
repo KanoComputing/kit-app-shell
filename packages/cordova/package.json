@@ -28,5 +28,8 @@
   },
   "scripts": {
     "test": "mocha **/*.test.js --ui tdd"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

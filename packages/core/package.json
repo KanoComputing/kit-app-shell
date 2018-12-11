@@ -41,5 +41,8 @@
     "rollup-plugin-virtual": "^1.0.1",
     "stream-replace": "^1.0.0",
     "walk-parse5": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
