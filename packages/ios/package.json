@@ -1,11 +1,11 @@
 {
   "name": "@kano/kit-app-shell-ios",
-  "version": "0.0.2-alpha.1",
+  "version": "0.0.2-alpha.2",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@kano/kit-app-shell-cordova": "^0.0.2-alpha.1",
-    "@kano/kit-app-shell-core": "^0.0.2-alpha.1",
+    "@kano/kit-app-shell-cordova": "^0.0.2-alpha.2",
+    "@kano/kit-app-shell-core": "^0.0.2-alpha.2",
     "cordova-ios": "^4.5.5",
     "cordova-plugin-add-swift-support": "^1.7.2",
     "cordova-plugin-blob-constructor-polyfill": "^1.0.2",

@@ -1,6 +1,6 @@
 {
   "name": "@kano/kit-app-shell-cli",
-  "version": "0.0.2-alpha.1",
+  "version": "0.0.2-alpha.2",
   "main": "index.js",
   "license": "MIT",
   "bin": {
@@ -11,7 +11,7 @@
     "test": "mocha **/*.test.js --ui tdd"
   },
   "dependencies": {
-    "@kano/kit-app-shell-core": "^0.0.2-alpha.1",
+    "@kano/kit-app-shell-core": "^0.0.2-alpha.2",
     "ora": "^3.0.0",
     "yargs": "^12.0.5",
     "yargs-parser": "^11.1.1"
