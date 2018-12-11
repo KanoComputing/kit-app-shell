@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@kano/kit-app-shell-core": "^0.0.2-alpha.1",
-    "@kano/kit-app-shell-windows": "^0.0.2-alpha.1",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "mock-require": "^3.0.2",

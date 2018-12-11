@@ -8,8 +8,6 @@ const polyfill = require('rollup-plugin-polyfill');
 const babel = require('rollup-plugin-babel');
 const minifyHTML = require('rollup-plugin-minify-html-literals').default;
 const uglify = require('rollup-plugin-uglify-es');
-const presetEnv = require('@babel/preset-env');
-const babelPluginDynamicImport = require('@babel/plugin-syntax-dynamic-import');
 const inject = require('rollup-plugin-inject');
 const virtual = require('rollup-plugin-virtual');
 const mkdirp = require('mkdirp');
@@ -137,10 +135,12 @@ class Bundler {
             defaultOptions.plugins.push(minifyHTML());
             defaultOptions.plugins.push(babel({
                 exclude: babelExclude,
-                plugins: [babelPluginDynamicImport],
+                plugins: [
+                    require.resolve('@babel/plugin-syntax-dynamic-import'),
+                ],
                 presets: [
                     [
-                        presetEnv,
+                        require.resolve('@babel/preset-env'),
                         {
                             targets,
                         }
