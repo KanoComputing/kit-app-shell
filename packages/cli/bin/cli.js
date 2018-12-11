@@ -88,6 +88,9 @@ const argv = require('yargs') // eslint-disable-line
                 alias: 'o',
                 required: true,
             })
+            .option('bundleOnly', {
+                default: false,
+            })
             .coerce('out', (v) => {
                 return path.resolve(v);
             }); 

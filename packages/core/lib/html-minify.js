@@ -1,8 +1,10 @@
-const htmlAutoprefixer = require('html-autoprefixer');
 const minifier = require('html-minifier');
+const HTMLPostCSS = require('html-postcss');
+
+const processHtml = new HTMLPostCSS([]);
 
 module.exports = (content) => {
-    const transformed = htmlAutoprefixer.process(content);
+    const transformed = processHtml.process(htmlContent);
     return minifier.minify(transformed, {
         removeAttributeQuotes: true,
         collapseInlineTagWhitespace: true,
@@ -10,4 +12,4 @@ module.exports = (content) => {
         minifyCSS: true,
         removeComments: true,
     });
-}
+};

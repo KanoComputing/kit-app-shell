@@ -34,6 +34,10 @@ if (!window.KitAppShellConfig) {
 
 p
     .then((config) => {
+        Object.assign(window.KitAppShellConfig, {
+            OS_PLATFORM: 'web',
+            OS_VERSION: navigator.userAgent,
+        });
         window.Shell = {
             defined: false,
             define(UIClass) {

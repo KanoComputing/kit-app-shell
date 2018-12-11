@@ -6,11 +6,11 @@ const mkdirp = require('mkdirp');
 const rimraf = require('rimraf');
 const packager = require('electron-packager');
 
-function macosBuild({ app, config = {}, out }, commandOpts) {
+function macosBuild({ app, config = {}, out, bundleOnly }, commandOpts) {
     const TMP_DIR = path.join(os.tmpdir(), 'kash-macos-build');
     rimraf.sync(TMP_DIR);
     mkdirp.sync(TMP_DIR);
-    return build({ app, config, out: TMP_DIR }, commandOpts)
+    return build({ app, config, out: TMP_DIR, bundleOnly }, commandOpts)
         .then((buildDir) => {
             processState.setStep('Creating macOS app');
             const packagerOptions = {

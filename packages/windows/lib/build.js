@@ -48,7 +48,7 @@ function createInstaller({ dir, app, config, out }) {
     return build;
 }
 
-function windowsBuild({ app, config = {}, out, skipInstaller = false }, commandOpts) {
+function windowsBuild({ app, config = {}, out, skipInstaller = false, bundleOnly }, commandOpts) {
     const TMP_DIR = path.join(os.tmpdir(), 'kash-windows-build');
     const BUILD_DIR = path.join(TMP_DIR, 'build');
     const PKG_DIR = path.join(TMP_DIR, 'app');
@@ -56,7 +56,7 @@ function windowsBuild({ app, config = {}, out, skipInstaller = false }, commandO
     mkdirp.sync(BUILD_DIR);
     mkdirp.sync(PKG_DIR);
     const icon = config.ICONS ? config.ICONS.WINDOWS : DEFAULT_ICON;
-    return build({ app, config, out: BUILD_DIR }, commandOpts)
+    return build({ app, config, out: BUILD_DIR, bundleOnly }, commandOpts)
         .then((buildDir) => {
             processState.setStep(`Creating windows application`);
             const targetDir = skipInstaller ? out : PKG_DIR;

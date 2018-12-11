@@ -26,11 +26,11 @@ function createAppx(dir, config, out) {
     }).then(() => out);
 }
 
-function storeBuild({ app, config = {}, out }, commandOpts) {
+function storeBuild({ app, config = {}, out, bundleOnly }, commandOpts) {
     const TMP_DIR = path.join(os.tmpdir(), 'kash-windows-store-build');
     rimraf.sync(TMP_DIR);
     mkdirp.sync(TMP_DIR);
-    return build({ app, config, out: TMP_DIR, skipInstaller: true }, commandOpts)
+    return build({ app, config, out: TMP_DIR, skipInstaller: true, bundleOnly }, commandOpts)
         .then((buildDir) => {
             processState.setStep(`Creating appx`);
             return createAppx(buildDir, config, out);

@@ -31,6 +31,7 @@ module.exports = (opts = {}, commandOpts = {}) => {
                         ...opts,
                     },
                     js: {
+                        bundleOnly: opts.bundleOnly,
                         targets: opts.targets,
                         replaces: {
                             // Avoid jsZip to detect the define from requirejs

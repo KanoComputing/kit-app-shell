@@ -108,7 +108,7 @@ function checkEnv(skipAr = false) {
         .then(() => checkCmd('ar'));
 }
 
-function kanoBuild({ app, config = {}, out }, commandOpts) {
+function kanoBuild({ app, config = {}, out, bundleOnly }, commandOpts) {
     const TMP_DIR = path.join(os.tmpdir(), 'kash-kano-build');
     const BUILD_DIR = path.join(TMP_DIR, 'build');
     const APP_DIR = path.join(TMP_DIR, 'app');
@@ -121,7 +121,7 @@ function kanoBuild({ app, config = {}, out }, commandOpts) {
     const appName = snake(config.APP_NAME);
     return checkEnv(commandOpts.skipAr)
         // Bundle app in tmp dir
-        .then(() => build({ app, config, out: BUILD_DIR }, commandOpts))
+        .then(() => build({ app, config, out: BUILD_DIR, bundleOnly }, commandOpts))
         .then((buildOut) => {
             processState.setStep('Creating linux app');
             // Create executable for linux using electron-packager

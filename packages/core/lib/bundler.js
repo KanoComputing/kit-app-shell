@@ -6,6 +6,8 @@ const nodeResolve = require('rollup-plugin-node-resolve');
 const replace = require('rollup-plugin-replace');
 const polyfill = require('rollup-plugin-polyfill');
 const babel = require('rollup-plugin-babel');
+const minifyHTML = require('rollup-plugin-minify-html-literals').default;
+const uglify = require('rollup-plugin-uglify-es');
 const presetEnv = require('@babel/preset-env');
 const babelPluginDynamicImport = require('@babel/plugin-syntax-dynamic-import');
 const inject = require('rollup-plugin-inject');
@@ -15,6 +17,7 @@ const { replaceIndex, addRequirejs } = require('./html');
 const log = require('./log');
 const util = require('./util');
 const processState = require('./process-state');
+const ProgressTracker = require('./progress');
 
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -92,7 +95,11 @@ class Bundler {
             return replacements[g0] || '';
         });
     }
-    static bundleSources(input, config, { polyfills = [], moduleContext = {}, replaces = {}, targets = {}, appSrcName = 'index.js' } = {}) {
+    static bundleSources(input, config, { polyfills = [], moduleContext = {}, replaces = {}, targets = {}, babelExclude = [], bundleOnly = false, appSrcName = 'index.js' } = {}) {
+        const tracker = new ProgressTracker();
+        tracker.on('progress', (e) => {
+            processState.setStep(`(${e.loaded}) Bundling '${e.file}'`);
+        });
         // Generate future config path
         // TODO: This does not work on non root files, figure out a solution
         const inputRoot = path.dirname(input);
@@ -101,6 +108,7 @@ class Bundler {
             input: [input],
             experimentalCodeSplitting: true,
             plugins: [
+                tracker.plugin(),
                 replace({
                     delimiters: ['', ''],
                     values: {
@@ -120,22 +128,27 @@ class Bundler {
                 }),
                 polyfill(escapeRegExp(path.resolve(input)), polyfills),
                 nodeResolve(),
-                babel({
-                    plugins: [babelPluginDynamicImport],
-                    presets: [
-                        [
-                            presetEnv,
-                            {
-                                targets,
-                            }
-                        ]
-                    ]
-                }),
             ],
             moduleContext,
             // Silence for now
             onwarn: () => {},
         };
+        if (!bundleOnly) {
+            defaultOptions.plugins.push(minifyHTML());
+            defaultOptions.plugins.push(babel({
+                exclude: babelExclude,
+                plugins: [babelPluginDynamicImport],
+                presets: [
+                    [
+                        presetEnv,
+                        {
+                            targets,
+                        }
+                    ]
+                ]
+            }));
+            defaultOptions.plugins.push(uglify());
+        }
         log.trace('ROLLUP OPTIONS', defaultOptions);
         return rollup.rollup(defaultOptions)
             .then(bundle => bundle.generate({ format: 'amd' }))
