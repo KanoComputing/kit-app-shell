@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
+    id="ios10"
+    version="1.0.5-dev">
+  <engines>
+    <engine name="cordova" version=">=3.0.0" />
+  </engines>
+
+  <name>IOS10 support for kit-app-shell-cordova</name>
+  <keywords></keywords>
+  <platform name="ios">
+    <asset src="./polyfills/text-encoding/encoding-indexes.js" target="polyfills/text-encoding/encoding-indexes.js" />
+    <asset src="./polyfills/text-encoding/encoding.js" target="polyfills/text-encoding/encoding.js" />
+    <asset src="./polyfills/fetch/fetch.js" target="polyfills/fetch/fetch.js" />
+    <asset src="./polyfills/canvas-to-blob/canvas-to-blob.js" target="polyfills/canvas-to-blob/canvas-to-blob.js" />
+    <js-module name="text-encoding-polyfill" src="./polyfills/text-encoding/index.js">
+        <runs />
+    </js-module>
+    <js-module name="fetch-polyfill" src="./polyfills/fetch/index.js">
+        <runs />
+    </js-module>
+    <js-module name="canvas-to-blob-polyfill" src="./polyfills/canvas-to-blob/index.js">
+        <runs />
+    </js-module>
+  </platform>
+</plugin>
+
+

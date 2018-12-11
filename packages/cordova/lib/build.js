@@ -10,7 +10,7 @@ module.exports = (opts = {}, commandOpts = {}) => {
     // TODO: Find a console UI to display these logs and any subprocess logs
     // in parrallel of the spinner
     cordova.on('log', (...args) => {
-        console.log(...args);
+        // console.log(...args);
     });
 
     // Get a corodva project ready to build

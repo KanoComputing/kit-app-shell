@@ -34,7 +34,7 @@ if (!window.KitAppShellConfig) {
 
 p
     .then((config) => {
-        Object.assign(window.KitAppShellConfig, {
+        Object.assign(config, {
             OS_PLATFORM: 'web',
             OS_VERSION: navigator.userAgent,
         });

@@ -93,7 +93,7 @@ function build({ app, config = {}, out, bundleOnly }, { resources = [], polyfill
                 js: {
                     bundleOnly,
                     targets: babelTargets,
-                }
+                },
                 appJs: {
                     bundleOnly,
                     resources,

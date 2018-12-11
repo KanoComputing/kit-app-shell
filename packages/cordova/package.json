@@ -12,7 +12,9 @@
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-splashscreen": "^5.0.2",
     "elementtree": "^0.1.7",
+    "ip": "^1.1.5",
     "mkdirp": "^0.5.1",
+    "ngrok": "^3.1.0",
     "pascal-case": "^2.0.1",
     "rimraf": "^2.6.2",
     "sharp": "^0.21.0"

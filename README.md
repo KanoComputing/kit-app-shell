@@ -49,3 +49,19 @@ Extends the electron platform. Used to build a macOS application and create a `.
 ## [@kano/kit-app-shell-kano](./packages/kano)
 
 Extends the electron platform. Used to build a kanoOS application and create a `.deb` package
+
+## [@kano/kit-app-shell-cordova](./packages/cordova)
+
+Uses the cordova project to create mobile apps
+
+## [@kano/kit-app-shell-android](./packages/android)
+
+Extends the cordova platform to create a .apk
+
+## [@kano/kit-app-shell-android-legacy](./packages/android-legacy)
+
+Extends the android platform to create a .apk using crosswalk as a webview
+
+## [@kano/kit-app-shell-ios](./packages/ios)
+
+Extends the cordova platform to create an iOS app

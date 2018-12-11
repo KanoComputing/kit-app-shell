@@ -1,16 +1,17 @@
 const { ConfigLoader, Bundler, processState } = require('@kano/kit-app-shell-core');
 const project = require('./project');
-const { promisify } = require('util');
-const localtunnel = promisify(require('localtunnel'));
+const ngrok = require('ngrok');
 const connect = require('connect');
 const path = require('path');
 const serveStatic = require('serve-static');
 const cors = require('cors');
 const { cordova } = require('cordova-lib');
-const { getIPAddress } = require('./ip');
+const ip = require('ip');
 const livereload = require('livereload');
 
 const namedResolutionMiddleware = require('@kano/es6-server/named-resolution-middleware');
+
+const { KASH_NET_INTERFACE_NAME } = process.env;
 
 function serve(app) {
     return connect()
@@ -35,13 +36,15 @@ function setupTunnel(app) {
     const { port } = server.address();
     // TODO: Move this to core. It can be re-used to live-reload any platform or project
     const lrServer = livereload.createServer();
-    return localtunnel(port)
-        .then((tunnel) => {
+    return ngrok.connect(port)
+        .then((url) => {
             lrServer.watch(app);
             return {
-                tunnel,
+                tunnel: {
+                    url,
+                },
                 stop() {
-                    tunnel.close();
+                    ngrok.disconnect(url);
                     server.close();
                 },
             };
@@ -68,7 +71,7 @@ module.exports = (opts, commandOpts, runPlatform) => {
                     appJs: {
                         replaces: {
                             TUNNEL_URL: `'${server.tunnel.url}'`,
-                            LR_URL: `'http://${getIPAddress()}:35729'`,
+                            LR_URL: `'http://${ip.address(KASH_NET_INTERFACE_NAME)}:35729'`,
                         },
                     },
                     js: {

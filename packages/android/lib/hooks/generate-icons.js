@@ -1,7 +1,7 @@
 const { util, xml } = require('@kano/kit-app-shell-cordova');
 const path = require('path');
 const Config = require('cordova-config');
-const icons = require('../data/icons');
+const icons = require('../../data/icons');
 
 function getIconPath(key, projectPath) {
     return path.join(projectPath, 'res/icon/android', `${key}-icon.png`);

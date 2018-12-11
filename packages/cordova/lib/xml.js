@@ -38,6 +38,15 @@ function addElement(root, tagName, content, attribs = {}) {
 }
 
 /**
+ * Add a subtree to a node using an XML stirng
+ */
+function addRaw(root, string) {
+    const node = new et.XML(string);
+
+    root.append(node);
+}
+
+/**
  * Find an element in a provided cordova-config instance
  */
 function findInConfig(cfg, query) {
@@ -48,4 +57,5 @@ module.exports = {
     setElement,
     findInConfig,
     addElement,
+    addRaw,
 };
