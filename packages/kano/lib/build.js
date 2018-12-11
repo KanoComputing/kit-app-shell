@@ -12,14 +12,6 @@ const packager = require('electron-packager');
 const debian = require('debian-packaging');
 const commandExists = require('command-exists');
 
-function fileFromTemplate(tmpPath, dest, options, writeOpts) {
-    const contents = fs.readFileSync(tmpPath).toString();
-    const newContents = contents.replace(/\$\{(.*?)\}/g, (match, g1) => {
-        return options[g1] || '';
-    });
-    fs.writeFileSync(dest, newContents, writeOpts);
-}
-
 const templateDir = path.join(__dirname, '../deb');
 
 function createControl(out, config) {
@@ -36,29 +28,25 @@ function createControl(out, config) {
     };
     path.join(out, 'control/control')
     path.join(out, 'control/postinst')
-    mkdirp.sync(path.join(out, 'control'));
-    fileFromTemplate(
+    util.fs.fromTemplate(
         path.join(templateDir, 'control'),
         path.join(out, 'control/control'),
         options,
     );
-    fileFromTemplate(
+    util.fs.fromTemplate(
         path.join(templateDir, 'postinst'),
         path.join(out, 'control/postinst'),
         options,
         { mode: 0o555 },
     );
-    mkdirp.sync(path.join(out, 'data/etc'));
-    mkdirp.sync(path.join(out, 'data/etc/ld.so.conf.d'));
-    fileFromTemplate(
+    util.fs.fromTemplate(
         path.join(templateDir, 'so.conf'),
         path.join(out, `data/etc/ld.so.conf.d/${options.KEBAB_NAME}.conf`),
         options,
     );
-    mkdirp.sync(path.join(out, 'data/usr/bin'));
-    fileFromTemplate(
+    util.fs.fromTemplate(
         path.join(templateDir, 'bin'),
-        path.join(out, 'data/usr/bin/kit-app'),
+        path.join(out, `data/usr/bin/${options.SNAKE_NAME}`),
         options,
         { mode: 0o555 },
     );
