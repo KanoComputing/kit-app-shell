@@ -1,0 +1,12 @@
+{
+  "name": "@kano/kit-app-shell-android-legacy",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@kano/kit-app-shell-android": "^1.0.0",
+    "@kano/kit-app-shell-cordova": "^1.0.0",
+    "@kano/kit-app-shell-core": "^1.0.0",
+    "cordova-plugin-crosswalk-webview": "^2.4.0"
+  }
+}

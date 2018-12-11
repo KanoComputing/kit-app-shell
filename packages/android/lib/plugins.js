@@ -12,6 +12,10 @@ const hooks = {
         require.resolve('./generate-icons'),
         require.resolve('./set-content'),
     ],
+    after_prepare: [
+        require.resolve('./hooks/repo-hack'),
+        require.resolve('./hooks/update-version'),
+    ],
 };
 
 module.exports = {

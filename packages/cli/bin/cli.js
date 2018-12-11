@@ -41,6 +41,7 @@ function agregateArgv(platform, argv, command) {
     // Remove the flat args
     delete platformOpts._;
     const config = ConfigLoader.load(argv.app, argv.env);
+    config.BUILD_NUMBER = parseInt(process.env.BUILD_NUMBER, 10) || argv.buildNumber;
     // Load config file
     const rcOpts = loadRc(argv.app);
     // Options specific to the platform defined in the config file
@@ -88,12 +89,15 @@ const argv = require('yargs') // eslint-disable-line
                 alias: 'o',
                 required: true,
             })
-            .option('bundleOnly', {
-                default: false,
+            .option('buildNumber', {
+                alias: 'n',
+                default: 0,
             })
+            .number('buildNumber')
+            .boolean('bundleOnly')
             .coerce('out', (v) => {
                 return path.resolve(v);
-            }); 
+            });
     }, (argv) => {
         runCommand('build', argv);
     })

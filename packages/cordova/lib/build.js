@@ -49,6 +49,8 @@ module.exports = (opts = {}, commandOpts = {}) => {
             // TODO: Maybe we should pass the platforms as ids and resolve their local packages if
             // already installed
             const platformIds = opts.platforms.map(platform => path.basename(platform).replace('cordova-', ''));
-            return cordova.build(platformIds);
+            // if the run flag is passed, run the built app on device
+            const command = commandOpts.run ? 'run' : 'build';
+            return cordova[command](platformIds);
         });
 };

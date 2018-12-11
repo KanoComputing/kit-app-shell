@@ -9,26 +9,37 @@ module.exports = (context) => {
         return;
     }
     const cfg = new Config(path.join(projectRoot, 'config.xml'));
+
+    if (shell.config.APP_DESCRIPTION) {
+        cfg.setDescription(config.APP_DESCRIPTION);
+    }
+    if (shell.config.UI_VERSION) {
+        cfg.setVersion(shell.config.UI_VERSION);
+        if (shell.config.BUILD_NUMBER) {
+            cfg.setAndroidVersionCode(`1${shell.config.UI_VERSION.replace(/\./g, '')}${shell.config.BUILD_NUMBER}`);
+            // TODO: Move this to ios platform
+            // configXML.setIOSBundleVersion(process.env.BUILD_NUMBER);
+        }
+    }
+
     const platformEl = xml.findInConfig(cfg, 'platform/[@name="android"]');
 
     const preferences = {
-        Port: 8000,
-        'android-targetSdkVersion': 27
-    }
+        Port: 8888,
+        'android-targetSdkVersion': 28,
+        ShowSplashScreenSpinner: false,
+        loadUrlTimeoutValue: 30000
+    };
 
-    xml.setElement(platformEl, 'content', 'content', '', {
-        src: 'http://localhost:8000/index.html',
+    Object.keys(preferences).forEach((preference) => {
+        xml.addElement(cfg._doc._root, 'preference', '', {
+            name: preference,
+            value: preferences[preference],
+        });
     });
-    xml.addElement(cfg._doc._root, 'preference', '', {
-        name: 'android-targetSdkVersion',
-        value: 27,
-    });
-    xml.addElement(cfg._doc._root, 'preference', '', {
-        name: 'Port',
-        value: 8000,
-    });
-    xml.addElement(cfg._doc._root, 'access', '', {
-        origin: '*',
+
+    xml.setElement(cfg._doc._root, 'content', 'content', '', {
+        src: 'http://localhost:8888/index.html',
     });
     return cfg.write();
 };

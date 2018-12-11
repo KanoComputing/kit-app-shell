@@ -11,8 +11,9 @@ module.exports = {
                 return {
                     default: {
                         cache: true,
+                        run: false,
                     },
-                    boolean: ['cache'],
+                    boolean: ['cache', 'run'],
                 };
             }
             default: {
