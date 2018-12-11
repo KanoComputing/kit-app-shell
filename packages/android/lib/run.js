@@ -61,7 +61,8 @@ module.exports = (opts, commandOpts) => {
             platforms: androidPlatform.platforms,
             plugins: androidPlatform.plugins,
             hooks: androidPlatform.hooks,
-        }, commandOpts),
+            skipCache: !commandOpts.cache,
+        }),
     ])
         .then(([server, projectPath]) => {
             const wwwPath = path.join(projectPath, 'www');

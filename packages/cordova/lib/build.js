@@ -21,7 +21,8 @@ module.exports = ({ app, config = {}, out, cacheId = 'cordova', platforms = [], 
         platforms,
         plugins,
         hooks,
-    }, commandOpts)
+        skipCache: !commandOpts.cache,
+    })
         .then((projectPath) => {
             const wwwPath = path.join(projectPath, 'www');
             // Bundle the cordova shell and provided app into the www directory

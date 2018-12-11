@@ -16,5 +16,15 @@
     "pascal-case": "^2.0.1",
     "rimraf": "^2.6.2",
     "sharp": "^0.21.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-fs": "^2.0.0",
+    "mocha": "^5.2.0",
+    "mock-fs": "^4.7.0",
+    "mock-require": "^3.0.2"
+  },
+  "scripts": {
+    "test": "mocha **/*.test.js --ui tdd"
   }
 }

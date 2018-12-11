@@ -10,6 +10,7 @@ const { cordova } = require('cordova-lib');
 const ProjectCacheManager = require('./cache');
 const { getModulePath } = require('./util');
 const Config = require('cordova-config');
+const chdir = require('./chdir');
 
 const exists = promisify(fs.exists);
 
@@ -41,7 +42,7 @@ function createProject(app, hash, config, platforms, plugins, hooks) {
     return rimraf(TMP_DIR)
         .then(() => mkdirp(TMP_DIR))
         .then(() => cordova.create(PROJECT_DIR, config.APP_ID, pascal(config.APP_NAME)))
-        .then(() => process.chdir(PROJECT_DIR))
+        .then(() => chdir(PROJECT_DIR))
         .then(() => {
             const cfg = new Config(path.join(PROJECT_DIR, 'config.xml'));
             Object.keys(hooks).forEach((type) => {
@@ -61,13 +62,13 @@ function createProject(app, hash, config, platforms, plugins, hooks) {
  * Retrieves a previously created project using the config's hash as a key
  * Will create and cache a project if none was found
  */
-function getProject({ app, config, cacheId, plugins, platforms, hooks }, commandOpts) {
+function getProject({ app, config, cacheId, plugins, platforms, hooks, skipCache = false }) {
     const cache = new ProjectCacheManager(cacheId);
 
     processState.setStep('Setting up cordova project');
 
     // Using a cache can be skipped by setting cache to false
-    const getCache = commandOpts.cache ? cache.getProject(config) : Promise.resolve(null);
+    const getCache = skipCache ? Promise.resolve(null) : cache.getProject(config);
 
     // Try to find cordova project matching this config
     // The config contains the app id, so each app will have its own project
@@ -96,7 +97,8 @@ function getProject({ app, config, cacheId, plugins, platforms, hooks }, command
                 processState.setSuccess('Found cached project for this config');
                 // Move the current process there. The whole cordova-lib relies
                 // on the cwd being a cdv project
-                process.chdir(projectPathOrNull);
+                // Use a custom module to easily mock the behavior of chdir
+                chdir(projectPathOrNull);
                 // Found project, make sure the www directory is wiped
                 return cleanProject(projectPathOrNull)
                     .then(() => projectPathOrNull);
