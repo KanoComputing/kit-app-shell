@@ -1,3 +1,4 @@
+const { EventEmitter } = require('events');
 const mockFs = require('mock-fs');
 const mock = require('mock-require');
 const chai = require('chai');
@@ -18,9 +19,17 @@ suite('project', () => {
         setup(() => {
             mock('sharp', {});
             mock('./util', {
-                getModulePath() {
-                    return '/';
+                getModulePath(mod) {
+                    return mod;
                 },
+            });
+            mock('os', {
+                tmpdir() {
+                    return '/test-tmp';
+                },
+            });
+            mock('./chdir', {
+                chdir() {}
             });
         });
         test('existing project', () => {
@@ -54,12 +63,28 @@ suite('project', () => {
             }, {});
         });
         test('non-existing project', () => {
+            // Runs the build script in a sandbox ( No fs, fake cache, ... )
+            // Expect the project creation steps to run in order with the right properties
             const expectedProjectPath = path.normalize('/test-tmp/kash-cordova-build/hash/project');
+            const expectedSteps = [
+                'get-project',
+                'create',
+                'platform',
+                'plugin',
+                'prepare',
+                'set-project',
+            ];
+            // Store steps in order they run. They will be checked against the expected steps array
+            const steps = [];
+            const testPlatforms = Symbol();
+            const testPlugin = Symbol();
             class CacheMock {
                 getProject() {
+                    steps.push('get-project');
                     return Promise.resolve(null);
                 }
                 setProject() {
+                    steps.push('set-project');
                     return Promise.resolve();
                 }
                 static configToHash() {
@@ -72,30 +97,37 @@ suite('project', () => {
                     return Promise.resolve();
                 }
             }
-            mock('os', {
-                tmpdir() {
-                    return '/test-tmp';
-                },
-            });
             mock('cordova-lib', {
                 cordova: {
                     create(projectPath, id, name) {
+                        steps.push('create');
                         assert.equal(projectPath, expectedProjectPath);
                         assert.equal(id, TEST_CONFIG.APP_ID);
                         assert.equal(name, 'AppName');
                     },
-                    platform() {
-
+                    platform(action, platforms) {
+                        assert.equal(action, 'add');
+                        // The platforms must match the provided set
+                        assert.equal(platforms, testPlatforms);
+                        steps.push('platform');
                     },
-                    plugin() {
-
+                    plugin(action, plugins) {
+                        assert.equal(action, 'add');
+                        // Default pluign for cordova must be in there
+                        assert(plugins.indexOf('cordova-plugin-bluetoothle') !== -1);
+                        assert(plugins.indexOf('cordova-plugin-device') !== -1);
+                        assert(plugins.indexOf('cordova-plugin-splashscreen') !== -1);
+                        // Provided plugin must also be there
+                        assert(plugins.indexOf(testPlugin) !== -1);
+                        steps.push('plugin');
                     },
-                    prepare() {
-
+                    prepare(opts) {
+                        assert.containsAllKeys(opts, ['shell']);
+                        assert.containsAllKeys(opts.shell, ['config', 'processState']);
+                        steps.push('prepare');
                     },
                 },
             });
-            mock('./chdir', () => {});
             mock('./cache', CacheMock);
             mock('cordova-config', MockCordovaConfig);
             const { getProject } = mock.reRequire('./project');
@@ -106,10 +138,12 @@ suite('project', () => {
                 app: '/app',
                 config: TEST_CONFIG,
                 cacheId: 'test',
-                platforms: [],
-                plugins: [],
+                platforms: testPlatforms,
+                plugins: [testPlugin],
                 hooks: {}
-            }, {});
+            }, {}).then(() => {
+                assert.deepEqual(steps, expectedSteps);
+            });
         });
         teardown(() => {
             mock.stopAll();

@@ -10,7 +10,7 @@ const { cordova } = require('cordova-lib');
 const ProjectCacheManager = require('./cache');
 const { getModulePath } = require('./util');
 const Config = require('cordova-config');
-const chdir = require('./chdir');
+const { chdir } = require('./chdir');
 
 const exists = promisify(fs.exists);
 
