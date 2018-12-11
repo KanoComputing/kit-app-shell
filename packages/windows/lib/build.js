@@ -9,10 +9,14 @@ const buildInnosetup = require('./innosetup');
 
 const INSTALLER_FILE = path.join(__dirname, '../installer.iss');
 
+const DEFAULT_ICON = path.join(__dirname, '../icons/icon.ico');
+const DEFAULT_INSTALLER_ICON = path.join(__dirname, '../icons/installer.bmp');
+const DEFAULT_INSTALLER_BIG_ICON = path.join(__dirname, '../icons/installer-big.bmp');
+
 function createInstaller({ dir, app, config, out }) {
-    const installerIconFullPath = path.resolve(app, config.ICONS.WINDOWS_INSTALLER);
+    const installerIconFullPath = config.ICONS && config.ICONS.WINDOWS_INSTALLER ? path.resolve(app, config.ICONS.WINDOWS_INSTALLER) : DEFAULT_INSTALLER_ICON;
     const installerIconPath = path.relative(path.join(__dirname, '..'), installerIconFullPath);
-    const installerLeftIconFullPath = path.resolve(app, config.ICONS.WINDOWS_INSTALLER_BIG);
+    const installerLeftIconFullPath = config.ICONS && config.ICONS.WINDOWS_INSTALLER_BIG ? path.resolve(app, config.ICONS.WINDOWS_INSTALLER_BIG) : DEFAULT_INSTALLER_BIG_ICON;
     const installerLeftIconPath = path.relative(path.join(__dirname, '..'), installerLeftIconFullPath);
     let compilerOptions = {
         gui: false,
@@ -22,6 +26,7 @@ function createInstaller({ dir, app, config, out }) {
             Name: config.APP_NAME,
             WizardSmallImageFile: installerIconPath,
             WizardImageFile: installerLeftIconPath,
+            // TODO: Generate installer name
             OutputName: 'kit-app-setup',
             OutputDir: out,
             Source: `${dir}\\${config.APP_NAME}-win32-x64\\*`,
@@ -50,6 +55,7 @@ function windowsBuild({ app, config = {}, out, skipInstaller = false }, commandO
     rimraf.sync(TMP_DIR);
     mkdirp.sync(BUILD_DIR);
     mkdirp.sync(PKG_DIR);
+    const icon = config.ICONS ? config.ICONS.WINDOWS : DEFAULT_ICON;
     return build({ app, config, out: BUILD_DIR }, commandOpts)
         .then((buildDir) => {
             processState.setStep(`Creating windows application`);
@@ -71,7 +77,7 @@ function windowsBuild({ app, config = {}, out, skipInstaller = false }, commandO
                     FileDescription: config.APP_NAME,
                     ProductName: config.APP_NAME,
                 },
-                icon: path.join(app, config.ICONS.WINDOWS),
+                icon,
                 quiet: true,
             };
             return packager(packagerOptions)

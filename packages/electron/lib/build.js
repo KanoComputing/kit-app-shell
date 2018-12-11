@@ -43,6 +43,10 @@ const cleanIgnore = [
     '**/*.tlog',
 ];
 
+const babelTargets = {
+    chrome: 66, // Electron 3 = Chromium 66
+};
+
 function copyElectronApp(out) {
     const cwd = path.join(__dirname, '../app');
     const paths = glob.sync('**/*.*', {
@@ -86,11 +90,15 @@ function build({ app, config = {}, out }, { resources = [], polyfills = [], modu
             path.join(app, 'index.js'),
             config,
             {
+                js: {
+                    targets: babelTargets,
+                }
                 appJs: {
                     resources,
                     polyfills,
                     moduleContext,
                     replaces,
+                    targets: babelTargets,
                 },
             })
             .then(bundle => Bundler.write(bundle, out))

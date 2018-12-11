@@ -1,24 +1,43 @@
 
-const { ConfigLoader } = require('@kano/kit-app-shell-core');
+const { ConfigLoader, util, processState } = require('@kano/kit-app-shell-core');
 const { spawn } = require('child_process');
 const electronPath = require('electron');
+const livereload = require('livereload');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
 
-function run({ app }, {}) {
-    const config = ConfigLoader.load(app);
-
+function run({ app, config = {} }, {}) {
+    processState.setStep('Launching electron app');
+    const server = livereload.createServer();
     // Write a temp file with the aggregated config
     const configPath = path.join(os.tmpdir(), '.kash-electron.config.json');
     fs.writeFileSync(configPath, JSON.stringify(config));
 
-    // Start the electron for the app provided with the config provided 
-    const p = spawn(electronPath, ['.', '--app', app, '--config', configPath], { cwd: path.join(__dirname, '../app'), _showOutput: true });
+    const runTplPath = path.join(__dirname, '../data/run.tpl.js');
+    const runPath = path.join(os.tmpdir(), '.kash-electron.run.js');
 
-    p.stdout.pipe(process.stdout);
-    p.stderr.pipe(process.stderr);
+    server.watch(app);
+
+    return util.fs.fromTemplate(runTplPath, runPath, { LR_URL: 'http://localhost:35729' })
+        .then(() => {
+            // Start the electron for the app provided with the config provided 
+            const p = spawn(electronPath, ['.', '--app', app, '--config', configPath, '--preload', runPath], { cwd: path.join(__dirname, '../app'), _showOutput: true });
+        
+            p.stdout.pipe(process.stdout);
+            p.stderr.pipe(process.stderr);
+
+            p.on('close', () => {
+                server.close();
+            });
+
+            processState.setSuccess('Electron app launched');
+        })
+        .catch((e) => {
+            server.close();
+            throw e;
+        });
 }
 
 module.exports = run;

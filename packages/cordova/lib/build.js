@@ -4,7 +4,7 @@ const { cordova } = require('cordova-lib');
 
 const { getProject } = require('./project');
 
-module.exports = ({ app, config = {}, out, cacheId = 'cordova', platforms = [], plugins = [], hooks = {} }, commandOpts) => {
+module.exports = (opts = {}, commandOpts = {}) => {
     // Catch cordova logs and displays them
     // TODO: Catch all logs (error, warn, ...)
     // TODO: Find a console UI to display these logs and any subprocess logs
@@ -15,12 +15,7 @@ module.exports = ({ app, config = {}, out, cacheId = 'cordova', platforms = [], 
 
     // Get a corodva project ready to build
     return getProject({
-        app,
-        config,
-        cacheId,
-        platforms,
-        plugins,
-        hooks,
+        ...opts,
         skipCache: !commandOpts.cache,
     })
         .then((projectPath) => {
@@ -29,11 +24,14 @@ module.exports = ({ app, config = {}, out, cacheId = 'cordova', platforms = [], 
             return Bundler.bundle(
                 __dirname + '/../www/index.html',
                 __dirname + '/../www/index.js',
-                path.join(app, 'index.js'),
-                config,
+                path.join(opts.app, 'index.js'),
+                opts.config,
                 {
-                    appJs: {}, // TODO: pass the options
+                    appJs: {
+                        ...opts,
+                    },
                     js: {
+                        targets: opts.targets,
                         replaces: {
                             // Avoid jsZip to detect the define from requirejs
                             'typeof define': 'undefined',
@@ -49,7 +47,7 @@ module.exports = ({ app, config = {}, out, cacheId = 'cordova', platforms = [], 
             // This is hacky and could in the future become unreliable.
             // TODO: Maybe we should pass the platforms as ids and resolve their local packages if
             // already installed
-            const platformIds = platforms.map(platform => path.basename(platform).replace('cordova-', ''));
+            const platformIds = opts.platforms.map(platform => path.basename(platform).replace('cordova-', ''));
             return cordova.build(platformIds);
         });
 };

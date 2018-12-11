@@ -5,6 +5,9 @@ const path = require('path');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const replace = require('rollup-plugin-replace');
 const polyfill = require('rollup-plugin-polyfill');
+const babel = require('rollup-plugin-babel');
+const presetEnv = require('@babel/preset-env');
+const babelPluginDynamicImport = require('@babel/plugin-syntax-dynamic-import');
 const inject = require('rollup-plugin-inject');
 const virtual = require('rollup-plugin-virtual');
 const mkdirp = require('mkdirp');
@@ -89,7 +92,7 @@ class Bundler {
             return replacements[g0] || '';
         });
     }
-    static bundleSources(input, config, { polyfills = [], moduleContext = {}, replaces = {}, appSrcName = 'index.js' } = {}) {
+    static bundleSources(input, config, { polyfills = [], moduleContext = {}, replaces = {}, targets = {}, appSrcName = 'index.js' } = {}) {
         // Generate future config path
         // TODO: This does not work on non root files, figure out a solution
         const inputRoot = path.dirname(input);
@@ -117,6 +120,17 @@ class Bundler {
                 }),
                 polyfill(escapeRegExp(path.resolve(input)), polyfills),
                 nodeResolve(),
+                babel({
+                    plugins: [babelPluginDynamicImport],
+                    presets: [
+                        [
+                            presetEnv,
+                            {
+                                targets,
+                            }
+                        ]
+                    ]
+                }),
             ],
             moduleContext,
             // Silence for now

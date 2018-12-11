@@ -9,7 +9,12 @@ const argsToIgnore = process.defaultApp ? 2 : 1;
 // Get necessary opts from cmdline or embedded config
 const args = parseArgs(process.argv.slice(argsToIgnore));
 
-const { app, config } = args;
+const { app, config, preload } = args;
+
+// Store optional preload script in global
+// The app's preload script will load this provided file
+// Use to inject scripts when runing the app in development
+global.preload = preload;
 
 const defaultApp = path.join(__dirname, 'www');
 const defaultConfig = path.join(__dirname, 'config.json');
