@@ -9,7 +9,7 @@ const argsToIgnore = process.defaultApp ? 2 : 1;
 // Get necessary opts from cmdline or embedded config
 const args = parseArgs(process.argv.slice(argsToIgnore));
 
-const { app, config, preload } = args;
+const { ui, config, preload } = args;
 
 // Store optional preload script in global
 // The app's preload script will load this provided file
@@ -19,7 +19,7 @@ global.preload = preload;
 const defaultApp = path.join(__dirname, 'www');
 const defaultConfig = path.join(__dirname, 'config.json');
 
-const desktopApp = new App(app || defaultApp, config || defaultConfig, args);
+const desktopApp = new App(ui || defaultApp, config || defaultConfig, args);
 
 process.on('uncaughtException', function(e) {
     console.error(e);

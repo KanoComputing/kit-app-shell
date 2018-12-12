@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 const path = require('path');
 const parser = require('yargs-parser');
-const { ConfigLoader, log, processState } = require('@kano/kit-app-shell-core');
+const { ConfigLoader, log, processState, test } = require('@kano/kit-app-shell-core');
 const { loadPlatform } = require('../lib/platform');
 const spinner = require('../lib/spinner');
 const output = require('../lib/output');
+
+// TODO: Move every non pure CLI code to core. Allowing a programatic usage
 
 function parseCommon(y) {
     return y
@@ -104,7 +106,11 @@ const argv = require('yargs') // eslint-disable-line
     .command('test <platform> [app]', 'test the application', (yargs) => {
         parseCommon(yargs);
     }, (argv) => {
-        runCommand('test', argv);
+        const platform = loadPlatform(argv.platform);
+        const { opts, commandOpts } = agregateArgv(platform, argv, 'test');
+        test(platform, opts, commandOpts)
+            .catch(e => processState.setFailure(e))
+            .then(() => end());
     })
     .option('quiet', {
         alias: 'q',

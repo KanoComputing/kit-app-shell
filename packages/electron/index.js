@@ -1,10 +1,10 @@
 const run = require('./lib/run');
 const build = require('./lib/build');
-const test = require('./lib/test');
+const getBuilder = require('./lib/test/get-builder');
 
 module.exports = {
     cli() {},
     run,
     build,
-    test,
+    getBuilder,
 };

@@ -41,6 +41,7 @@
     "rollup-plugin-transform-postcss": "^1.0.5",
     "rollup-plugin-uglify-es": "^0.0.1",
     "rollup-plugin-virtual": "^1.0.1",
+    "selenium-webdriver": "^4.0.0-alpha.1",
     "stream-replace": "^1.0.0",
     "walk-parse5": "^1.0.0"
   },
