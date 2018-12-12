@@ -101,6 +101,11 @@ const argv = require('yargs') // eslint-disable-line
     }, (argv) => {
         runCommand('build', argv);
     })
+    .command('test <platform> [app]', 'test the application', (yargs) => {
+        parseCommon(yargs);
+    }, (argv) => {
+        runCommand('test', argv);
+    })
     .option('quiet', {
         alias: 'q',
         default: false,
