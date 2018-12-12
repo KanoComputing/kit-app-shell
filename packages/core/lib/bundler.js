@@ -45,12 +45,14 @@ class Bundler {
         tasks.push(write(bundle.html, outputDir));
         bundle.js.forEach(file => tasks.push(write(file, outputDir)));
         bundle.appJs.forEach(file => tasks.push(write(file, appOutputDir)));
-        const { root, files } = bundle.appStatic;
-        // Write assets in series
-        // TODO: Move all this to a module that could run in a separate thread
-        let p = Promise.resolve();
-        files.forEach(file => p = p.then(writeStatic(root, file, appOutputDir)));
-        tasks.push(p);
+        if (bundle.appStatic) {
+            const { root, files } = bundle.appStatic;
+            // Write assets in series
+            // TODO: Move all this to a module that could run in a separate thread
+            let p = Promise.resolve();
+            files.forEach(file => p = p.then(writeStatic(root, file, appOutputDir)));
+            tasks.push(p);
+        }
         return Promise.all(tasks)
             .then(() => {
                 processState.setSuccess('Bundled app');

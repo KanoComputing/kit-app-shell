@@ -1,8 +1,11 @@
-const { Bundler, util, processState } = require('@kano/kit-app-shell-core');
 const path = require('path');
-const glob = require('glob');
 const fs = require('fs');
-const mkdirp = require('mkdirp');
+const { promisify } = require('util');
+const glob = promisify(require('glob'));
+const mkdirp = promisify(require('mkdirp'));
+const { Bundler, util, processState } = require('@kano/kit-app-shell-core');
+
+const writeFile = promisify(fs.writeFile);
 
 const cleanIgnore = [
     '**/.npmrc',
@@ -49,7 +52,7 @@ const babelTargets = {
 
 function copyElectronApp(out) {
     const cwd = path.join(__dirname, '../app');
-    const paths = glob.sync('**/*.*', {
+    return glob('**/*.*', {
         cwd,
         ignore: [
             ...cleanIgnore,
@@ -58,25 +61,25 @@ function copyElectronApp(out) {
         ],
         dot: true,
         nodir: true,
+    }).then((paths) => {
+        // Chain file copying
+        const tasks = paths.reduce((p, file) => {
+            const src = path.join(cwd, file);
+            const dest = path.join(out, file);
+            return p.then(() => util.fs.copy(src, dest));
+        }, Promise.resolve());
+        return tasks;
     });
-    const tasks = paths.reduce((p, file) => {
-        const src = path.join(cwd, file);
-        const dest = path.join(out, file);
-        return p.then(() => util.fs.copy(src, dest));
-    }, Promise.resolve());
-    return tasks;
 }
 
 function createConfig(config, out) {
-    mkdirp.sync(out);
-    return new Promise((resolve, reject) => {
-        fs.writeFile(path.join(out, 'config.json'), JSON.stringify(Object.assign({ BUNDLED: true }, config)), (err) => {
-            if (err) {
-                return reject(err);
-            }
-            return resolve();
+    return mkdirp(out)
+        .then(() => {
+            return writeFile(
+                path.join(out, 'config.json'),
+                JSON.stringify(Object.assign({ BUNDLED: true }, config)),
+            );
         });
-    });
 }
 
 function build({ app, config = {}, out, bundleOnly }, { resources = [], polyfills = [], moduleContext = {}, replaces = {} } = {}) {
@@ -85,8 +88,8 @@ function build({ app, config = {}, out, bundleOnly }, { resources = [], polyfill
         copyElectronApp(out),
         createConfig(config, out),
         Bundler.bundle(
-            __dirname + '/../app/index.html',
-            __dirname + '/../app/index.js',
+            path.join(__dirname, '../app/index.html'),
+            path.join(__dirname, '../app/index.js'),
             path.join(app, 'index.js'),
             config,
             {
