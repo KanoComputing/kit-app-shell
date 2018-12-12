@@ -47,12 +47,52 @@ suite('Bundler', () => {
                 assert.fileContent('/www/a.png', 'static-test');
             });
     });
-    test('bundleStatic', () => {
-        mock('glob', {
-            sync() {
-                return [];
-            },
+    test('bundle', () => {
+        // Fake rollup, avoid testing rollup
+        mock('rollup', {
+            rollup(opts) {
+                return Promise.resolve({
+                    generate() {
+                        // Generate fake output based on the provided inputs
+                        return Promise.resolve({
+                            output: opts.input.reduce((acc, id) => {
+                                acc[id] = 'test';
+                                return acc;
+                            }, {}),
+                        });
+                    },
+                });
+            }
         });
+        // Fake bable plugin. Babel always tries to resolve its plugins
+        mock('rollup-plugin-babel', () => {});
+        const html = '/index.html';
+        const js = '/index.js';
+        const appJs = '/app.js';
+        const Bundler = mock.reRequire('./bundler');
+        // Fake fs structure with all the input files and the requirejs library
+        mockFs({
+            '/index.html': 'html',
+            '/index.js': 'js',
+            '/app.js': 'appJs',
+            [path.join(__dirname, '../../../node_modules/requirejs/require.js')]: 'requirejs',
+        });
+        return Bundler.bundle(html, js, appJs, {}, { appJs: { resources: [] } });
+    });
+    test('bundleStatic', () => {
+        mock('glob', (patterns, opts, cb) => {
+            cb(null, [
+                'path1',
+                'path2',
+            ]);
+        });
+        const Bundler = mock.reRequire('./bundler');
+        return Bundler.bundleStatic(['testPattern'])
+            .then((result) => {
+                assert.equal(result.root, '/');
+                assert.equal(result.files.indexOf('path1'), 0);
+                assert.equal(result.files.indexOf('path2'), 1);
+            });
     });
     teardown(() => {
         mockFs.restore();

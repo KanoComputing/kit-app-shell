@@ -33,7 +33,8 @@
     "nyc": "^13.1.0"
   },
   "scripts": {
-    "test": "mocha **/*.test.js --ui tdd"
+    "test": "mocha",
+    "coverage": "nyc --reporter=html mocha"
   },
   "publishConfig": {
     "access": "public"

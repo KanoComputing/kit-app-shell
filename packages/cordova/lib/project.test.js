@@ -27,6 +27,9 @@ suite('project', () => {
                 tmpdir() {
                     return '/test-tmp';
                 },
+                platform() {
+                    return null;
+                }
             });
             mock('./chdir', {
                 chdir() {}

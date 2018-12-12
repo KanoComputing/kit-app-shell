@@ -65,3 +65,7 @@ Extends the android platform to create a .apk using crosswalk as a webview
 ## [@kano/kit-app-shell-ios](./packages/ios)
 
 Extends the cordova platform to create an iOS app
+
+
+## TODO:
+ - Create a Dockerfile with the setup to create on any platform. Host the image on dockerhub 

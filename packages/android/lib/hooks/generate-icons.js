@@ -17,6 +17,7 @@ function generateIcons(src, projectPath) {
 }
 
 module.exports = (context) => {
+    // TODO: Check on every build the timestamp of the source icon to regenerate if necessary
     const { projectRoot, shell } = context.opts;
     if (!shell) {
         return;

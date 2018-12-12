@@ -1,4 +1,3 @@
-const glob = require('glob');
 const fs = require('fs');
 const rollup = require('rollup');
 const path = require('path');
@@ -17,9 +16,14 @@ const util = require('./util');
 const processState = require('./process-state');
 const ProgressTracker = require('./progress');
 const { promisify } = require('util');
+const glob = promisify(require('glob'));
 const escapeRegExp = require('escape-regexp');
 
 const writeFile = promisify(fs.writeFile);
+
+// Resolve modules here. Allows tests to mock the file system after this has been resolved
+const babelPluginSyntaxDynamicImport = require.resolve('@babel/plugin-syntax-dynamic-import');
+const babelPresetEnv = require.resolve('@babel/preset-env');
 
 function write(file, outputDir) {
     const filePath = path.join(outputDir, file.fileName);
@@ -63,11 +67,14 @@ class Bundler {
             fileName: path.basename(html),
             code: stage1,
         };
-        return Promise.all([
+        const tasks = [
             Bundler.bundleSources(js, config, Object.assign({}, opts.js || {}, { appSrcName })),
             Bundler.bundleSources(appSrc, config, opts.appJs),
-            Bundler.bundleStatic(opts.appJs.resources, path.dirname(appSrc)),
-        ]).then((results) => {
+        ];
+        if (opts.appJs && opts.appJs.resources) {
+            tasks.push(Bundler.bundleStatic(opts.appJs.resources, path.dirname(appSrc)));
+        }
+        return Promise.all(tasks).then((results) => {
             pkg.js = results[0];
             pkg.js.unshift({
                 fileName: 'require.js',
@@ -129,11 +136,11 @@ class Bundler {
             defaultOptions.plugins.push(babel({
                 exclude: babelExclude,
                 plugins: [
-                    require.resolve('@babel/plugin-syntax-dynamic-import'),
+                    babelPluginSyntaxDynamicImport,
                 ],
                 presets: [
                     [
-                        require.resolve('@babel/preset-env'),
+                        babelPresetEnv,
                         {
                             targets,
                         }
@@ -155,12 +162,16 @@ class Bundler {
             });
     }
     static bundleStatic(patterns = [], appRoot = '/') {
-        const fileList = patterns
-            .reduce((acc, pattern) => acc.concat(glob.sync(pattern, { cwd: appRoot, nodir: true })), []);
-        return {
-            root: appRoot,
-            files: fileList,
-        };
+        const tasks = patterns.map(pattern => glob(pattern, { cwd: appRoot, nodir: true }));
+        return Promise.all(tasks)
+            .then((results) => {
+                const fileList = results
+                    .reduce((acc, files) => acc.concat(files), []);
+                return {
+                    root: appRoot,
+                    files: fileList,
+                };
+            });
     }
 }
 
