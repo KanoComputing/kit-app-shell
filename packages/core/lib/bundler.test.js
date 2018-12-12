@@ -1,5 +1,6 @@
 const path = require('path');
-const mock = require('mock-fs');
+const mockFs = require('mock-fs');
+const mock = require('mock-require');
 const Bundler = require('./bundler');
 const chai = require('chai');
 chai.use(require('chai-fs'));
@@ -34,7 +35,7 @@ suite('Bundler', () => {
                 files: ['a.png']
             }
         };
-        mock({
+        mockFs({
             '/static/a.png': 'static-test',
         });
         return Bundler.write(bundle, '/')
@@ -45,8 +46,16 @@ suite('Bundler', () => {
                 assert.fileContent('/www/index.js', 'app-js-test');
                 assert.fileContent('/www/a.png', 'static-test');
             });
+    });
+    test('bundleStatic', () => {
+        mock('glob', {
+            sync() {
+                return [];
+            },
         });
+    });
     teardown(() => {
-        mock.restore();
+        mockFs.restore();
+        mock.stopAll();
     });
 });

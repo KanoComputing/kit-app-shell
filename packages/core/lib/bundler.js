@@ -17,12 +17,9 @@ const util = require('./util');
 const processState = require('./process-state');
 const ProgressTracker = require('./progress');
 const { promisify } = require('util');
+const escapeRegExp = require('escape-regexp');
 
 const writeFile = promisify(fs.writeFile);
-
-function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
-}
 
 function write(file, outputDir) {
     const filePath = path.join(outputDir, file.fileName);
