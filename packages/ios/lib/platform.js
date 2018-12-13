@@ -8,6 +8,7 @@ const plugins = [
     util.getModulePath('cordova-plugin-add-swift-support'),
     util.getModulePath('cordova-plugin-blob-constructor-polyfill'),
     util.getModulePath('cordova-plugin-ios-ble-permissions'),
+    util.getModulePath('cordova-plugin-protocol'),
     path.join(__dirname, 'plugin'),
 ];
 

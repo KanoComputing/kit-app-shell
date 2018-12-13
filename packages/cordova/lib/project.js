@@ -27,7 +27,6 @@ function cleanProject(root) {
  */
 function createProject(app, hash, config, platforms, plugins, hooks) {
     const TMP_DIR = path.join(os.tmpdir(), 'kash-cordova-build', hash);
-    const PROJECT_DIR = path.join(TMP_DIR, 'project');
 
     const defaultPluginNames = [
         'cordova-plugin-bluetoothle',
@@ -41,20 +40,26 @@ function createProject(app, hash, config, platforms, plugins, hooks) {
 
     return rimraf(TMP_DIR)
         .then(() => mkdirp(TMP_DIR))
-        .then(() => cordova.create(PROJECT_DIR, config.APP_ID, pascal(config.APP_NAME)))
-        .then(() => chdir(PROJECT_DIR))
         .then(() => {
-            const cfg = new Config(path.join(PROJECT_DIR, 'config.xml'));
-            Object.keys(hooks).forEach((type) => {
-                hooks[type].forEach(src => cfg.addHook(type, path.relative(PROJECT_DIR, src)));
-            });
-            return cfg.write();
-        })
-        .then(() => cordova.platform('add', platforms))
-        .then(() => cordova.plugin('add', allPlugins))
-        .then(() => cordova.prepare({ shell: { app, config, processState } }))
-        .then(() => {
-            return PROJECT_DIR;
+            const REAL_TMP_DIR = fs.realpathSync(TMP_DIR);
+            const PROJECT_DIR = path.join(REAL_TMP_DIR, 'project');
+            return cordova.create(PROJECT_DIR, config.APP_ID, pascal(config.APP_NAME))
+                .then(() => chdir(PROJECT_DIR))
+                .then(() => {
+                    const cfg = new Config(path.join(PROJECT_DIR, 'config.xml'));
+                    Object.keys(hooks).forEach((type) => {
+                        hooks[type].forEach(src => cfg.addHook(type, path.relative(PROJECT_DIR, src)));
+                    });
+                    return cfg.write();
+                })
+                .then(() => cordova.platform('add', platforms))
+                .then(() => cordova.plugin('add', allPlugins))
+                .then(() => {
+                    return cordova.prepare({ shell: { app, config, processState } });
+                })
+                .then(() => {
+                    return PROJECT_DIR;
+                });
         });
 }
 

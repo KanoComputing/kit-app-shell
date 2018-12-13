@@ -12,6 +12,12 @@ module.exports = (opts = {}, commandOpts = {}) => {
     cordova.on('log', (...args) => {
         // console.log(...args);
     });
+    cordova.on('error', (...args) => {
+        console.error(...args);
+    });
+    cordova.on('warn', (...args) => {
+        console.warn(...args);
+    });
 
     // Get a corodva project ready to build
     return getProject({
@@ -51,6 +57,7 @@ module.exports = (opts = {}, commandOpts = {}) => {
             const platformIds = opts.platforms.map(platform => path.basename(platform).replace('cordova-', ''));
             // if the run flag is passed, run the built app on device
             const command = commandOpts.run ? 'run' : 'build';
-            return cordova[command](platformIds);
+            return cordova[command](platformIds, opts.buildOpts || {})
+                .then(() => projectPath);
         });
 };

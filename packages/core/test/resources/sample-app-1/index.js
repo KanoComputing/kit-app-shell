@@ -17,12 +17,18 @@ class App {
                 }
             </style>
             <div class="container">
-                <div>Sample App 1 v${config.UI_VERSION}</div>
+                <div id="main">Sample App 1 v${config.UI_VERSION}</div>
                 <div>UI root: ${config.UI_ROOT}</div>
+                <button id="click">Click me</button>
             </div>
         `;
 
         this.root.appendChild(tpl.content.cloneNode(true));
+
+        const button = this.root.querySelector('#click');
+        button.addEventListener('click', () => {
+            document.body.style.background = 'red';
+        });
     }
 }
 

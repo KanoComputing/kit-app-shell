@@ -15,7 +15,7 @@ module.exports = (webdriver, { app, config = {} }, commandOpts) => {
     const configPath = path.join(os.tmpdir(), '.kash-electron.config.json');
     fs.writeFileSync(configPath, JSON.stringify(config));
 
-    return new webdriver.Builder()
+    const builder = new webdriver.Builder()
         // The "9515" is the port opened by chrome driver.
         .usingServer('http://localhost:9515')
         .withCapabilities({
@@ -26,4 +26,6 @@ module.exports = (webdriver, { app, config = {} }, commandOpts) => {
             }
         })
         .forBrowser('electron');
+
+    return Promise.resolve(builder);
 };
