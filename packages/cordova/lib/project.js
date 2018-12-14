@@ -25,7 +25,7 @@ function cleanProject(root) {
 /**
  * Creates a cordova project with the platforms, plugins and hooks provided
  */
-function createProject(app, hash, config, platforms, plugins, hooks) {
+function createProject(app, hash, config, platforms, plugins, hooks, commandOpts) {
     const TMP_DIR = path.join(os.tmpdir(), 'kash-cordova-build', hash);
 
     const defaultPluginNames = [
@@ -55,7 +55,7 @@ function createProject(app, hash, config, platforms, plugins, hooks) {
                 .then(() => cordova.platform('add', platforms))
                 .then(() => cordova.plugin('add', allPlugins))
                 .then(() => {
-                    return cordova.prepare({ shell: { app, config, processState } });
+                    return cordova.prepare({ shell: { app, config, processState, commandOpts } });
                 })
                 .then(() => {
                     return PROJECT_DIR;
@@ -67,7 +67,7 @@ function createProject(app, hash, config, platforms, plugins, hooks) {
  * Retrieves a previously created project using the config's hash as a key
  * Will create and cache a project if none was found
  */
-function getProject({ app, config, cacheId, plugins, platforms, hooks, skipCache = false }) {
+function getProject({ app, config, cacheId, plugins, platforms, hooks, skipCache = false, commandOpts }) {
     const cache = new ProjectCacheManager(cacheId);
 
     processState.setStep('Setting up cordova project');
@@ -110,7 +110,7 @@ function getProject({ app, config, cacheId, plugins, platforms, hooks, skipCache
             }
             // No project yet, get a hash from the config and create one
             const hash = ProjectCacheManager.configToHash(config);
-            return createProject(app, hash, config, platforms, plugins, hooks)
+            return createProject(app, hash, config, platforms, plugins, hooks, commandOpts)
                 .then((newProjectPath) => {
                     // Save the project path in cache. For future use
                     return cache.setProject(config, newProjectPath)

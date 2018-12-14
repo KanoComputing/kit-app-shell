@@ -31,8 +31,8 @@ module.exports = (wd, opts, commandOpts) => {
                                     automationName: 'XCUITest',
                                     // Pass down the found connected devices
                                     udid,
-                                    xcodeOrgId: 'YWCQ65XXP9',
-                                    xcodeSigningId: 'iPhone Developer',
+                                    xcodeOrgId: commandOpts.developmentTeam,
+                                    xcodeSigningId: commandOpts.codeSigningIdentity,
                                     autoWebview: true,
                                 }).then(() => driver);
                             };

@@ -31,6 +31,7 @@ const RcLoader = {
     load(app) {
         return RcLoader.findAll(app)
             .then((files) => {
+                console.log(files);
                 return files.reduce((acc, file) => {
                     Object.assign(acc, require(file));
                     return acc;

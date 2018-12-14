@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const path = require('path');
 const parser = require('yargs-parser');
-const { ConfigLoader, log, processState, test } = require('@kano/kit-app-shell-core');
+const { ConfigLoader, log, processState, test, RcLoader } = require('@kano/kit-app-shell-core');
 const { loadPlatform } = require('../lib/platform');
 const spinner = require('../lib/spinner');
 const output = require('../lib/output');
@@ -30,12 +30,17 @@ function parseCommon(y) {
  * @param {String} app path to the app directory
  */
 function loadRc(app) {
-    const rcPath = path.join(app, 'kit-app-shell.conf.js');
-    try {
-        return require(rcPath);
-    } catch(e) {
-        return {};
-    }
+    return RcLoader.load(app);
+}
+
+function deleteCommandKeys(obj) {
+    [
+        'build',
+        'run',
+        'test',
+    ].forEach((key) => {
+        delete obj[key];
+    });
 }
 
 function agregateArgv(platform, argv, command) {
@@ -44,17 +49,28 @@ function agregateArgv(platform, argv, command) {
     delete platformOpts._;
     const config = ConfigLoader.load(argv.app, argv.env);
     config.BUILD_NUMBER = parseInt(process.env.BUILD_NUMBER, 10) || argv.buildNumber;
-    // Load config file
-    const rcOpts = loadRc(argv.app);
-    // Options specific to the platform defined in the config file
-    const rcPlatformOpts = rcOpts[argv.platform] || {};
-    // Merge the command options
-    const commandOpts = Object.assign({}, platformOpts, rcOpts[command] || {}, rcPlatformOpts[command] || {});
-    argv.config = config;
-    return {
-        opts: argv,
-        commandOpts,
-    };
+    // Load config files
+    return loadRc(argv.app)
+        .then((rcOpts) => {
+            // Options specific to the platform defined in the config file
+            const rcPlatformOpts = rcOpts[argv.platform] || {};
+            // Remove the platform key from the rc options
+            delete rcOpts[argv.platform];
+            // Collect the command options form the rc platform data
+            const rcPlatformCommandOpts = rcPlatformOpts[command] || {};
+            // Remove command keys from the platform object in the rc data
+            deleteCommandKeys(rcPlatformOpts);
+            const rcCommandOpts = rcOpts[command] || {};
+            // Remove the command keys from the rc data itself
+            deleteCommandKeys(rcOpts);
+            // Merge the command options
+            const commandOpts = Object.assign({}, rcOpts, rcPlatformOpts, platformOpts, rcCommandOpts, rcPlatformCommandOpts);
+            argv.config = config;
+            return {
+                opts: argv,
+                commandOpts,
+            };
+        });
 }
 
 function end() {
@@ -63,19 +79,21 @@ function end() {
 
 function runCommand(command, argv) {
     const platform = loadPlatform(argv.platform);
-    const { opts, commandOpts } = agregateArgv(platform, argv, command);
-    log.trace('OPTIONS', opts);
-    log.trace('COMMAND OPTIONS', commandOpts);
-    // About to start the big boy tasks. Let the process breathe and setup its CLI interface
-    process.nextTick(() => {
-        const result = platform[command](opts, commandOpts);
-        if (result && 'then' in result && 'catch' in result) {
-            result.catch(e => processState.setFailure(e))
-                .then(() => end());
-        } else {
-            end();
-        }
-    });
+    return agregateArgv(platform, argv, command)
+        .then(({ opts, commandOpts }) => {
+            log.trace('OPTIONS', opts);
+            log.trace('COMMAND OPTIONS', commandOpts);
+            // About to start the big boy tasks. Let the process breathe and setup its CLI interface
+            process.nextTick(() => {
+                const result = platform[command](opts, commandOpts);
+                if (result && 'then' in result && 'catch' in result) {
+                    result.catch(e => processState.setFailure(e))
+                        .then(() => end());
+                } else {
+                    end();
+                }
+            });
+        });
 }
 
 const argv = require('yargs') // eslint-disable-line
@@ -107,8 +125,8 @@ const argv = require('yargs') // eslint-disable-line
         parseCommon(yargs);
     }, (argv) => {
         const platform = loadPlatform(argv.platform);
-        const { opts, commandOpts } = agregateArgv(platform, argv, 'test');
-        test(platform, opts, commandOpts)
+        return agregateArgv(platform, argv, 'test')
+            .then(({ opts, commandOpts }) => test(platform, opts, commandOpts))
             .catch(e => processState.setFailure(e))
             .then(() => end());
     })

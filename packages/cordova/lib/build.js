@@ -22,6 +22,7 @@ module.exports = (opts = {}, commandOpts = {}) => {
     // Get a corodva project ready to build
     return getProject({
         ...opts,
+        commandOpts,
         skipCache: !commandOpts.cache,
     })
         .then((projectPath) => {

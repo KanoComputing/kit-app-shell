@@ -67,14 +67,33 @@ module.exports = (context) => {
         src: `${scheme}:///index.html`,
     });
 
+    const { commandOpts } = shell;
+
+    // TODO: merge using a error util
+    if (!commandOpts.developmentTeam) {
+        throw new Error(`Could not build iOS app: Missing 'developmentTeam' key in config. Make sure you have a .kashrc.json file in your home directory`);
+    }
+    if (!commandOpts.codeSignIdentity) {
+        throw new Error(`Could not build iOS app: Missing 'codeSignIdentity' key in config. Make sure you have a .kashrc.json file in your home directory`);
+    }
+
+    const { developmentTeam, codeSignIdentity } = commandOpts;
+
+    // TODO: Integrate more complex debug build vs release build
+
     fs.writeFileSync(path.join(projectRoot, 'build.json'), JSON.stringify({
-        "ios": {
-            "debug": {
-                "codeSignIdentity": "iPhone Developer",
-                "developmentTeam": "YWCQ65XXP9",
-                "automaticProvisioning": true,
-                "packageType": "development",
-                "buildFlag": ["-allowProvisioningUpdates", "SWIFT_VERSION = 3.0", "EMBEDDED_CONTENT_CONTAINS_SWIFT = YES", "-quiet"]
+        ios: {
+            debug: {
+                codeSignIdentity,
+                developmentTeam,
+                automaticProvisioning: true,
+                packageType: 'development',
+                buildFlag: [
+                    '-allowProvisioningUpdates',
+                    'SWIFT_VERSION = 3.0',
+                    'EMBEDDED_CONTENT_CONTAINS_SWIFT = YES',
+                    '-quiet',
+                ]
             }
         }
     }));
