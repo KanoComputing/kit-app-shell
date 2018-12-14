@@ -68,6 +68,7 @@ suite('fs', () => {
         test('proxy writeOptions to fs bindings', () => {
             const testOptions = Symbol();
             const { copy } = mockFsAssertWriteOptions(testOptions);
+            mock();
             return copy('/src/file.txt', '/dest/file.txt', { writeOptions: testOptions });
         });
         teardown(() => {

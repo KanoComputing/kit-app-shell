@@ -74,7 +74,7 @@ module.exports = (context) => {
                 "developmentTeam": "YWCQ65XXP9",
                 "automaticProvisioning": true,
                 "packageType": "development",
-                "buildFlag": ["-allowProvisioningUpdates", "SWIFT_VERSION = 3.0", "EMBEDDED_CONTENT_CONTAINS_SWIFT = YES"]
+                "buildFlag": ["-allowProvisioningUpdates", "SWIFT_VERSION = 3.0", "EMBEDDED_CONTENT_CONTAINS_SWIFT = YES", "-quiet"]
             }
         }
     }));

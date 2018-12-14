@@ -9,7 +9,7 @@ module.exports = (wd, opts, commandOpts) => {
     return build(Object.assign({}, opts, { out: TMP_OUT }), commandOpts)
         .then((app) => {
             // Start appium server
-            return appium.main({ logLevel: 'error' })
+            return appium.main({ loglevel: 'error' })
                 .then((server) => {
                     // Retrieve appium port
                     const { port } = server.address();
