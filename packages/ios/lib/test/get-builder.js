@@ -4,13 +4,16 @@ const path = require('path');
 const os = require('os');
 const build = require('../build');
 
-module.exports = (wd, opts, commandOpts) => {
+module.exports = (wd, mocha, opts, commandOpts) => {
     const TMP_OUT = path.join(os.tmpdir(), 'kash-ios-test');
     return build(Object.assign({}, opts, { out: TMP_OUT }), commandOpts)
         .then((app) => {
             // Start appium server
             return appium.main({ loglevel: 'error' })
                 .then((server) => {
+                    mocha.suite.afterAll(() => {
+                        server.close();
+                    });
                     // Retrieve appium port
                     const { port } = server.address();
                     return lib.id()

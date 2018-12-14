@@ -2,7 +2,7 @@ const { spawn } = require('child_process');
 
 // TODO: TESTS!!!!
 class ElectronChromedriver {
-    start() {
+    start(port) {
         let command;
         // Try to find the chrome driver for all platforms
         try {
@@ -12,7 +12,7 @@ class ElectronChromedriver {
         }
     
         // TODO: Subprocess managment
-        this._process = spawn(command, []);
+        this._process = spawn(command, ['--url-base=wd/hub', `--port=${port}`]);
         this._process.on('close', (code) => {});
         this._process.on('error', (error) => { throw new Error(error) })
     }

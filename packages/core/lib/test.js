@@ -5,10 +5,12 @@ const { promisify } = require('util');
 const glob = promisify(require('glob'));
 
 class KashTestFramework {
-    constructor(builder) {
+    constructor() {
         // TODO: Add features to control API through web-bus
-        this._builder = builder;
         this.wd = wd;
+    }
+    _setBuilder(builder) {
+        this._builder = builder;
     }
     _beforeEach() {
         return this._builder()
@@ -25,28 +27,30 @@ class KashTestFramework {
 }
 
 module.exports = (platform, opts, commandOpts) => {
-    return platform.getBuilder(wd, opts, commandOpts)
+    const framework = new KashTestFramework();
+    // Create new mocha UI inhecting the test framework 
+    Mocha.interfaces['selenium-bdd'] = (suite) => {
+        Mocha.interfaces.bdd(suite);
+        suite.on('pre-require', function(context, file, mocha) {
+            context.kash = framework;
+        });
+        suite.beforeEach(function () {
+            this.timeout(30000);
+            return framework._beforeEach();
+        });
+        suite.afterEach(function () {
+            this.timeout(30000);
+            return framework._afterEach();
+        });
+    };
+    // TODO: customise mocha through command options
+    const mocha = new Mocha({
+        ui: 'selenium-bdd',
+        timeout: 60000,
+    });
+    return platform.getBuilder(wd, mocha, opts, commandOpts)
         .then((builder) => {
-            const framework = new KashTestFramework(builder);
-            // Create new mocha UI inhecting the test framework 
-            Mocha.interfaces['selenium-bdd'] = (suite) => {
-                Mocha.interfaces.bdd(suite);
-                suite.on('pre-require', function(context, file, mocha) {
-                    context.kash = framework;
-                });
-                suite.beforeEach(function () {
-                    this.timeout(30000);
-                    return framework._beforeEach();
-                });
-                suite.afterEach(() => {
-                    return framework._afterEach();
-                });
-            };
-            // TODO: customise mocha through command options
-            const mocha = new Mocha({
-                ui: 'selenium-bdd',
-                timeout: 60000,
-            });
+            framework._setBuilder(builder);
             // Grab all spec files using glob
             // TODO: research and mimic mocha's glob behaviour for consistency (e.g. minimist)
             return Promise.all((commandOpts.spec || []).map(s => glob(s, { cwd: opts.app })))

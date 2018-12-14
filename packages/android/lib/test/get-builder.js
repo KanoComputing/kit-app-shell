@@ -1,14 +1,48 @@
-require('chromedriver');
+const appium = require('appium');
+const adbkit = require('adbkit');
+const build = require('../build');
+const path = require('path');
+const os = require('os');
+
 /**
  * Create a builder to create a driver for each test
  */
-module.exports = (webdriver, { app, config = {} }, commandOpts) => {
-    return new webdriver.Builder()
-        .withCapabilities({
-            chromeOptions: {
-                androidPackage: config.APP_ID,
-                androidActivity: '.MainActivity',
-            }
-        })
-        .forBrowser('chrome');
+module.exports = (wd, mocha, opts, commandOpts) => {
+    const TMP_OUT = path.join(os.tmpdir(), 'kash-android-test');
+    return build(Object.assign({}, opts, { out: TMP_OUT }), commandOpts)
+        .then((app) => {
+            // Start appium server
+            return appium.main({ loglevel: 'error' })
+                .then((server) => {
+                    mocha.suite.afterAll(() => {
+                        server.close();
+                    });
+                    // Retrieve appium port
+                    const { port } = server.address();
+                    const client = adbkit.createClient();
+                    return client.listDevices()
+                        .then((devices) => {
+                            const [device] = devices;
+                            if (!device) {
+                                throw new Error('Could not run test: No connected device found');
+                            }
+                            const builder = () => {
+                                const driver = wd.promiseChainRemote('0.0.0.0', port);
+                                return driver.init({
+                                    platformName: 'Android',
+                                    deviceName: '-',
+                                    browserName: 'Android',
+                                    autoWebview: true,
+                                    udid: device.id,
+                                    app,
+                                }).then(() => driver);
+                            };
+                            return builder;
+                        })
+                        .catch((e) => {
+                            server.close();
+                            throw e;
+                        });
+                });
+        });
 };

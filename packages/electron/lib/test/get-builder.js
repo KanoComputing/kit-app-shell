@@ -7,25 +7,30 @@ const ElectronChromedriver = require('./electron-chromedriver');
 /**
  * Create a builder to create a driver for each test
  */
-module.exports = (webdriver, { app, config = {} }, commandOpts) => {
+module.exports = (wd, mocha, { app, config = {} }, commandOpts) => {
     const electronChromedriver = new ElectronChromedriver();
 
-    electronChromedriver.start();
+    electronChromedriver.start(9515);
 
     const configPath = path.join(os.tmpdir(), '.kash-electron.config.json');
     fs.writeFileSync(configPath, JSON.stringify(config));
 
-    const builder = new webdriver.Builder()
-        // The "9515" is the port opened by chrome driver.
-        .usingServer('http://localhost:9515')
-        .withCapabilities({
+    mocha.suite.afterAll(() => {
+        electronChromedriver.stop();
+    });
+
+    const builder = () => {
+        const driver = wd.promiseChainRemote('0.0.0.0', 9515);
+        return driver.init({
+            browserName: 'chrome',
             chromeOptions: {
                 // Here is the path to the Electron binary.
                 binary: electronPath,
                 args: [`app=${path.join(__dirname, '../../app')}`, `ui=${app}`, `config=${configPath}`],
-            }
-        })
-        .forBrowser('electron');
+            },
+        }).then(() => driver);
+    };
 
     return Promise.resolve(builder);
+
 };

@@ -1,6 +1,8 @@
 const { Bundler } = require('@kano/kit-app-shell-core');
 const path = require('path');
 const { cordova } = require('cordova-lib');
+const { promisify } = require('util');
+const rimraf = promisify(require('rimraf'));
 
 const { getProject } = require('./project');
 
@@ -26,28 +28,31 @@ module.exports = (opts = {}, commandOpts = {}) => {
         skipCache: !commandOpts.cache,
     })
         .then((projectPath) => {
-            const wwwPath = path.join(projectPath, 'www');
-            // Bundle the cordova shell and provided app into the www directory
-            return Bundler.bundle(
-                __dirname + '/../www/index.html',
-                __dirname + '/../www/index.js',
-                path.join(opts.app, 'index.js'),
-                opts.config,
-                {
-                    appJs: {
-                        ...opts,
-                    },
-                    js: {
-                        bundleOnly: opts.bundleOnly,
-                        targets: opts.targets,
-                        replaces: {
-                            // Avoid jsZip to detect the define from requirejs
-                            'typeof define': 'undefined',
-                        },
-                    },
-                })
-                .then(bundle => Bundler.write(bundle, wwwPath))
-                .then(() => projectPath);
+            return Promise.all((opts.clean || []).map(p => rimraf(p)))
+                .then(() => {
+                    const wwwPath = path.join(projectPath, 'www');
+                    // Bundle the cordova shell and provided app into the www directory
+                    return Bundler.bundle(
+                        __dirname + '/../www/index.html',
+                        __dirname + '/../www/index.js',
+                        path.join(opts.app, 'index.js'),
+                        opts.config,
+                        {
+                            appJs: {
+                                ...opts,
+                            },
+                            js: {
+                                bundleOnly: opts.bundleOnly,
+                                targets: opts.targets,
+                                replaces: {
+                                    // Avoid jsZip to detect the define from requirejs
+                                    'typeof define': 'undefined',
+                                },
+                            },
+                        })
+                        .then(bundle => Bundler.write(bundle, wwwPath))
+                        .then(() => projectPath);
+                });
         })
         .then((projectPath) => {
             // A platform path can be provided to use as a local module, this resolves the name of a potential path

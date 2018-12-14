@@ -12,20 +12,4 @@ describe('simple', () => {
         return kash.driver.elementById('click')
             .then((el) => el.click());
     });
-    it('test1', () => {
-        return kash.driver.elementById('click')
-            .then((el) => el.click());
-    });
-    it('test1', () => {
-        return kash.driver.elementById('click')
-            .then((el) => el.click());
-    });
-    it('test1', () => {
-        return kash.driver.elementById('click')
-            .then((el) => el.click());
-    });
-    it('test1', () => {
-        return kash.driver.elementById('click')
-            .then((el) => el.click());
-    });
 });

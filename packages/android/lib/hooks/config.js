@@ -2,6 +2,16 @@ const { xml } = require('@kano/kit-app-shell-cordova');
 const path = require('path');
 const Config = require('cordova-config');
 
+/**
+ * Transform a number into a string while contaraining its length
+ * If the number is longer than the length, it'll be trimmed from the left to fit
+ * 0 are added as left padding
+ */
+function bindNumberAsString(value, length) {
+    const str = value.toString().substr(-length);
+    return str.padStart(length, '0');
+}
+
 module.exports = (context) => {
     const { projectRoot, shell } = context.opts;
     // No shell means it's running more than once
@@ -15,10 +25,20 @@ module.exports = (context) => {
     }
     if (shell.config.UI_VERSION) {
         cfg.setVersion(shell.config.UI_VERSION);
+
+        const [major, minor, patch] = shell.config.UI_VERSION.split('.');
+
+        const buildNumber = shell.config.BUILD_NUMBER || 0;
+    
+        const parts = [
+            bindNumberAsString(major, 2),
+            bindNumberAsString(minor, 2),
+            bindNumberAsString(patch, 2),
+            bindNumberAsString(buildNumber, 3),
+        ];
+
         if (shell.config.BUILD_NUMBER) {
-            cfg.setAndroidVersionCode(`1${shell.config.UI_VERSION.replace(/\./g, '')}${shell.config.BUILD_NUMBER}`);
-            // TODO: Move this to ios platform
-            // configXML.setIOSBundleVersion(process.env.BUILD_NUMBER);
+            cfg.setAndroidVersionCode(`1${parts.join('')}`);
         }
     }
 
