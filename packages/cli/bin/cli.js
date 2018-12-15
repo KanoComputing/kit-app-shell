@@ -5,6 +5,7 @@ const { ConfigLoader, log, processState, test, RcLoader } = require('@kano/kit-a
 const { loadPlatform } = require('../lib/platform');
 const spinner = require('../lib/spinner');
 const output = require('../lib/output');
+const deepMerge = require('deepmerge');
 
 // TODO: Move every non pure CLI code to core. Allowing a programatic usage
 
@@ -63,8 +64,16 @@ function agregateArgv(platform, argv, command) {
             const rcCommandOpts = rcOpts[command] || {};
             // Remove the command keys from the rc data itself
             deleteCommandKeys(rcOpts);
-            // Merge the command options
-            const commandOpts = Object.assign({}, rcOpts, rcPlatformOpts, platformOpts, rcCommandOpts, rcPlatformCommandOpts);
+            const allOpts = [
+                rcOpts,
+                rcPlatformOpts,
+                platformOpts,
+                rcCommandOpts,
+                rcPlatformCommandOpts,
+            ];
+            const commandOpts = allOpts.reduce((acc, item) => {
+                return deepMerge(acc, item);
+            }, {});
             argv.config = config;
             return {
                 opts: argv,

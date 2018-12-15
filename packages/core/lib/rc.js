@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
+const deepMerge = require('deepmerge');
 
 const NAMES = [
     'kit-app-shell.conf.js',
@@ -32,8 +33,7 @@ const RcLoader = {
         return RcLoader.findAll(app)
             .then((files) => {
                 return files.reduce((acc, file) => {
-                    Object.assign(acc, require(file));
-                    return acc;
+                    return deepMerge(acc, require(file));
                 }, {});
             });
     }

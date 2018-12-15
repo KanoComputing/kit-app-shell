@@ -12,8 +12,8 @@ class KashTestFramework {
     _setBuilder(builder) {
         this._builder = builder;
     }
-    _beforeEach() {
-        return this._builder()
+    _beforeEach(test) {
+        return this._builder(test)
             .then((d) => {
                 this.driver = d;
             });
@@ -35,18 +35,18 @@ module.exports = (platform, opts, commandOpts) => {
             context.kash = framework;
         });
         suite.beforeEach(function () {
-            this.timeout(30000);
-            return framework._beforeEach();
+            this.timeout(60000);
+            return framework._beforeEach(this.currentTest);
         });
         suite.afterEach(function () {
-            this.timeout(30000);
+            this.timeout(60000);
             return framework._afterEach();
         });
     };
     // TODO: customise mocha through command options
     const mocha = new Mocha({
         ui: 'selenium-bdd',
-        timeout: 60000,
+        timeout: 120000,
     });
     return platform.getBuilder(wd, mocha, opts, commandOpts)
         .then((builder) => {

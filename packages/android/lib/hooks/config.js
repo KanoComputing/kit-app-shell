@@ -45,7 +45,7 @@ module.exports = (context) => {
     const platformEl = xml.findInConfig(cfg, 'platform/[@name="android"]');
 
     const preferences = {
-        Port: 8888,
+        Port: 10100,
         'android-targetSdkVersion': 28,
         ShowSplashScreenSpinner: false,
         loadUrlTimeoutValue: 30000
@@ -59,7 +59,7 @@ module.exports = (context) => {
     });
 
     xml.setElement(cfg._doc._root, 'content', 'content', '', {
-        src: 'http://localhost:8888/index.html',
+        src: 'http://localhost:10100/index.html',
     });
     return cfg.write();
 };
