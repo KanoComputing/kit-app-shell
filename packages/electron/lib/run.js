@@ -23,7 +23,7 @@ function run({ app, config = {} }, {}) {
     return util.fs.fromTemplate(runTplPath, runPath, { LR_URL: 'http://localhost:35729' })
         .then(() => {
             // Start the electron for the app provided with the config provided 
-            const p = spawn(electronPath, ['.', '--app', app, '--config', configPath, '--preload', runPath], { cwd: path.join(__dirname, '../app'), _showOutput: true });
+            const p = spawn(electronPath, ['.', '--ui', app, '--config', configPath, '--preload', runPath], { cwd: path.join(__dirname, '../app'), _showOutput: true });
         
             p.stdout.pipe(process.stdout);
             p.stderr.pipe(process.stderr);

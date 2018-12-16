@@ -1,19 +1,14 @@
 #!/usr/bin/env node
 const path = require('path');
 const parser = require('yargs-parser');
-const { ConfigLoader, log, processState, test, RcLoader } = require('@kano/kit-app-shell-core');
-const { loadPlatform } = require('../lib/platform');
-const spinner = require('../lib/spinner');
-const output = require('../lib/output');
-const deepMerge = require('deepmerge');
+const { processState, test } = require('@kano/kit-app-shell-core');
+const { loadPlatformKey, registerCommands, registerOptions } = require('../lib/platform');
+const colors = require('colors/safe');
 
 // TODO: Move every non pure CLI code to core. Allowing a programatic usage
 
 function parseCommon(y) {
     return y
-        .positional('platform', {
-            describe: 'Target platform',
-        })
         .positional('app', {
             describe: 'Root of the app',
             default: './',
@@ -26,92 +21,38 @@ function parseCommon(y) {
         .coerce('app', path.resolve);
 }
 
-/**
- * Loads the config file from the app's directory
- * @param {String} app path to the app directory
- */
-function loadRc(app) {
-    return RcLoader.load(app);
-}
-
-function deleteCommandKeys(obj) {
-    [
-        'build',
-        'run',
-        'test',
-    ].forEach((key) => {
-        delete obj[key];
-    });
-}
-
-function agregateArgv(platform, argv, command) {
-    const platformOpts = parser(process.argv.slice(2), platform.cli(command));
-    // Remove the flat args
-    delete platformOpts._;
-    const config = ConfigLoader.load(argv.app, argv.env);
-    config.BUILD_NUMBER = parseInt(process.env.BUILD_NUMBER, 10) || argv.buildNumber;
-    // Load config files
-    return loadRc(argv.app)
-        .then((rcOpts) => {
-            // Options specific to the platform defined in the config file
-            const rcPlatformOpts = rcOpts[argv.platform] || {};
-            // Remove the platform key from the rc options
-            delete rcOpts[argv.platform];
-            // Collect the command options form the rc platform data
-            const rcPlatformCommandOpts = rcPlatformOpts[command] || {};
-            // Remove command keys from the platform object in the rc data
-            deleteCommandKeys(rcPlatformOpts);
-            const rcCommandOpts = rcOpts[command] || {};
-            // Remove the command keys from the rc data itself
-            deleteCommandKeys(rcOpts);
-            const allOpts = [
-                rcOpts,
-                rcPlatformOpts,
-                platformOpts,
-                rcCommandOpts,
-                rcPlatformCommandOpts,
-            ];
-            const commandOpts = allOpts.reduce((acc, item) => {
-                return deepMerge(acc, item);
-            }, {});
-            argv.config = config;
-            return {
-                opts: argv,
-                commandOpts,
-            };
-        });
-}
-
+// TODO: This fails as we can load multiple CLI UI
 function end() {
-    spinner.stop();
+    // spinner.stop();
 }
 
-function runCommand(command, argv) {
-    const platform = loadPlatform(argv.platform);
-    return agregateArgv(platform, argv, command)
-        .then(({ opts, commandOpts }) => {
-            log.trace('OPTIONS', opts);
-            log.trace('COMMAND OPTIONS', commandOpts);
-            // About to start the big boy tasks. Let the process breathe and setup its CLI interface
-            process.nextTick(() => {
-                const result = platform[command](opts, commandOpts);
-                if (result && 'then' in result && 'catch' in result) {
-                    result.catch(e => processState.setFailure(e))
-                        .then(() => end());
-                } else {
-                    end();
-                }
-            });
-        });
+const firstPass = parser(process.argv.slice(2));
+
+const [command, platformId] = firstPass._;
+
+if (!platformId) {
+    // TODO: here generate the yargs default API and print usage with missing platform error
+    return;
 }
 
-const argv = require('yargs') // eslint-disable-line
-    .command('run <platform> [app]', 'run the application', (yargs) => {
+const platformCli = loadPlatformKey(platformId, 'cli');
+
+const platform = {
+    cli: platformCli,
+};
+
+const yargs = require('yargs');
+
+yargs // eslint-disable-line
+    .scriptName('kash')
+    .command(`run ${platformId} [app]`, 'run the application', (yargs) => {
         parseCommon(yargs);
+        registerOptions(yargs, platform, command);
     }, (argv) => {
-        runCommand('run', argv);
+        const { runCommand } = require('../lib/command');
+        runCommand(command, platformId, argv).then(() => end());
     })
-    .command('build <platform> [app]', 'build the application', (yargs) => {
+    .command(`build ${platformId} [app]`, 'build the application', (yargs) => {
         parseCommon(yargs)
             .array('resources')
             .option('out', {
@@ -127,14 +68,17 @@ const argv = require('yargs') // eslint-disable-line
             .coerce('out', (v) => {
                 return path.resolve(v);
             });
+        registerOptions(yargs, platform, command);
     }, (argv) => {
-        runCommand('build', argv);
+        const { runCommand } = require('../lib/command');
+        runCommand(command, platformId, argv).then(() => end());
     })
-    .command('test <platform> [app]', 'test the application', (yargs) => {
+    .command(`test ${platformId} [app]`, 'test the application', (yargs) => {
         parseCommon(yargs);
+        registerOptions(yargs, platform, command);
     }, (argv) => {
-        const platform = loadPlatform(argv.platform);
-        return agregateArgv(platform, argv, 'test')
+        // TODO: Move to its own module to be dynamically loaded
+        return agregateArgv(platform, argv, command)
             .then(({ opts, commandOpts }) => test(platform, opts, commandOpts))
             .catch(e => processState.setFailure(e))
             .then(() => end());
@@ -146,12 +90,28 @@ const argv = require('yargs') // eslint-disable-line
     .option('verbose', {
         alias: 'v',
         default: false
-    }).argv;
+    })
+    .fail((message, error, yargs) => {
+        console.log(yargs.help());
+        console.log('\n', colors.red(message));
+        process.exit(1);
+    });
 
+registerCommands(yargs, platform);
+
+// argv is a getter. This will trigger the CLI managment
+const { argv } = yargs;
+
+// Mount the CLI UI managers if not quiet
 if (!argv.quiet) {
+    // Avoid wasting people's time by loading only the necessary code
     if (process.stdout.isTTY) {
+        const spinner = require('../lib/spinner');
+        // Use spinner UI for humans
         spinner.setup(processState);
     } else {
+        // Use normal logging for machines (e.g. CI)
+        const output = require('../lib/output');
         output.setup(processState);
     }
 }

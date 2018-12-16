@@ -66,6 +66,9 @@ Extends the android platform to create a .apk using crosswalk as a webview
 
 Extends the cordova platform to create an iOS app
 
+## [@kano/kit-app-shell-browserstack](./packages/browserstack)
+
+Utilities to integrate testing with Browserstack
 
 ## TODO:
  - Create a Dockerfile with the setup to create on any platform. Host the image on dockerhub 
