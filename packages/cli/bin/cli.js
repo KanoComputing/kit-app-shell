@@ -77,9 +77,8 @@ yargs // eslint-disable-line
         parseCommon(yargs);
         registerOptions(yargs, platform, command);
     }, (argv) => {
-        // TODO: Move to its own module to be dynamically loaded
-        return agregateArgv(platform, argv, command)
-            .then(({ opts, commandOpts }) => test(platform, opts, commandOpts))
+        const runTest = require('../lib/test');
+        return runTest(argv, platformId, command)
             .catch(e => processState.setFailure(e))
             .then(() => end());
     })

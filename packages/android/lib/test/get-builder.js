@@ -24,6 +24,7 @@ function browserstackSetup(app, wd, mocha, opts, commandOpts) {
                 os_version: '6.0',
                 'browserstack.user': user,
                 'browserstack.key' : key,
+                'browserstack.local' : true,
                 build : `${opts.config.APP_NAME} v${opts.config.UI_VERSION} Android`,
                 name: test.fullTitle(),
                 app : app_url,
@@ -76,7 +77,7 @@ module.exports = (wd, mocha, opts, commandOpts) => {
     const TMP_OUT = path.join(os.tmpdir(), 'kash-android-test');
     return build(Object.assign({}, opts, { out: TMP_OUT }), commandOpts)
         .then((app) => {
-            if (commandOpts.browserstack) {
+            if (opts.browserstack) {
                 return browserstackSetup(app, wd, mocha, opts, commandOpts);
             }
             return localSetup(app, wd, mocha, opts, commandOpts);
