@@ -84,11 +84,14 @@ module.exports = (context) => {
     fs.writeFileSync(path.join(projectRoot, 'build.json'), JSON.stringify({
         ios: {
             debug: {
+                // TODO: See if we can move that to build options
                 codeSignIdentity,
                 developmentTeam,
                 automaticProvisioning: true,
                 packageType: 'development',
                 buildFlag: [
+                    // TODO: Get xcodebuild version and add this dynamicallly
+                    '-UseModernBuildSystem=0',
                     '-allowProvisioningUpdates',
                     'SWIFT_VERSION = 3.0',
                     'EMBEDDED_CONTENT_CONTAINS_SWIFT = YES',

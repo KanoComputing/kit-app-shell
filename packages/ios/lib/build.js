@@ -18,6 +18,11 @@ module.exports = (opts, commandOpts) => {
         targets: {
             safari: 10,
         },
+        buildOpts: {
+            options: {
+                device: true,
+            },
+        },
     }, commandOpts)
         .then((projectPath) => {
             const dest = path.join(projectPath, 'platforms/ios/build/device');

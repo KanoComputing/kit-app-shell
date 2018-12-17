@@ -19,7 +19,6 @@ function browserstackSetup(app, wd, mocha, opts, commandOpts) {
             const driver = wd.promiseChainRemote(HUB_URL);
             return driver.init({
                 // TODO: parametrize this
-                platformName: 'Android',
                 device: 'Google Nexus 6',
                 os_version: '6.0',
                 'browserstack.user': user,
