@@ -1,7 +1,6 @@
 const { log, processState } = require('@kano/kit-app-shell-core');
 const { loadPlatformKey } = require('../lib/platform');
 const { agregateArgv } = require('./argv');
-const colors = require('colors/safe');
 
 function runCommand(command, platformId, argv) {
     const platformCommand = loadPlatformKey(platformId, command);

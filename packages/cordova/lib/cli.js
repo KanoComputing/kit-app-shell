@@ -1,16 +1,14 @@
 module.exports = {
-    commands(yargs) {
-        yargs.option('cache', {
-            type: 'boolean',
-            default: true,
-            describe: 'Uses cached cordova project to speed up builds. Use --no-cache to build the project every time',
+    commands(sywac) {
+        sywac.boolean('--no-cache', {
+            defaultValue: false,
+            desc: 'Create a new cordova project for this build',
         });
     },
-    build(yargs) {
-        yargs.option('run', {
-            type: 'boolean',
-            default: false,
-            describe: 'Runs the app after building on an available connected device',
+    build(sywac) {
+        sywac.boolean('--run', {
+            defaultValue: false,
+            desc: 'Runs the app after building on an available connected device',
         });
     }
 };

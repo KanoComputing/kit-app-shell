@@ -36,7 +36,19 @@ function loadPlatformKey(name, key) {
     return loaded;
 }
 
-function registerCommands(yargs, platform) {
+function patchSywacOptions(sywac, forcedOptions) {
+    const originalOptions = sywac._addOptionType.bind(sywac);
+    sywac._addOptionType = (flags, opts, type) => {
+        return originalOptions(flags, Object.assign({}, opts, forcedOptions), type);
+    };
+    return {
+        dispose() {
+            sywac._addOptionType = originalOptions;
+        }
+    };
+}
+
+function registerCommands(sywac, platform) {
     // Ignore missing cli
     if (!platform.cli) {
         return;
@@ -46,10 +58,12 @@ function registerCommands(yargs, platform) {
     if (typeof platform.cli.commands !== 'function') {
         return;
     }
-    platform.cli.commands(yargs);
+    const sywacPatch = patchSywacOptions(sywac, { group: platform.cli.group || 'Platform: ' });
+    platform.cli.commands(sywac);
+    sywacPatch.dispose();
 }
 
-function registerOptions(yargs, platform, command) {
+function registerOptions(sywac, platform, command) {
     // Ignore missing cli
     if (!platform.cli) {
         return;
@@ -61,7 +75,9 @@ function registerOptions(yargs, platform, command) {
     if (typeof optionsRegistration !== 'function') {
         return;
     }
-    optionsRegistration(yargs);
+    const sywacPatch = patchSywacOptions(sywac, { group: platform.cli.group });
+    optionsRegistration(sywac);
+    sywacPatch.dispose();
 }
 
 module.exports = {
@@ -69,4 +85,5 @@ module.exports = {
     loadPlatformKey,
     registerCommands,
     registerOptions,
+    patchSywacOptions,
 };
