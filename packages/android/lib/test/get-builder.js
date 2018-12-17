@@ -24,7 +24,6 @@ function browserstackSetup(app, wd, mocha, opts, commandOpts) {
                 os_version: '6.0',
                 'browserstack.user': user,
                 'browserstack.key' : key,
-                'browserstack.local' : true,
                 build : `${opts.config.APP_NAME} v${opts.config.UI_VERSION} Android`,
                 name: test.fullTitle(),
                 app : app_url,
