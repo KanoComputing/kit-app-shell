@@ -1,4 +1,4 @@
-const { Bundler } = require('@kano/kit-app-shell-core');
+const { Bundler, util } = require('@kano/kit-app-shell-core');
 const path = require('path');
 const { cordova } = require('cordova-lib');
 const { promisify } = require('util');
@@ -25,30 +25,41 @@ module.exports = (opts = {}, commandOpts = {}) => {
     return getProject({
         ...opts,
         commandOpts,
-        skipCache: !commandOpts.cache,
+        skipCache: !opts.cache,
     })
         .then((projectPath) => {
             return Promise.all((opts.clean || []).map(p => rimraf(p)))
                 .then(() => {
                     const wwwPath = path.join(projectPath, 'www');
-                    // Bundle the cordova shell and provided app into the www directory
-                    return Bundler.bundle(
-                        __dirname + '/../www/index.html',
-                        __dirname + '/../www/index.js',
-                        path.join(opts.app, 'index.js'),
-                        opts.config,
-                        {
-                            appJs: {
-                                ...opts,
-                            },
-                            js: {
-                                bundleOnly: opts.bundleOnly,
-                                targets: opts.targets,
-                                replaces: {
-                                    // Avoid jsZip to detect the define from requirejs
-                                    'typeof define': 'undefined',
-                                },
-                            },
+                    // TODO move this to core and make it an optional plugin
+                    const wcPath = require.resolve('@webcomponents/webcomponentsjs/webcomponents-bundle.js');
+                    const wcFilename = 'webcomponents-bundle.js';
+                    // Copy webcomponents bundle
+                    return util.fs.copy(wcPath, path.join(wwwPath, wcFilename))
+                        .then(() => {
+                            // Bundle the cordova shell and provided app into the www directory
+                            return Bundler.bundle(
+                                __dirname + '/../www/index.html',
+                                __dirname + '/../www/index.js',
+                                path.join(opts.app, 'index.js'),
+                                opts.config,
+                                {
+                                    appJs: {
+                                        ...commandOpts,
+                                        ...opts,
+                                    },
+                                    js: {
+                                        bundleOnly: opts.bundleOnly,
+                                        targets: opts.targets,
+                                        replaces: {
+                                            // Avoid jsZip to detect the define from requirejs
+                                            'typeof define': 'undefined',
+                                        },
+                                    },
+                                    html: {
+                                        injectScript: `<script src="/${wcFilename}"></script>`,
+                                    },
+                                })
                         })
                         .then(bundle => Bundler.write(bundle, wwwPath))
                         .then(() => projectPath);
@@ -62,7 +73,7 @@ module.exports = (opts = {}, commandOpts = {}) => {
             // already installed
             const platformIds = opts.platforms.map(platform => path.basename(platform).replace('cordova-', ''));
             // if the run flag is passed, run the built app on device
-            const command = commandOpts.run ? 'run' : 'build';
+            const command = opts.run ? 'run' : 'build';
             const options = Object.assign(opts.buildOpts || {}, { platforms: platformIds });
             return cordova[command](options)
                 .then(() => projectPath);

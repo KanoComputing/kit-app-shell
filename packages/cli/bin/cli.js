@@ -74,7 +74,14 @@ yargs // eslint-disable-line
         runCommand(command, platformId, argv).then(() => end());
     })
     .command(`test ${platformId} [app]`, 'test the application', (yargs) => {
-        parseCommon(yargs);
+        parseCommon(yargs)
+            .option('--prebuilt-app', {
+                type: 'string',
+                required: true,
+                coerce(value) {
+                    return path.resolve(process.cwd(), value);
+                }
+            });
         registerOptions(yargs, platform, command);
     }, (argv) => {
         const runTest = require('../lib/test');

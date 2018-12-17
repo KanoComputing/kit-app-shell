@@ -72,12 +72,8 @@ function localSetup(app, wd, mocha, opts, commandOpts) {
  * Create a builder to create a driver for each test
  */
 module.exports = (wd, mocha, opts, commandOpts) => {
-    const TMP_OUT = path.join(os.tmpdir(), 'kash-android-test');
-    return build(Object.assign({}, opts, { out: TMP_OUT }), commandOpts)
-        .then((app) => {
-            if (opts.browserstack) {
-                return browserstackSetup(app, wd, mocha, opts, commandOpts);
-            }
-            return localSetup(app, wd, mocha, opts, commandOpts);
-        });
+    if (opts.browserstack) {
+        return browserstackSetup(opts.prebuiltApp, wd, mocha, opts, commandOpts);
+    }
+    return localSetup(opts.prebuiltApp, wd, mocha, opts, commandOpts);
 };

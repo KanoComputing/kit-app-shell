@@ -59,7 +59,7 @@ module.exports = (context) => {
     });
 
     xml.setElement(cfg._doc._root, 'content', 'content', '', {
-        src: 'http://127.0.0.1:8888/index.html',
+        src: 'http://127.0.0.1:10100/index.html',
     });
     return cfg.write();
 };
