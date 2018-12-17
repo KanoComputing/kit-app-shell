@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 const path = require('path');
-const sywac = require('sywac');
+const Api = require('sywac/Api');
 const { processState, test } = require('@kano/kit-app-shell-core');
 const { loadPlatformKey, registerCommands, registerOptions } = require('../lib/platform');
 const chalk = require('chalk');
 
 // TODO: Move every non pure CLI code to core. Allowing a programatic usage
-
 function parseCommon(sywac) {
     return sywac
         .positional('[app=./]', {
@@ -43,108 +42,144 @@ function mountUI(argv) {
     }
 }
 
-return sywac.parse(process.argv.slice(2))
-    .then(({ argv, output }) => {
-        const [command, platformId] = argv._;
+function applyStyles(sywac) {
+    sywac.style({
+        group: s => chalk.cyan.bold(s),
+        desc: s => chalk.white(s),
+        hints: s => chalk.dim(s),
+        flagsError: s => chalk.red(s),
+    });
+}
 
-        if (!platformId) {
-            // TODO: here generate the sywac default API and print usage with missing platform error
-            return;
-        }
+function firstPass() {
+    // Create local sywac
+    const sywac = new Api();
 
-        const platformCli = loadPlatformKey(platformId, 'cli');
+    // All commands available
+    const commands = ['run', 'build', 'test'];
 
-        const platform = {
-            cli: platformCli,
-        };
+    sywac.configure({ name: 'kash' });
 
-        sywac.command(`build ${platformId}`, {
-            desc: 'build the application',
-            ignore: [platformId],
-            setup(sywac) {
-                parseCommon(sywac);
-                sywac.array('resources')
-                    .string('--out, -o', {
-                        desc: 'Output directory',
-                        coerce: path.resolve,
-                        required: true,
-                    })
-                    .number('--build-number, -n', {
-                        defaultValue: 0,
-                    })
-                    .boolean('--bundle-only');
-                registerOptions(sywac, platform, 'build');
-            },
+    // Generate all commands with generic help message
+    commands.forEach((cmd) => {
+        sywac.command(`${cmd} <platform> --help`, {
+            desc: `Show help for the ${cmd} command`,
             run(argv) {
-                mountUI(argv);
-                const { runCommand } = require('../lib/command');
-                return runCommand('build', platformId, argv);
+                return secondPass(argv.platform);
             }
         });
+    });
 
-        sywac.command(`run ${platformId}`, {
-            desc: 'run the application',
-            ignore: [platformId],
-            setup(sywac) {
-                parseCommon(sywac);
-                registerOptions(sywac, platform, 'run');
-            },
-            run(argv) {
-                mountUI(argv);
-                const { runCommand } = require('../lib/command');
-                return runCommand('run', platformId, argv);
-            }
-        });
+    sywac.help();
+    sywac.showHelpByDefault();
 
-        sywac.command(`test ${platformId}`, {
-            desc: 'test the application',
-            ignore: [platformId],
-            setup(sywac) {
-                parseCommon(sywac);
-                sywac.string('--prebuilt-app', {
-                    desc: 'Path to the built app to test',
+    sywac.version();
+
+    applyStyles(sywac);
+
+    return sywac.parse(process.argv.slice(2));
+}
+
+function secondPass(platformId) {
+    const sywac = new Api();
+    const platformCli = loadPlatformKey(platformId, 'cli');
+
+    const platform = {
+        cli: platformCli,
+    };
+
+    sywac.command('build <platform>', {
+        desc: 'build the application',
+        setup(sywac) {
+            parseCommon(sywac);
+            sywac.array('resources')
+                .string('--out, -o', {
+                    desc: 'Output directory',
+                    coerce: path.resolve,
                     required: true,
-                    coerce(value) {
-                        return path.resolve(process.cwd(), value);
-                    },
-                });
-                registerOptions(sywac, platform, 'test');
-            },
-            run(argv) {
-                mountUI(argv);
-                const runTest = require('../lib/test');
-                return runTest(argv, platformId, command);
-            },
-        });
+                })
+                .number('--build-number, -n', {
+                    defaultValue: 0,
+                })
+                .boolean('--bundle-only');
+            registerOptions(sywac, platform, 'build');
+        },
+        run(argv) {
+            mountUI(argv);
+            const { runCommand } = require('../lib/command');
+            return runCommand('build', platformId, argv);
+        }
+    });
 
-        sywac.boolean('--quiet, -q', {
-            desc: 'Silences all outputs',
-            defaultValue: false,
-        });
+    sywac.command(`run <platform>`, {
+        desc: 'run the application',
+        setup(sywac) {
+            parseCommon(sywac);
+            registerOptions(sywac, platform, 'run');
+        },
+        run(argv) {
+            mountUI(argv);
+            const { runCommand } = require('../lib/command');
+            return runCommand('run', platformId, argv);
+        }
+    });
 
-        sywac.boolean('--verbose', {
-            desc: 'Displays verbose logs',
-            defaultValue: false
-        });
+    sywac.command(`test <platform>`, {
+        desc: 'test the application',
+        setup(sywac) {
+            parseCommon(sywac);
+            sywac.string('--prebuilt-app', {
+                desc: 'Path to the built app to test',
+                required: true,
+                coerce(value) {
+                    return path.resolve(process.cwd(), value);
+                },
+            });
+            registerOptions(sywac, platform, 'test');
+        },
+        run(argv) {
+            mountUI(argv);
+            const runTest = require('../lib/test');
+            return runTest(argv, platformId, command);
+        },
+    });
 
-        sywac.help();
+    sywac.boolean('--quiet, -q', {
+        desc: 'Silence all outputs',
+        defaultValue: false,
+    });
 
-        sywac.configure({ name: 'kash' });
+    sywac.boolean('--verbose', {
+        desc: 'Displays verbose logs',
+        defaultValue: false
+    });
 
-        // Register the global commands for the platform
-        registerCommands(sywac, platform);
+    sywac.help();
+    sywac.showHelpByDefault();
 
-        sywac.style({
-            group: s => chalk.cyan.bold(s),
-            desc: s => chalk.white(s),
-            hints: s => chalk.dim(s),
-            flagsError: s => chalk.red(s),
-        });
-        
-        return sywac.parse(process.argv.slice(2))
-            .then((result) => {
-                console.log(result.output);
-                process.exit(result.code);
-            })
-            .catch(e => console.error(e));
+    sywac.version();
+
+    sywac.configure({ name: 'kash' });
+
+    // Register the global commands for the platform
+    registerCommands(sywac, platform);
+
+    applyStyles(sywac);
+    
+    return sywac.parse(process.argv.slice(2))
+        .then((result) => {
+            console.log(result.output);
+            process.exit(result.code);
+        })
+        .catch(e => console.error(e));
+}
+
+firstPass()
+    .then((result) => {
+        // This won't run if secondPass is executed forom a run command
+        if (result.argv.platform) {
+            return secondPass(result.argv.platform);
+        }
+        console.log(result.output);
+        process.exit(result.code);
     });
