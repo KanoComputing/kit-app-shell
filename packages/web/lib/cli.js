@@ -1,8 +1,8 @@
 module.exports = {
-    run(yargs) {
-        yargs.option('port', {
-            alias: 'p',
-            default: 4000,
+    group: 'Web: ',
+    run(sywac) {
+        sywac.number('--port, -p', {
+            defaultValue: 4000,
         });
     },
 };

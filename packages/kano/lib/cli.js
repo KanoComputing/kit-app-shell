@@ -1,9 +1,9 @@
 module.exports = {
-    build(yargs) {
-        yargs.option('skipAr', {
-            type: 'boolean',
-            default: 'false',
-            describe: 'Export the contents of the debian package instead of the .deb file',
+    group: 'KanoOS:',
+    build(sywac) {
+        sywac.boolean('--skip-ar', {
+            defaultValue: false,
+            desc: 'Export the contents of the debian package instead of the .deb file',
         });
     },
 };
