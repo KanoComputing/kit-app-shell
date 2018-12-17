@@ -63,7 +63,8 @@ module.exports = (opts = {}, commandOpts = {}) => {
             const platformIds = opts.platforms.map(platform => path.basename(platform).replace('cordova-', ''));
             // if the run flag is passed, run the built app on device
             const command = commandOpts.run ? 'run' : 'build';
-            return cordova[command](platformIds, opts.buildOpts || {})
+            const options = Object.assign(opts.buildOpts || {}, { platforms: platformIds });
+            return cordova[command](options)
                 .then(() => projectPath);
         });
 };

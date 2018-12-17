@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@kano/kit-app-shell-browserstack": "^0.0.2-alpha.2",
     "@kano/kit-app-shell-cordova": "^0.0.2-alpha.2",
     "@kano/kit-app-shell-core": "^0.0.2-alpha.2",
     "appium": "^1.10.0",
