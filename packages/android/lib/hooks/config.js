@@ -48,6 +48,7 @@ module.exports = (context) => {
         Port: 10100,
         'android-targetSdkVersion': 28,
         ShowSplashScreenSpinner: false,
+        SplashMaintainAspectRatio: true,
         loadUrlTimeoutValue: 30000
     };
 

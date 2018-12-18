@@ -6,7 +6,7 @@ const rimraf = promisify(require('rimraf'));
 
 const { getProject } = require('./project');
 
-module.exports = (opts = {}, commandOpts = {}) => {
+module.exports = (opts = {}) => {
     // Catch cordova logs and displays them
     // TODO: Catch all logs (error, warn, ...)
     // TODO: Find a console UI to display these logs and any subprocess logs
@@ -24,8 +24,7 @@ module.exports = (opts = {}, commandOpts = {}) => {
     // Get a corodva project ready to build
     return getProject({
         ...opts,
-        commandOpts,
-        skipCache: !opts.cache,
+        skipCache: opts['no-cache'],
     })
         .then((projectPath) => {
             return Promise.all((opts.clean || []).map(p => rimraf(p)))
@@ -45,7 +44,6 @@ module.exports = (opts = {}, commandOpts = {}) => {
                                 opts.config,
                                 {
                                     appJs: {
-                                        ...commandOpts,
                                         ...opts,
                                     },
                                     js: {

@@ -1,4 +1,4 @@
-const { log } = require('@kano/kit-app-shell-core');
+const log = require('./');
 
 function loadPlatform(name) {
     if (name === 'common' || name === 'cli') {
@@ -36,18 +36,6 @@ function loadPlatformKey(name, key) {
     return loaded;
 }
 
-function patchSywacOptions(sywac, forcedOptions) {
-    const originalOptions = sywac._addOptionType.bind(sywac);
-    sywac._addOptionType = (flags, opts, type) => {
-        return originalOptions(flags, Object.assign({}, opts, forcedOptions), type);
-    };
-    return {
-        dispose() {
-            sywac._addOptionType = originalOptions;
-        }
-    };
-}
-
 function registerCommands(sywac, platform) {
     // Ignore missing cli
     if (!platform.cli) {
@@ -58,9 +46,7 @@ function registerCommands(sywac, platform) {
     if (typeof platform.cli.commands !== 'function') {
         return;
     }
-    const sywacPatch = patchSywacOptions(sywac, { group: platform.cli.group || 'Platform: ' });
     platform.cli.commands(sywac);
-    sywacPatch.dispose();
 }
 
 function registerOptions(sywac, platform, command) {
@@ -75,9 +61,7 @@ function registerOptions(sywac, platform, command) {
     if (typeof optionsRegistration !== 'function') {
         return;
     }
-    const sywacPatch = patchSywacOptions(sywac, { group: platform.cli.group });
     optionsRegistration(sywac);
-    sywacPatch.dispose();
 }
 
 module.exports = {
@@ -85,5 +69,4 @@ module.exports = {
     loadPlatformKey,
     registerCommands,
     registerOptions,
-    patchSywacOptions,
 };

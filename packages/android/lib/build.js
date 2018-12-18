@@ -5,11 +5,10 @@ const glob = promisify(require('glob'));
 const path = require('path');
 const fs = require('fs');
 const mkdirp = promisify(require('mkdirp'));
-const rimraf = promisify(require('rimraf'));
 
 const rename = promisify(fs.rename);
 
-module.exports = (opts, commandOpts) => {
+module.exports = (opts) => {
         return build({
             ...opts,
             cacheId: 'android',
@@ -20,7 +19,7 @@ module.exports = (opts, commandOpts) => {
                 chrome: 53,
             },
             clean: ['platforms/android/app/build/outputs/apk'],
-        }, commandOpts)
+        })
         .then((projectPath) => {
             const dest = path.join(projectPath, 'platforms/android/app/build/outputs/apk');
             return glob('**/*.apk', { cwd: dest })

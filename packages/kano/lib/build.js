@@ -108,7 +108,7 @@ function checkEnv(skipAr = false) {
         .then(() => checkCmd('ar'));
 }
 
-function kanoBuild({ app, config = {}, out, bundleOnly }, commandOpts) {
+function kanoBuild({ app, config = {}, out, bundleOnly }) {
     const TMP_DIR = path.join(os.tmpdir(), 'kash-kano-build');
     const BUILD_DIR = path.join(TMP_DIR, 'build');
     const APP_DIR = path.join(TMP_DIR, 'app');
@@ -119,9 +119,9 @@ function kanoBuild({ app, config = {}, out, bundleOnly }, commandOpts) {
     mkdirp.sync(APP_DIR);
     mkdirp.sync(DEB_DIR);
     const appName = snake(config.APP_NAME);
-    return checkEnv(commandOpts.skipAr)
+    return checkEnv(opts.skipAr)
         // Bundle app in tmp dir
-        .then(() => build({ app, config, out: BUILD_DIR, bundleOnly }, commandOpts))
+        .then(() => build({ app, config, out: BUILD_DIR, bundleOnly }))
         .then((buildOut) => {
             processState.setStep('Creating linux app');
             // Create executable for linux using electron-packager
@@ -151,7 +151,7 @@ function kanoBuild({ app, config = {}, out, bundleOnly }, commandOpts) {
             );
             processState.setSuccess('Created linux app');
             processState.setStep('Preparing debian package');
-            const targetDir = commandOpts.skipAr ? out : DEB_DIR;
+            const targetDir = opts.skipAr ? out : DEB_DIR;
             // Create structure and files for debian package
             const tasks = [
                 createControl(targetDir, config),
@@ -161,7 +161,7 @@ function kanoBuild({ app, config = {}, out, bundleOnly }, commandOpts) {
         })
         .then((dir) => {
             processState.setSuccess('Debian package ready');
-            if (commandOpts.skipAr) {
+            if (opts.skipAr) {
                 return;
             }
             processState.setStep('Creating .deb file');

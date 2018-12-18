@@ -67,17 +67,17 @@ module.exports = (context) => {
         src: `${scheme}:///index.html`,
     });
 
-    const { commandOpts } = shell;
+    const { opts } = shell;
 
     // TODO: merge using a error util
-    if (!commandOpts.developmentTeam) {
+    if (!opts.developmentTeam) {
         throw new Error(`Could not build iOS app: Missing 'developmentTeam' key in config. Make sure you have a .kashrc.json file in your home directory`);
     }
-    if (!commandOpts.codeSignIdentity) {
+    if (!opts.codeSignIdentity) {
         throw new Error(`Could not build iOS app: Missing 'codeSignIdentity' key in config. Make sure you have a .kashrc.json file in your home directory`);
     }
 
-    const { developmentTeam, codeSignIdentity } = commandOpts;
+    const { developmentTeam, codeSignIdentity } = opts;
 
     // TODO: Integrate more complex debug build vs release build
 

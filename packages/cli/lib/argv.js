@@ -11,6 +11,35 @@ function deleteCommandKeys(obj) {
     });
 }
 
+/**
+ * Collect all options into one object
+ * Merges the data following this rule:
+ * rc <= rc-cmd <= rc-platform <= rc-platform-cmd <= opts
+ * 
+ *  - Given opts
+ *  - Platform command options ( Configures a command for a specific platform )
+ * {
+ *     "web": {
+ *         "build": {...}
+ *     }
+ * }
+ *  - Platform options ( Configures options shared across all command for a platform )
+ * {
+ *     "web": {...}
+ * }
+ *  - Command options ( Configures options shared across all platforms for a command )
+ * {
+ *     "build": {...}
+ * }
+ *  - Global options ( Configures options for all command and all platforms )
+ * {
+ *     ...
+ * }
+ * 
+ * @param {Object} opts 
+ * @param {String} platformId 
+ * @param {String} command 
+ */
 function agregateArgv(argv, platformId, command) {
     const config = ConfigLoader.load(argv.app, argv.env);
     config.BUILD_NUMBER = parseInt(process.env.BUILD_NUMBER, 10) || argv.buildNumber;
@@ -30,18 +59,16 @@ function agregateArgv(argv, platformId, command) {
             deleteCommandKeys(rcOpts);
             const allOpts = [
                 rcOpts,
-                rcPlatformOpts,
                 rcCommandOpts,
+                rcPlatformOpts,
                 rcPlatformCommandOpts,
+                argv,
             ];
-            const commandOpts = allOpts.reduce((acc, item) => {
+            const opts = allOpts.reduce((acc, item) => {
                 return deepMerge(acc, item);
             }, {});
-            argv.config = config;
-            return {
-                opts: argv,
-                commandOpts,
-            };
+            opts.config = config;
+            return opts;
         });
 }
 

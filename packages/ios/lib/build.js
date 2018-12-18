@@ -8,7 +8,7 @@ const mkdirp = promisify(require('mkdirp'));
 
 const rename = promisify(fs.rename);
 
-module.exports = (opts, commandOpts) => {
+module.exports = (opts) => {
     return build({
         ...opts,
         cacheId: 'ios',
@@ -23,7 +23,7 @@ module.exports = (opts, commandOpts) => {
                 device: true,
             },
         },
-    }, commandOpts)
+    })
         .then((projectPath) => {
             const dest = path.join(projectPath, 'platforms/ios/build/device');
             return glob('*.ipa', { cwd: dest })

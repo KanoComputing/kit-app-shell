@@ -11,8 +11,3 @@ kash --version
 ```
 
 ## Usage
-
-## TODO
-
- - Move to commader.js (Maybe after benchmark)
- - Merge opts and commandOpts /!\ IMPORTANT PLEASE

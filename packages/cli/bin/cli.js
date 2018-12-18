@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 const path = require('path');
 const Api = require('sywac/Api');
-const { processState, test } = require('@kano/kit-app-shell-core');
-const { loadPlatformKey, registerCommands, registerOptions } = require('../lib/platform');
+const { processState, util } = require('@kano/kit-app-shell-core');
 const chalk = require('chalk');
 
 // TODO: Move every non pure CLI code to core. Allowing a programatic usage
@@ -51,6 +50,18 @@ function applyStyles(sywac) {
     });
 }
 
+function patchSywacOptions(sywac, forcedOptions) {
+    const originalOptions = sywac._addOptionType.bind(sywac);
+    sywac._addOptionType = (flags, opts, type) => {
+        return originalOptions(flags, Object.assign({}, opts, forcedOptions), type);
+    };
+    return {
+        dispose() {
+            sywac._addOptionType = originalOptions;
+        }
+    };
+}
+
 function firstPass() {
     // Create local sywac
     const sywac = new Api();
@@ -82,7 +93,7 @@ function firstPass() {
 
 function secondPass(platformId) {
     const sywac = new Api();
-    const platformCli = loadPlatformKey(platformId, 'cli');
+    const platformCli = util.platform.loadPlatformKey(platformId, 'cli');
 
     const platform = {
         cli: platformCli,
@@ -99,10 +110,16 @@ function secondPass(platformId) {
                     required: true,
                 })
                 .number('--build-number, -n', {
+                    aliases: ['n', 'build-number', 'buildNumber'],
                     defaultValue: 0,
                 })
-                .boolean('--bundle-only');
-            registerOptions(sywac, platform, 'build');
+                .boolean('--bundle-only', {
+                    aliases: ['bundle-only', 'bundleOnly'],
+                    defaultValue: false,
+                });
+            const sywacPatch = patchSywacOptions(sywac, { group: platform.cli.group || 'Platform: ' });
+            util.platform.registerOptions(sywac, platform, 'build');
+            sywacPatch.dispose();
         },
         run(argv) {
             mountUI(argv);
@@ -115,7 +132,9 @@ function secondPass(platformId) {
         desc: 'run the application',
         setup(sywac) {
             parseCommon(sywac);
-            registerOptions(sywac, platform, 'run');
+            const sywacPatch = patchSywacOptions(sywac, { group: platform.cli.group || 'Platform: ' });
+            util.platform.registerOptions(sywac, platform, 'run');
+            sywacPatch.dispose();
         },
         run(argv) {
             mountUI(argv);
@@ -129,18 +148,19 @@ function secondPass(platformId) {
         setup(sywac) {
             parseCommon(sywac);
             sywac.string('--prebuilt-app', {
+                aliases: ['prebuilt-app', 'prebuiltApp'],
                 desc: 'Path to the built app to test',
                 required: true,
-                coerce(value) {
-                    return path.resolve(process.cwd(), value);
-                },
+                coerce: path.resolve,
             });
-            registerOptions(sywac, platform, 'test');
+            const sywacPatch = patchSywacOptions(sywac, { group: platform.cli.group || 'Platform: ' });
+            util.platform.registerOptions(sywac, platform, 'test');
+            sywacPatch.dispose();
         },
         run(argv) {
             mountUI(argv);
             const runTest = require('../lib/test');
-            return runTest(argv, platformId, command);
+            return runTest(argv, platformId, 'test');
         },
     });
 
@@ -162,7 +182,9 @@ function secondPass(platformId) {
     sywac.configure({ name: 'kash' });
 
     // Register the global commands for the platform
-    registerCommands(sywac, platform);
+    const sywacPatch = patchSywacOptions(sywac, { group: platform.cli.group || 'Platform: ' });
+    util.platform.registerCommands(sywac, platform);
+    sywacPatch.dispose();
 
     applyStyles(sywac);
     
