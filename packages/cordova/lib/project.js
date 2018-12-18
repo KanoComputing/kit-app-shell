@@ -2,7 +2,6 @@ const { processState } = require('@kano/kit-app-shell-core');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
-const pascal = require('pascal-case');
 const { promisify } = require('util');
 const mkdirp = promisify(require('mkdirp'));
 const rimraf = promisify(require('rimraf'));
@@ -25,7 +24,7 @@ function cleanProject(root) {
 /**
  * Creates a cordova project with the platforms, plugins and hooks provided
  */
-function createProject(app, hash, config, platforms, plugins, hooks, commandOpts) {
+function createProject(app, hash, config, platforms, plugins, hooks) {
     const TMP_DIR = path.join(os.tmpdir(), 'kash-cordova-build', hash);
 
     const defaultPluginNames = [
@@ -43,7 +42,7 @@ function createProject(app, hash, config, platforms, plugins, hooks, commandOpts
         .then(() => {
             const REAL_TMP_DIR = fs.realpathSync(TMP_DIR);
             const PROJECT_DIR = path.join(REAL_TMP_DIR, 'project');
-            return cordova.create(PROJECT_DIR, config.APP_ID, pascal(config.APP_NAME))
+            return cordova.create(PROJECT_DIR, config.APP_ID, config.APP_NAME)
                 .then(() => chdir(PROJECT_DIR))
                 .then(() => {
                     const cfg = new Config(path.join(PROJECT_DIR, 'config.xml'));
@@ -55,7 +54,7 @@ function createProject(app, hash, config, platforms, plugins, hooks, commandOpts
                 .then(() => cordova.platform('add', platforms))
                 .then(() => cordova.plugin('add', allPlugins))
                 .then(() => {
-                    return cordova.prepare({ shell: { app, config, processState, commandOpts } });
+                    return cordova.prepare({ shell: { app, config, processState } });
                 })
                 .then(() => {
                     return PROJECT_DIR;
@@ -67,7 +66,7 @@ function createProject(app, hash, config, platforms, plugins, hooks, commandOpts
  * Retrieves a previously created project using the config's hash as a key
  * Will create and cache a project if none was found
  */
-function getProject({ app, config, cacheId, plugins, platforms, hooks, skipCache = false, commandOpts }) {
+function getProject({ app, config, cacheId, plugins, platforms, hooks, skipCache = false }) {
     const cache = new ProjectCacheManager(cacheId);
 
     processState.setStep('Setting up cordova project');
@@ -110,7 +109,7 @@ function getProject({ app, config, cacheId, plugins, platforms, hooks, skipCache
             }
             // No project yet, get a hash from the config and create one
             const hash = ProjectCacheManager.configToHash(config);
-            return createProject(app, hash, config, platforms, plugins, hooks, commandOpts)
+            return createProject(app, hash, config, platforms, plugins, hooks)
                 .then((newProjectPath) => {
                     // Save the project path in cache. For future use
                     return cache.setProject(config, newProjectPath)

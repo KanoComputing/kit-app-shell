@@ -1,7 +1,7 @@
 const { build } = require('@kano/kit-app-shell-cordova');
 const plugins = require('./plugins');
 
-module.exports = (opts, commandOpts) => {
+module.exports = (opts) => {
     return build({
         ...opts,
         cacheId: 'android-legacy',
@@ -11,5 +11,5 @@ module.exports = (opts, commandOpts) => {
         targets: {
             chrome: 53,
         },
-    }, commandOpts);
+    });
 };

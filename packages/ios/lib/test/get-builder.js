@@ -1,12 +1,9 @@
 const lib = require('./libimobiledevice');
 const appium = require('appium');
-const path = require('path');
-const os = require('os');
-const build = require('../build');
 const { upload, HUB_URL } = require('@kano/kit-app-shell-browserstack');
 
-function browserstackSetup(app, wd, mocha, opts, commandOpts) {
-    const { browserstackOptions } = commandOpts;
+function browserstackSetup(app, wd, mocha, opts) {
+    const { browserstackOptions } = opts;
     if (!browserstackOptions) {
         throw new Error(`Could not run test on browserstack: Missing 'browserstackOptions' in your rc file`);
     }
@@ -33,7 +30,7 @@ function browserstackSetup(app, wd, mocha, opts, commandOpts) {
     });
 }
 
-function localSetup(wd, mocha, opts, commandOpts) {
+function localSetup(wd, mocha, opts) {
     // Start appium server
     return appium.main({ loglevel: 'error' })
     .then((server) => {
@@ -60,8 +57,8 @@ function localSetup(wd, mocha, opts, commandOpts) {
                         automationName: 'XCUITest',
                         // Pass down the found connected devices
                         udid,
-                        xcodeOrgId: commandOpts.developmentTeam,
-                        xcodeSigningId: commandOpts.codeSigningIdentity,
+                        xcodeOrgId: opts.developmentTeam,
+                        xcodeSigningId: opts.codeSigningIdentity,
                         autoWebview: true,
                     }).then(() => driver);
                 };
@@ -74,13 +71,9 @@ function localSetup(wd, mocha, opts, commandOpts) {
         });
 }
 
-module.exports = (wd, mocha, opts, commandOpts) => {
-    const TMP_OUT = path.join(os.tmpdir(), 'kash-ios-test');
-    return build(Object.assign({}, opts, { out: TMP_OUT }), commandOpts)
-        .then((app) => {
-            if (opts.browserstack) {
-                return browserstackSetup(app, wd, mocha, opts, commandOpts);
-            }
-            return localSetup(app, wd, mocha, opts, commandOpts);
-        });
+module.exports = (wd, mocha, opts) => {
+    if (opts.browserstack) {
+        return browserstackSetup(opts.prebuiltApp, wd, mocha, opts);
+    }
+    return localSetup(opts.prebuiltApp, wd, mocha, opts);
 };

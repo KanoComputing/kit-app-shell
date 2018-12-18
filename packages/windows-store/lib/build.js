@@ -31,7 +31,7 @@ function createAppx(dir, config, out) {
     }).then(() => out);
 }
 
-module.exports = ({ app, config = {}, out, bundleOnly }, commandOpts) => {
+module.exports = ({ app, config = {}, out, bundleOnly }) => {
     // Prepare a temp directory for the build
     const TMP_DIR = path.join(os.tmpdir(), 'kash-windows-store-build');
     return rimraf(TMP_DIR)
@@ -44,7 +44,7 @@ module.exports = ({ app, config = {}, out, bundleOnly }, commandOpts) => {
                 out: TMP_DIR,
                 skipInstaller: true,
                 bundleOnly,
-            }, commandOpts);
+            });
         })
         .then((buildDir) => {
             processState.setStep(`Creating appx`);

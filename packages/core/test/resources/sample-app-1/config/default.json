@@ -1,7 +1,10 @@
 {
-    "APP_NAME": "SAMPLE APP 1",
+    "APP_NAME": "Sample App 1",
     "APP_ID": "com.kano.sampleapp1",
     "ICONS": {
         "ANDROID": "icons/android.png"
+    },
+    "SPLASHSCREENS": {
+        "ANDROID": "screens/android.png"
     }
 }

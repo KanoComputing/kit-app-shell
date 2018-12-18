@@ -7,7 +7,7 @@ const ElectronChromedriver = require('./electron-chromedriver');
 /**
  * Create a builder to create a driver for each test
  */
-module.exports = (wd, mocha, { app, config = {} }, commandOpts) => {
+module.exports = (wd, mocha, { app, config = {} }) => {
     const electronChromedriver = new ElectronChromedriver();
 
     electronChromedriver.start(9515);

@@ -7,6 +7,7 @@ const replace = require('stream-replace');
 /**
  * Promise version of file copy using streams
  * Allows to pass an optional transform stream
+ * TODO: Use fs.copyFile is exists and no transform is required for speed improvements
  */
 function _copy(src, dest, { transform = null, writeOptions } = {}) {
     return new Promise((resolve, reject) => {
@@ -15,7 +16,9 @@ function _copy(src, dest, { transform = null, writeOptions } = {}) {
 
         read.on('error', reject);
         write.on('error', reject);
-        write.on('finish', () => resolve());
+        write.on('finish', () => {
+            resolve();
+        });
 
         if (transform) {
             transform.on('error', reject);

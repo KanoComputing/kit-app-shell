@@ -51,13 +51,12 @@ function setupTunnel(app) {
         });
 }
 
-module.exports = (opts, commandOpts) => {
+module.exports = (opts) => {
     return Promise.all([
         setupTunnel(opts.app),
         project.getProject({
             ...opts,
-            commandOpts,
-            skipCache: !commandOpts.cache,
+            skipCache: !opts.cache,
         }),
     ])
         .then(([server, projectPath]) => {

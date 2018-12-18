@@ -9,7 +9,7 @@ const rimraf = promisify(require('rimraf'));
 
 const defaultIconPath = path.join(__dirname, '../icons/1024.png.icns');
 
-function macosBuild({ app, config = {}, out, bundleOnly }, commandOpts) {
+function macosBuild({ app, config = {}, out, bundleOnly }) {
     const warnings = [];
     const TMP_DIR = path.join(os.tmpdir(), 'kash-macos-build');
     const icon = config.ICONS && config.ICONS.MACOS ?
@@ -26,7 +26,7 @@ function macosBuild({ app, config = {}, out, bundleOnly }, commandOpts) {
             config,
             out: TMP_DIR,
             bundleOnly,
-        }, commandOpts))
+        }))
         .then((buildDir) => {
             processState.setStep('Creating macOS app');
             const packagerOptions = {

@@ -26,7 +26,7 @@ class KashTestFramework {
     }
 }
 
-module.exports = (platform, opts, commandOpts) => {
+module.exports = (platform, opts) => {
     const framework = new KashTestFramework();
     // Create new mocha UI inhecting the test framework 
     Mocha.interfaces['selenium-bdd'] = (suite) => {
@@ -48,12 +48,12 @@ module.exports = (platform, opts, commandOpts) => {
         ui: 'selenium-bdd',
         timeout: 120000,
     });
-    return platform.getBuilder(wd, mocha, opts, commandOpts)
+    return platform.getBuilder(wd, mocha, opts)
         .then((builder) => {
             framework._setBuilder(builder);
             // Grab all spec files using glob
             // TODO: research and mimic mocha's glob behaviour for consistency (e.g. minimist)
-            return Promise.all((commandOpts.spec || []).map(s => glob(s, { cwd: opts.app })))
+            return Promise.all((opts.spec || []).map(s => glob(s, { cwd: opts.app })))
                 .then((specFiles) => {
                     // Merge all results
                     const allFiles = specFiles.reduce((acc, it) => acc.concat(it), []);
