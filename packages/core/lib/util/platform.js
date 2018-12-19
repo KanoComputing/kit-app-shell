@@ -1,4 +1,4 @@
-const log = require('./');
+const log = require('../log');
 
 function loadPlatform(name) {
     if (name === 'common' || name === 'cli') {
