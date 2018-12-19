@@ -108,6 +108,9 @@ function localSetup(app, wd, mocha, opts) {
  * Create a builder to create a driver for each test
  */
 module.exports = (wd, mocha, opts) => {
+    if (opts.saucelabs) {
+        return require('./saucelabs')(opts.prebuiltApp, wd, mocha, opts);
+    }
     // Use either browserstack or a local device for testing
     if (opts.browserstack) {
         return browserstackSetup(opts.prebuiltApp, wd, mocha, opts);

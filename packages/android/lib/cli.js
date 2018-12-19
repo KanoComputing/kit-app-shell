@@ -8,5 +8,9 @@ module.exports = Object.assign({}, cli, {
             defaultValue: false,
             desc: 'Run the tests on browserstack',
         });
+        sywac.boolean('--saucelabs', {
+            defaultValue: false,
+            desc: 'Run the tests on saucelabs',
+        });
     },
 });
