@@ -79,7 +79,10 @@ module.exports = (wd, mocha, opts) => {
             return require('./bitbar')(opts.prebuiltApp, wd, mocha, opts);
         }
         case 'browserstack': {
-            return browserstackSetup(opts.prebuiltApp, wd, mocha, opts);
+            return require('./browserstack')(opts.prebuiltApp, wd, mocha, opts);
+        }
+        case 'kobiton': {
+            return require('./kobiton')(opts.prebuiltApp, wd, mocha, opts);
         }
         default: {
             return localSetup(opts.prebuiltApp, wd, mocha, opts);

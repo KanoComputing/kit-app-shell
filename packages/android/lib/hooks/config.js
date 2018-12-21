@@ -42,10 +42,7 @@ module.exports = (context) => {
         }
     }
 
-    const platformEl = xml.findInConfig(cfg, 'platform/[@name="android"]');
-
     const preferences = {
-        Port: 10100,
         'android-targetSdkVersion': 28,
         ShowSplashScreenSpinner: false,
         SplashMaintainAspectRatio: true,
@@ -60,7 +57,7 @@ module.exports = (context) => {
     });
 
     xml.setElement(cfg._doc._root, 'content', 'content', '', {
-        src: 'http://127.0.0.1:10100/index.html',
+        src: 'http://localhost:8080/index.html',
     });
     return cfg.write();
 };

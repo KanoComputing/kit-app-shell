@@ -54,17 +54,10 @@ module.exports = (context) => {
 </config-file>
     `);
 
-    const scheme = 'sample-app';
-
-    xml.addRaw(platformEl, `
-<allow-navigation href="${scheme}://*/*"/>
-    `);
-    xml.addRaw(platformEl, `
-<allow-intent href="${scheme}://*/*"/>
-    `);
+    const scheme = 'ionic';
 
     xml.setElement(cfg._doc._root, 'content', 'content', '', {
-        src: `${scheme}:///index.html`,
+        src: `${scheme}://localhost:8080/index.html`,
     });
 
     const { opts } = shell;

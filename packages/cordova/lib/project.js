@@ -31,6 +31,7 @@ function createProject(app, hash, config, platforms, plugins, hooks) {
         'cordova-plugin-bluetoothle',
         'cordova-plugin-device',
         'cordova-plugin-splashscreen',
+        'cordova-plugin-ionic-webview',
     ];
 
     const defaultPlugins = defaultPluginNames.map(name => getModulePath(name));
