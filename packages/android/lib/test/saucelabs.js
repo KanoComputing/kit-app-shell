@@ -7,15 +7,23 @@ const { promisify } = require('util');
 
 const post = promisify(request.post);
 
-function upload(app, { user, key } = {}) {
+// TODO: Upload to bucket instead of direct upload for speed and consistency across all cloud test services
+
+function uploadForEmulator(app, { user, key } = {}) {
     const filename = path.basename(app);
+    const stat = fs.statSync(app);
+    const stream = fs.createReadStream(app);
+    let uploaded = 0;
+    stream.on('data', (d) => {
+        uploaded += d.length;
+        console.log(uploaded / stat.size);
+    });
     return post({
         headers: {
-            // Authorization: `Basic ${new Buffer([user, key].join(":")).toString('base64')}`,
             'Content-Type': 'application/octet-stream',
         },
         url: `https://saucelabs.com/rest/v1/storage/${user}/${filename}?overwrite=true`,
-        body: fs.readFileSync(app),
+        body: stream,
         auth: {
             user,
             pass: key,
@@ -23,10 +31,36 @@ function upload(app, { user, key } = {}) {
     }).then((response) => {
         // TODO: check md5
         return JSON.parse(response.body);
-    }).catch(e => console.error(e));
+    });
 }
 
-const HUB_URL = '';
+
+function uploadForRealDevice(app, { user, key } = {}) {
+    const stat = fs.statSync(app);
+    const stream = fs.createReadStream(app);
+    let uploaded = 0;
+    stream.on('data', (d) => {
+        uploaded += d.length;
+        console.log(uploaded / stat.size);
+    });
+    return post({
+        headers: {
+            Authorization: `Basic ${(new Buffer([user, key].join(':'))).toString('base64')}`,
+            'Content-Type': 'application/octet-stream',
+        },
+        url: 'https://app.testobject.com:443/api/storage/upload',
+        body: stream,
+        auth: {
+            user,
+            pass: key,
+        },
+    }).then((response) => {
+        console.log(response.statusCode);
+        process.exit();
+        // TODO: check md5
+        return JSON.parse(response.body);
+    });
+}
 
 function saucelabsSetup(app, wd, mocha, opts) {
     // Retrieve saucelabs options
@@ -36,12 +70,14 @@ function saucelabsSetup(app, wd, mocha, opts) {
         // Be explicit enough so people know what to do next
         throw new Error(`Could not run test on browserstack: Missing 'saucelabsOptions' in your rc file`);
     }
-    const { user, key } = saucelabsOptions;
+    const { user, realDeviceKey } = saucelabsOptions;
     // Send the apk to saucelabs
-    return upload(app, {
+    // TODO: Switch between emulator and real
+    return uploadForRealDevice(app, {
         user,
-        key,
+        key: realDeviceKey,
     }).then(({ filename }) => {
+        console.log(filename);
         const builder = (test) => {
             const driver = wd.promiseChainRemote('ondemand.saucelabs.com', 80, user, key);
             const caps = {

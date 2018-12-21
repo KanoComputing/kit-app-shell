@@ -35,18 +35,18 @@ module.exports = (platform, opts) => {
             context.kash = framework;
         });
         suite.beforeEach(function () {
-            this.timeout(60000);
+            this.timeout(120000);
             return framework._beforeEach(this.currentTest);
         });
         suite.afterEach(function () {
-            this.timeout(60000);
+            this.timeout(120000);
             return framework._afterEach();
         });
     };
     // TODO: customise mocha through command options
     const mocha = new Mocha({
         ui: 'selenium-bdd',
-        timeout: 120000,
+        timeout: 240000,
     });
     return platform.getBuilder(wd, mocha, opts)
         .then((builder) => {

@@ -4,13 +4,9 @@ const cli = require('@kano/kit-app-shell-cordova/lib/cli');
 module.exports = Object.assign({}, cli, {
     group: 'Android:',
     test(sywac) {
-        sywac.boolean('--browserstack', {
-            defaultValue: false,
-            desc: 'Run the tests on browserstack',
-        });
-        sywac.boolean('--saucelabs', {
-            defaultValue: false,
-            desc: 'Run the tests on saucelabs',
+        sywac.string('--target', {
+            defaultValue: 'local',
+            desc: 'Where to run the tests',
         });
     },
 });
