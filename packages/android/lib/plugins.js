@@ -4,7 +4,7 @@ const { util } = require('@kano/kit-app-shell-cordova');
 // This avoid using cordova-fetch and having to download deps on every build
 const platforms = [util.getModulePath('cordova-android')];
 const plugins = [
-    // util.getModulePath('cordova-httpd'),
+    util.getModulePath('cordova-plugin-ionic-webview'),
 ];
 
 const hooks = {

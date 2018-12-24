@@ -67,6 +67,13 @@ module.exports = (platform, opts) => {
         ui: 'selenium-bdd',
         timeout: 240000,
     });
+    // After the main suite finished all tests, get rid of the framework
+    // This needs to be registered here so that individual platforms defining their
+    // builders can use the same lifecycle to stop whatever process they started after
+    // the framework did its cleanup
+    mocha.suite.afterAll(() => {
+        return framework.dispose();
+    });
     return platform.getBuilder(wd, mocha, opts)
         .then((builder) => {
             framework._setBuilder(builder);
@@ -85,9 +92,7 @@ module.exports = (platform, opts) => {
                     return new Promise((resolve, reject) => {
                         // Kill driver at the end
                         runner.on('end', () => {
-                            framework.dispose()
-                                .then(() => resolve())
-                                .catch(e => reject(e));
+                            resolve();
                         });
                         runner.on('error', reject);
                     });

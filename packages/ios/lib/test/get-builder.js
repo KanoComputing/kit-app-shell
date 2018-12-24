@@ -1,5 +1,6 @@
 const lib = require('./libimobiledevice');
 const appium = require('appium');
+const getBuilder = require('@kano/kit-app-shell-cordova/lib/test/get-builder');
 
 /**
  * Create a local provider for iOS devices. Uses an appium server and libimobiledevice
@@ -32,7 +33,8 @@ function localSetup(app, wd, mocha, opts) {
                         // Pass down the found connected devices
                         udid,
                         xcodeOrgId: opts.developmentTeam,
-                        xcodeSigningId: opts.codeSigningIdentity,
+                        xcodeSigningId: opts.codeSignIdentity,
+                        startIWDP: true,
                     }).then(() => driver);
                 };
                 return builder;

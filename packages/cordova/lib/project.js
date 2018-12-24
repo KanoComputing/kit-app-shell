@@ -24,14 +24,14 @@ function cleanProject(root) {
 /**
  * Creates a cordova project with the platforms, plugins and hooks provided
  */
-function createProject(app, hash, config, platforms, plugins, hooks) {
+function createProject(opts, hash) {
+    const { app, config, plugins, platforms, hooks } = opts;
     const TMP_DIR = path.join(os.tmpdir(), 'kash-cordova-build', hash);
 
     const defaultPluginNames = [
         'cordova-plugin-bluetoothle',
         'cordova-plugin-device',
         'cordova-plugin-splashscreen',
-        'cordova-plugin-ionic-webview',
     ];
 
     const defaultPlugins = defaultPluginNames.map(name => getModulePath(name));
@@ -55,7 +55,7 @@ function createProject(app, hash, config, platforms, plugins, hooks) {
                 .then(() => cordova.platform('add', platforms))
                 .then(() => cordova.plugin('add', allPlugins))
                 .then(() => {
-                    return cordova.prepare({ shell: { app, config, processState } });
+                    return cordova.prepare({ shell: { app, config, processState, opts } });
                 })
                 .then(() => {
                     return PROJECT_DIR;
@@ -67,13 +67,13 @@ function createProject(app, hash, config, platforms, plugins, hooks) {
  * Retrieves a previously created project using the config's hash as a key
  * Will create and cache a project if none was found
  */
-function getProject({ app, config, cacheId, plugins, platforms, hooks, skipCache = false }) {
-    const cache = new ProjectCacheManager(cacheId);
+function getProject(opts) {
+    const cache = new ProjectCacheManager(opts.cacheId);
 
     processState.setStep('Setting up cordova project');
 
     // Using a cache can be skipped by setting cache to false
-    const getCache = skipCache ? Promise.resolve(null) : cache.getProject(config);
+    const getCache = opts.skipCache ? Promise.resolve(null) : cache.getProject(opts.config);
 
     // Try to find cordova project matching this config
     // The config contains the app id, so each app will have its own project
@@ -109,11 +109,11 @@ function getProject({ app, config, cacheId, plugins, platforms, hooks, skipCache
                     .then(() => projectPathOrNull);
             }
             // No project yet, get a hash from the config and create one
-            const hash = ProjectCacheManager.configToHash(config);
-            return createProject(app, hash, config, platforms, plugins, hooks)
+            const hash = ProjectCacheManager.configToHash(opts.config);
+            return createProject(opts, hash)
                 .then((newProjectPath) => {
                     // Save the project path in cache. For future use
-                    return cache.setProject(config, newProjectPath)
+                    return cache.setProject(opts.config, newProjectPath)
                         .then(() => {
                             processState.setSuccess('Created cordova project');
                             return newProjectPath;

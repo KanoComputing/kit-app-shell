@@ -25,7 +25,7 @@ module.exports = (context) => {
     const platformEl = xml.findInConfig(cfg, 'platform/[@name="ios"]');
 
     const preferences = {
-        Scheme: 'sample-app',
+        Scheme: 'kit-app',
         DisallowOverscroll: true,
         'target-device': 'tablet',
         'deployment-target': '10.0',
@@ -54,10 +54,13 @@ module.exports = (context) => {
 </config-file>
     `);
 
-    const scheme = 'ionic';
+    xml.addRaw(platformEl, `<allow-navigation href="kit-app://*"></allow-navigation>`);
+
+
+    const scheme = 'kit-app';
 
     xml.setElement(cfg._doc._root, 'content', 'content', '', {
-        src: `${scheme}://localhost:8080/index.html`,
+        src: `${scheme}:///index.html`,
     });
 
     const { opts } = shell;
