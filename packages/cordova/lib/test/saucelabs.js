@@ -29,55 +29,25 @@ function uploadForEmulator(app, { user, key } = {}) {
             pass: key,
         },
     }).then((response) => {
-        // TODO: check md5
-        return JSON.parse(response.body);
-    });
-}
-
-
-function uploadForRealDevice(app, { user, key } = {}) {
-    const stat = fs.statSync(app);
-    const stream = fs.createReadStream(app);
-    let uploaded = 0;
-    stream.on('data', (d) => {
-        uploaded += d.length;
-        console.log(uploaded / stat.size);
-    });
-    return post({
-        headers: {
-            Authorization: `Basic ${(new Buffer([user, key].join(':'))).toString('base64')}`,
-            'Content-Type': 'application/octet-stream',
-        },
-        url: 'https://app.testobject.com:443/api/storage/upload',
-        body: stream,
-        auth: {
-            user,
-            pass: key,
-        },
-    }).then((response) => {
-        console.log(response.statusCode);
-        process.exit();
-        // TODO: check md5
         return JSON.parse(response.body);
     });
 }
 
 function saucelabsSetup(app, wd, mocha, opts) {
     // Retrieve saucelabs options
-    const { saucelabsOptions } = opts;
+    const { saucelabs } = opts;
     // Authentication options are required, throw an error
-    if (!saucelabsOptions) {
+    if (!saucelabs) {
         // Be explicit enough so people know what to do next
-        throw new Error(`Could not run test on browserstack: Missing 'saucelabsOptions' in your rc file`);
+        throw new Error(`Could not run test on saucelabs: Missing 'saucelabs' in your rc file`);
     }
-    const { user, realDeviceKey } = saucelabsOptions;
+    const { user, key } = saucelabs;
     // Send the apk to saucelabs
     // TODO: Switch between emulator and real
-    return uploadForRealDevice(app, {
+    return uploadForEmulator(app, {
         user,
-        key: realDeviceKey,
+        key,
     }).then(({ filename }) => {
-        console.log(filename);
         const builder = (test) => {
             const driver = wd.promiseChainRemote('ondemand.saucelabs.com', 80, user, key);
             const caps = {

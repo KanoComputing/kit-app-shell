@@ -1,27 +1,22 @@
-const fs = require('fs');
-const path = require('path');
-
-const request = require('request');
-
 const { promisify } = require('util');
+const fs = require('fs');
+const request = require('request');
 
 const post = promisify(request.post);
 
+const BITBAR_HUB = 'https://appium.bitbar.com/wd/hub';
+const BITBAR_UPLOAD = 'https://appium.bitbar.com/upload';
+
 function upload(app, { key } = {}) {
-    const filename = path.basename(app);
-    const stat = fs.statSync(app);
     const stream = fs.createReadStream(app);
-    let uploaded = 0;
-    stream.on('data', (d) => {
-        uploaded += d.length;
-        console.log(uploaded / stat.size);
-    });
+    const auth = `Basic ${new Buffer(`${key}:`).toString('base64')}`;
+    // Post to the bitbar API
     return post({
         headers: {
             Accept: 'application/json',
-            Authorization: `Basic ${new Buffer(`${key}:`).toString('base64')}`,
+            Authorization: auth,
         },
-        url: 'https://appium.bitbar.com/upload',
+        url: BITBAR_UPLOAD,
         formData: {
             file: {
                 value: stream,
@@ -31,29 +26,28 @@ function upload(app, { key } = {}) {
             },
         },
     }).then((response) => {
-        // TODO: check md5
+        // The response will contain the uploaded files to be used during tests
         return JSON.parse(response.body);
     });
 }
 
 function saucelabsSetup(app, wd, mocha, opts) {
     // Retrieve saucelabs options
-    const { bitbarOptions } = opts;
+    const { bitbar } = opts;
     // Authentication options are required, throw an error
-    if (!bitbarOptions) {
+    if (!bitbar) {
         // Be explicit enough so people know what to do next
-        throw new Error(`Could not run test on bitbar: Missing 'bitbarOptions' in your rc file`);
+        throw new Error(`Could not run test on bitbar: Missing 'bitbar' in your rc file`);
     }
-    const { key } = bitbarOptions;
-    // Send the apk to saucelabs
-    // TODO: Switch between emulator and real
+    const { key } = bitbar;
+    // Send the apk to bitbar
     return upload(app, {
         key,
     }).then(({ value }) => {
         const { uploads } = value;
         const { file } = uploads;
         const builder = (test) => {
-            const driver = wd.promiseChainRemote('https://appium.bitbar.com/wd/hub');
+            const driver = wd.promiseChainRemote(BITBAR_HUB);
             const caps = {
                 testdroid_project: `${opts.config.APP_NAME} Android`,
                 testdroid_target: 'android',
@@ -66,7 +60,6 @@ function saucelabsSetup(app, wd, mocha, opts) {
                 testdroid_testrun: test.fullTitle(),
                 testdroid_app: file,
                 testdroid_findDevice: true,
-                autoWebview: true,
                 platformName: 'Android',
                 deviceName: '-',
             };

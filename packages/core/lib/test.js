@@ -12,13 +12,32 @@ class KashTestFramework {
     _setBuilder(builder) {
         this._builder = builder;
     }
+    _switchContexts() {
+        const asserter = new wd.Asserter((target, cb) => {
+            this.driver.contexts()
+                .then((ctxs) => {
+                    cb(null, ctxs.length > 1, ctxs);
+                })
+                .catch(e => cb(e));
+        });
+        return this.driver.waitFor(asserter)
+                .then((ctxs) => this.driver.context(ctxs[1]));
+    }
     _beforeEach(test) {
+        if (this.driver) {
+            return this.driver.resetApp()
+                .then(() => this._switchContexts());
+        }
         return this._builder(test)
             .then((d) => {
                 this.driver = d;
+                return this._switchContexts();
             });
     }
     _afterEach() {
+        return Promise.resolve();
+    }
+    dispose() {
         if (!this.driver) {
             return Promise.resolve();
         }
@@ -66,7 +85,9 @@ module.exports = (platform, opts) => {
                     return new Promise((resolve, reject) => {
                         // Kill driver at the end
                         runner.on('end', () => {
-                            resolve();
+                            framework.dispose()
+                                .then(() => resolve())
+                                .catch(e => reject(e));
                         });
                         runner.on('error', reject);
                     });

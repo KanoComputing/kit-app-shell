@@ -2,13 +2,13 @@ const { upload, HUB_URL } = require('@kano/kit-app-shell-browserstack');
 
 function browserstackSetup(app, wd, mocha, opts) {
     // Retrieve browserstack options
-    const { browserstackOptions } = opts;
+    const { browserstack } = opts;
     // Authentication options are required, throw an error
-    if (!browserstackOptions) {
+    if (!browserstack) {
         // Be explicit enough so peopoe know what to do next
-        throw new Error(`Could not run test on browserstack: Missing 'browserstackOptions' in your rc file`);
+        throw new Error(`Could not run test on browserstack: Missing 'browserstack' in your rc file`);
     }
-    const { user, key } = browserstackOptions;
+    const { user, key } = browserstack;
     // Send the apk to browserstack
     return upload(app, {
         user,

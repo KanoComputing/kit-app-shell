@@ -2,7 +2,11 @@ const appium = require('appium');
 const adbkit = require('adbkit');
 const url = require('url');
 const { processState } = require('@kano/kit-app-shell-core');
+const getBuilder = require('@kano/kit-app-shell-cordova/lib/test/get-builder');
 
+/**
+ * Local device provider for android apps. Uses a local appium server and adb to find devices
+ */
 function localSetup(app, wd, mocha, opts) {
     processState.setStep('Starting appium server');
     // Start appium server
@@ -29,21 +33,6 @@ function localSetup(app, wd, mocha, opts) {
                 })
                 .then((device) => {
                     const builder = () => {
-                        // Replace refresh method to prevent android from opening a browser
-                        wd.addAsyncMethod(
-                            'refresh',
-                            function(cb) {
-                                // Get the current URL
-                                this.url((err, contextUrl) => {
-                                    if (err) {
-                                        return cb(err);
-                                    }
-                                    // Parse and rebuild the original content URL
-                                    const parsed = url.parse(contextUrl);
-                                    this.get(`${parsed.protocol}//${parsed.host}/index.html`, cb);
-                                });
-                            }
-                        );
                         // Create driver with required capabilities
                         const driver = wd.promiseChainRemote('0.0.0.0', port);
                         return driver.init({
@@ -51,7 +40,7 @@ function localSetup(app, wd, mocha, opts) {
                             // Required to be non-empty, but is irrelevant
                             deviceName: '-',
                             browserName: 'Android',
-                            autoWebview: true,
+                            // autoWebview: true,
                             // Id of the device found
                             udid: device.id,
                             // Path to the prebuilt app
@@ -71,21 +60,27 @@ function localSetup(app, wd, mocha, opts) {
  * Create a builder to create a driver for each test
  */
 module.exports = (wd, mocha, opts) => {
-    switch (opts.target) {
-        case 'saucelabs': {
-            return require('./saucelabs')(opts.prebuiltApp, wd, mocha, opts);
+    // Replace refresh method to prevent android from opening a browser
+    wd.addAsyncMethod(
+        'refresh',
+        function(cb) {
+            // Get the current URL
+            this.url((err, contextUrl) => {
+                if (err) {
+                    return cb(err);
+                }
+                // Parse and rebuild the original content URL
+                const parsed = url.parse(contextUrl);
+                this.get(`${parsed.protocol}//${parsed.host}/index.html`, cb);
+            });
         }
-        case 'bitbar': {
-            return require('./bitbar')(opts.prebuiltApp, wd, mocha, opts);
-        }
-        case 'browserstack': {
-            return require('./browserstack')(opts.prebuiltApp, wd, mocha, opts);
-        }
-        case 'kobiton': {
-            return require('./kobiton')(opts.prebuiltApp, wd, mocha, opts);
-        }
-        default: {
-            return localSetup(opts.prebuiltApp, wd, mocha, opts);
-        }
+    );
+    // Remote device providers are configured in the cordova platform to be shared between iOS
+    // and Android
+    const builder = getBuilder(wd, mocha, opts);
+    if (!builder) {
+        // No provider matched, use local provider
+        return localSetup(opts.prebuiltApp, wd, mocha, opts);
     }
+    return builder;
 };
