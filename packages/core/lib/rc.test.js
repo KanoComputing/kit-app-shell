@@ -1,3 +1,4 @@
+const path = require('path');
 const mockFs = require('mock-fs');
 const mock = require('mock-require');
 const RcLoader = require('./rc');
@@ -35,7 +36,7 @@ suite('RcLoader', () => {
             return RcLoader.findAll('/')
                 .then((files) => {
                     allFiles.forEach((f) => {
-                        assert.include(files, f);
+                        assert.include(files, path.normalize(f));
                     });
                 });
         });

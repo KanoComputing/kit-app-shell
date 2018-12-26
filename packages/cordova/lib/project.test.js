@@ -32,7 +32,7 @@ suite('project', () => {
                 }
             });
             mock('./chdir', {
-                chdir() {}
+                chdir() {},
             });
         });
         test('existing project', () => {
@@ -104,9 +104,10 @@ suite('project', () => {
                 cordova: {
                     create(projectPath, id, name) {
                         steps.push('create');
-                        assert.equal(projectPath, expectedProjectPath);
+                        assert.equal(projectPath, path.resolve(expectedProjectPath));
                         assert.equal(id, TEST_CONFIG.APP_ID);
-                        assert.equal(name, 'AppName');
+                        assert.equal(name, 'App Name');
+                        return Promise.resolve();
                     },
                     platform(action, platforms) {
                         assert.equal(action, 'add');
