@@ -43,7 +43,6 @@ function saucelabsSetup(app, wd, mocha, opts) {
     }
     const { user, key } = saucelabs;
     // Send the apk to saucelabs
-    // TODO: Switch between emulator and real
     return uploadForEmulator(app, {
         user,
         key,

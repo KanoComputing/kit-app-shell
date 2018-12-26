@@ -6,8 +6,10 @@ function loadPlatform(name) {
     try {
         loaded = require(`@kano/kit-app-shell-${name}`);
     } catch (e) {
-        // TODO: Detect if it is a module loading error
-        throw new Error(`Could load platform: '${name}' was not installed`);
+        if (e.code === 'MODULE_NOT_FOUND') {
+            throw new Error(`Could load platform: '${name}' was not installed`);
+        }
+        throw e;
     }
     return loaded;
 }
@@ -20,7 +22,7 @@ function loadPlatform(name) {
 // getting the sub-module fails.
 // TODO: Maybe only load submodule and force platforms to organise their files properly
 function loadPlatformKey(name, key) {
-    if (name === 'common' || name === 'cli') {
+    if (name === 'core' || name === 'cli') {
         throw new Error(`Could not load platform: '${name}' is reserved`);
     }
     let loaded;
@@ -39,9 +41,8 @@ function registerCommands(sywac, platform) {
         return;
     }
     // Ignore missing or wrongly typed commands config
-    // TODO: Throw error when commands is here but not a function for explicit failure
     if (typeof platform.cli.commands !== 'function') {
-        return;
+        throw new Error(`Could not register commands: 'commands' key in cli module is not a function`);
     }
     platform.cli.commands(sywac);
 }
@@ -53,10 +54,9 @@ function registerOptions(sywac, platform, command) {
     }
     // Fetch the function that will regiter options for a given command
     const optionsRegistration = platform.cli[command];
-    // Ignore if wrong type
-    // TODO: See TODO for registerCommands
+
     if (typeof optionsRegistration !== 'function') {
-        return;
+        throw new Error(`Could not register options: '${command}' key in cli module is not a function`);
     }
     optionsRegistration(sywac);
 }

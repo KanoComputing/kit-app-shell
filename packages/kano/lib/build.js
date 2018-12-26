@@ -28,30 +28,25 @@ function createControl(out, config) {
     };
     path.join(out, 'control/control')
     path.join(out, 'control/postinst')
-    util.fs.fromTemplate(
+    return util.fs.fromTemplate(
         path.join(templateDir, 'control'),
         path.join(out, 'control/control'),
         options,
-    );
-    util.fs.fromTemplate(
+    ).then(() => util.fs.fromTemplate(
         path.join(templateDir, 'postinst'),
         path.join(out, 'control/postinst'),
         options,
         { mode: 0o555 },
-    );
-    util.fs.fromTemplate(
+    )).then(() => util.fs.fromTemplate(
         path.join(templateDir, 'so.conf'),
         path.join(out, `data/etc/ld.so.conf.d/${options.KEBAB_NAME}.conf`),
         options,
-    );
-    util.fs.fromTemplate(
+    )).then(() => util.fs.fromTemplate(
         path.join(templateDir, 'bin'),
         path.join(out, `data/usr/bin/${options.SNAKE_NAME}`),
         options,
         { mode: 0o555 },
-    );
-    // TODO: Make the whole function async for perf
-    return Promise.resolve();
+    ));
 }
 
 function copyExtra(app, out, config) {

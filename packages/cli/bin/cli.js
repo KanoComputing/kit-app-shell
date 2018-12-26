@@ -4,7 +4,6 @@ const Api = require('sywac/Api');
 const { processState, util } = require('@kano/kit-app-shell-core');
 const chalk = require('chalk');
 
-// TODO: Move every non pure CLI code to core. Allowing a programatic usage
 function parseCommon(sywac) {
     return sywac
         .positional('[app=./]', {
@@ -93,7 +92,15 @@ function firstPass() {
 
 function secondPass(platformId) {
     const sywac = new Api();
-    const platformCli = util.platform.loadPlatformKey(platformId, 'cli');
+    let platformKey;
+    // catch synchronous error and reject as a result
+    try {
+        platformCli = util.platform.loadPlatformKey(platformId, 'cli');
+    } catch (e) {
+        let context = sywac.initContext(false);
+        context.unexpectedError(e);
+        return Promise.resolve(context.toResult());
+    }
 
     const platform = {
         cli: platformCli,
@@ -188,19 +195,19 @@ function secondPass(platformId) {
 
     applyStyles(sywac);
     
-    return sywac.parse(process.argv.slice(2))
-        .then((result) => {
-            console.log(result.output);
-            process.exit(result.code);
-        })
-        .catch(e => console.error(e));
+    return sywac.parse(process.argv.slice(2));
 }
 
 firstPass()
     .then((result) => {
         // This won't run if secondPass is executed forom a run command
         if (result.argv.platform) {
-            return secondPass(result.argv.platform);
+            return secondPass(result.argv.platform)
+                .then((result) => {
+                    console.log(result.output);
+                    process.exit(result.code);
+                })
+                .catch(e => console.error(e));
         }
         console.log(result.output);
         process.exit(result.code);

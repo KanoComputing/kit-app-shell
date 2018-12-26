@@ -4,6 +4,11 @@
 const path = require('path');
 const deepMerge = require('deepmerge');
 
+const DEFAULTS = {
+    APP_NAME: 'Unnamed App',
+    APP_ID: 'com.kano.unknown',
+}
+
 class ConfigLoader {
     static load(appDir, env = 'development') {
         const configDir = path.join(appDir, 'config');
@@ -20,7 +25,7 @@ class ConfigLoader {
             config.UI_VERSION = pck.version;
         } catch (e) { /* ignore */ }
 
-        return config;
+        return deepMerge(DEFAULTS, config);
     }
 }
 
