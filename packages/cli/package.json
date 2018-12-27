@@ -7,13 +7,13 @@
     "kit-app-shell": "bin/cli.js",
     "kash": "bin/cli.js"
   },
-  "scripts": {
-    
-  },
+  "scripts": {},
   "dependencies": {
     "@kano/kit-app-shell-core": "^0.0.2-alpha.2",
     "chalk": "^2.4.1",
     "deepmerge": "^3.0.0",
+    "enquirer": "^2.2.0",
+    "open-file-explorer": "^1.0.2",
     "ora": "^3.0.0",
     "sywac": "^1.2.1"
   },

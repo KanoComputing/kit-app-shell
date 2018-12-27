@@ -1467,6 +1467,11 @@ android-versions@1.4.0:
   dependencies:
     semver "^5.4.1"
 
+ansi-colors@^3.2.1:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/ansi-colors/-/ansi-colors-3.2.3.tgz#57d35b8686e851e2cc04c403f1c00203976a1813"
+  integrity sha512-LEHHyuhlPY3TmuUYMh2oz89lTShfvgbmzaBcxve9t/9Wuy7Dwf4yoAKcND7KFT1HAQfqZ12qtc+DUrBMeKF9nw==
+
 ansi-escapes@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/ansi-escapes/-/ansi-escapes-3.1.0.tgz#f73207bb81207d75fd6c83f125af26eea378ca30"
@@ -4083,6 +4088,13 @@ end-of-stream@^1.0.0, end-of-stream@^1.1.0:
   resolved "https://registry.yarnpkg.com/end-of-stream/-/end-of-stream-1.4.1.tgz#ed29634d19baba463b6ce6b80a37213eab71ec43"
   dependencies:
     once "^1.4.0"
+
+enquirer@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/enquirer/-/enquirer-2.2.0.tgz#beb4415e6293a6214de0fd405398e994da775d66"
+  integrity sha512-etPgLOWzaJ7qgJyQEVvSG+vOjkldCYJ3ZnDsY/ZF++O/K30rbWUTyUdoz03fg1EF7WtJHIKWdQDHSSYtzNqtTQ==
+  dependencies:
+    ansi-colors "^3.2.1"
 
 entities@1.0:
   version "1.0.0"
@@ -7163,6 +7175,11 @@ onetime@^2.0.0:
   resolved "https://registry.yarnpkg.com/onetime/-/onetime-2.0.1.tgz#067428230fd67443b2794b22bba528b6867962d4"
   dependencies:
     mimic-fn "^1.0.0"
+
+open-file-explorer@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/open-file-explorer/-/open-file-explorer-1.0.2.tgz#4083716ec6fb3de7812adcf5d8ac5f76e9316037"
+  integrity sha512-U4p+VW5uhtgK5W7qSsRhKioYAHCiTX9PiqV4ZtAFLMGfQ3QhppaEevk8k8+DSjM6rgc1yNIR2nttDuWfdNnnJQ==
 
 opener@^1.4.3:
   version "1.5.1"

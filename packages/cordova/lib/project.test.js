@@ -29,7 +29,10 @@ suite('project', () => {
                 },
                 platform() {
                     return null;
-                }
+                },
+                homedir() {
+                    return '/test-homedir';
+                },
             });
             mock('./chdir', {
                 chdir() {},

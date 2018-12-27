@@ -66,7 +66,7 @@ function firstPass() {
     const sywac = new Api();
 
     // All commands available
-    const commands = ['run', 'build', 'test'];
+    const commands = ['run', 'build', 'test', 'configure'];
 
     sywac.configure({ name: 'kash' });
 
@@ -78,6 +78,13 @@ function firstPass() {
                 return secondPass(argv.platform);
             }
         });
+    });
+
+    sywac.command('open config', {
+        desc: 'Open the location of your configuration',
+        run(argv) {
+            return require('../lib/open-config')();
+        },
     });
 
     sywac.help();
@@ -99,7 +106,9 @@ function secondPass(platformId) {
     } catch (e) {
         let context = sywac.initContext(false);
         context.unexpectedError(e);
-        return Promise.resolve(context.toResult());
+        const result = context.toResult();
+        console.log(result.output);
+        process.exit(result.code);
     }
 
     const platform = {
@@ -171,6 +180,20 @@ function secondPass(platformId) {
         },
     });
 
+    sywac.command(`configure <platform>`, {
+        desc: 'configure kash',
+        setup(sywac) {
+            const sywacPatch = patchSywacOptions(sywac, { group: platform.cli.group || 'Platform: ' });
+            util.platform.registerOptions(sywac, platform, 'configure');
+            sywacPatch.dispose();
+        },
+        run(argv) {
+            mountUI(argv);
+            const configure = require('../lib/configure');
+            return configure(argv, platformId, 'configure');
+        },
+    });
+
     sywac.boolean('--quiet, -q', {
         desc: 'Silence all outputs',
         defaultValue: false,
@@ -195,19 +218,19 @@ function secondPass(platformId) {
 
     applyStyles(sywac);
     
-    return sywac.parse(process.argv.slice(2));
+    return sywac.parse(process.argv.slice(2))
+        .then((result) => {
+            console.log(result.output);
+            process.exit(result.code);
+        })
+        .catch(e => console.error(e));
 }
 
 firstPass()
     .then((result) => {
-        // This won't run if secondPass is executed forom a run command
+        // This won't run if secondPass is executed from a run command
         if (result.argv.platform) {
-            return secondPass(result.argv.platform)
-                .then((result) => {
-                    console.log(result.output);
-                    process.exit(result.code);
-                })
-                .catch(e => console.error(e));
+            return secondPass(result.argv.platform);
         }
         console.log(result.output);
         process.exit(result.code);

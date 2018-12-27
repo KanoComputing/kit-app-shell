@@ -41,8 +41,6 @@ function deleteCommandKeys(obj) {
  * @param {String} command 
  */
 function agregateArgv(argv, platformId, command) {
-    const config = ConfigLoader.load(argv.app, argv.env);
-    config.BUILD_NUMBER = parseInt(process.env.BUILD_NUMBER, 10) || argv.buildNumber;
     // Load config files
     return RcLoader.load(argv.app)
         .then((rcOpts) => {
@@ -67,11 +65,18 @@ function agregateArgv(argv, platformId, command) {
             const opts = allOpts.reduce((acc, item) => {
                 return deepMerge(acc, item);
             }, {});
-            opts.config = config;
             return opts;
         });
 }
 
+function addConfig(opts, app) {
+    const config = ConfigLoader.load(argv.app, argv.env);
+    config.BUILD_NUMBER = parseInt(process.env.BUILD_NUMBER, 10) || argv.buildNumber;
+    opts.config = config;
+    return opts;
+}
+
 module.exports = {
     agregateArgv,
+    addConfig,
 };

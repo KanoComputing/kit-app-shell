@@ -2,6 +2,9 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 const deepMerge = require('deepmerge');
+const { promisify } = require('util');
+
+const writeFile = promisify(fs.writeFile);
 
 const NAMES = [
     'kit-app-shell.conf.js',
@@ -9,6 +12,8 @@ const NAMES = [
     'kash.conf.js',
     '.kash.conf.js',
 ];
+
+const RC_PATH = path.join(os.homedir(), '.kashrc.json');
 
 const RcLoader = {
     check(filePath) {
@@ -18,7 +23,7 @@ const RcLoader = {
     findAll(app) {
         const resolved = [];
         const files = NAMES.map((name) => path.join(app, name));
-        files.push(path.join(os.homedir(), '.kashrc.json'));
+        files.push(RC_PATH);
         const tasks = files.map((filePath) => {
             return RcLoader.check(filePath)
                 .then((exists) => {
@@ -36,7 +41,23 @@ const RcLoader = {
                     return deepMerge(acc, require(file));
                 }, {});
             });
-    }
+    },
+    hasHomeRc() {
+        return RcLoader.check(RC_PATH);
+    },
+    loadHomeRc() {
+        return RcLoader.hasHomeRc()
+            .then((exists) => {
+                if (!exists) {
+                    return {};
+                }
+                return require(RC_PATH);
+            });
+    },
+    saveHomeRc(contents) {
+        return writeFile(RC_PATH, JSON.stringify(contents, null, '    '));
+    },
+    RC_PATH,
 }
 
 module.exports = RcLoader;

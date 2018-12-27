@@ -42,7 +42,7 @@ function registerCommands(sywac, platform) {
     }
     // Ignore missing or wrongly typed commands config
     if (typeof platform.cli.commands !== 'function') {
-        throw new Error(`Could not register commands: 'commands' key in cli module is not a function`);
+        return;
     }
     platform.cli.commands(sywac);
 }
@@ -56,7 +56,7 @@ function registerOptions(sywac, platform, command) {
     const optionsRegistration = platform.cli[command];
 
     if (typeof optionsRegistration !== 'function') {
-        throw new Error(`Could not register options: '${command}' key in cli module is not a function`);
+        return;
     }
     optionsRegistration(sywac);
 }

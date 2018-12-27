@@ -1,10 +1,11 @@
 const { log, processState, util } = require('@kano/kit-app-shell-core');
-const { agregateArgv } = require('./argv');
+const { agregateArgv, addConfig } = require('./argv');
 
 function runCommand(command, platformId, argv) {
     const platformCommand = util.platform.loadPlatformKey(platformId, command);
     return agregateArgv(argv, platformId, command)
         .then((opts) => {
+            addConfig(opts, argv.app);
             log.trace('OPTIONS', opts);
             return new Promise((resolve) => {
                 const result = platformCommand(opts);
