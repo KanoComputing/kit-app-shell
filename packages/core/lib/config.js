@@ -2,6 +2,7 @@
  * Reads config file from an app directory and merge default, environment and app config
  */
 const path = require('path');
+const fs = require('fs');
 const deepMerge = require('deepmerge');
 
 const DEFAULTS = {
@@ -9,21 +10,31 @@ const DEFAULTS = {
     APP_ID: 'com.kano.unknown',
 }
 
+/**
+ * Behaves like require, but can provide a fallback
+ */
+function softRequire(moduleId, fallback = {}) {
+    try {
+        const content = fs.readFileSync(moduleId, 'utf-8');
+        return JSON.parse(content);
+    } catch(e) {
+        return fallback;
+    }
+}
+
 class ConfigLoader {
     static load(appDir, env = 'development') {
         const configDir = path.join(appDir, 'config');
-        const defaultConfig = require(path.join(configDir, 'default.json'));
-        const envConfig = require(path.join(configDir, `${env}.json`));
+        const defaultConfig = softRequire(path.join(configDir, 'default.json'));
+        const envConfig = softRequire(path.join(configDir, `${env}.json`));
 
         const config = deepMerge(defaultConfig, envConfig);
 
         config.ENV = env;
         config.UI_ROOT = '/www/';
 
-        try {
-            const pck = require(path.join(appDir, 'package.json'));
-            config.UI_VERSION = pck.version;
-        } catch (e) { /* ignore */ }
+        const pck = softRequire(path.join(appDir, 'package.json'));
+        config.UI_VERSION = pck.version || '0.0.0';
 
         return deepMerge(DEFAULTS, config);
     }

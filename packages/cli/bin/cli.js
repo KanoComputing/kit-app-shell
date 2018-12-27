@@ -155,7 +155,8 @@ function secondPass(platformId) {
         run(argv) {
             mountUI(argv);
             const { runCommand } = require('../lib/command');
-            return runCommand('run', platformId, argv);
+            return runCommand('run', platformId, argv)
+                .catch(e => processState.setFailure(e));
         }
     });
 
@@ -176,7 +177,8 @@ function secondPass(platformId) {
         run(argv) {
             mountUI(argv);
             const runTest = require('../lib/test');
-            return runTest(argv, platformId, 'test');
+            return runTest(argv, platformId, 'test')
+                .catch(e => processState.setFailure(e));
         },
     });
 
@@ -190,7 +192,8 @@ function secondPass(platformId) {
         run(argv) {
             mountUI(argv);
             const configure = require('../lib/configure');
-            return configure(argv, platformId, 'configure');
+            return configure(argv, platformId, 'configure')
+                .catch(e => processState.setFailure(e));
         },
     });
 
@@ -222,8 +225,7 @@ function secondPass(platformId) {
         .then((result) => {
             console.log(result.output);
             process.exit(result.code);
-        })
-        .catch(e => console.error(e));
+        });
 }
 
 firstPass()

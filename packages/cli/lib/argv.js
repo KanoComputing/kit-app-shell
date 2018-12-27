@@ -70,8 +70,8 @@ function agregateArgv(argv, platformId, command) {
 }
 
 function addConfig(opts, app) {
-    const config = ConfigLoader.load(argv.app, argv.env);
-    config.BUILD_NUMBER = parseInt(process.env.BUILD_NUMBER, 10) || argv.buildNumber;
+    const config = ConfigLoader.load(opts.app, opts.env);
+    config.BUILD_NUMBER = parseInt(process.env.BUILD_NUMBER, 10) || opts.buildNumber;
     opts.config = config;
     return opts;
 }

@@ -3,14 +3,6 @@ const deepMerge = require('deepmerge');
 const { util, RcLoader, log } = require('@kano/kit-app-shell-core');
 const chalk = require('chalk');
 
-function transformQuestion(q, platformId, cfg) {
-    const initial = cfg[platformId] ? (cfg[platformId][q.name] || q.initial) : q.initial;
-    const better = {
-        initial,
-    };
-    return Object.assign({}, q, better);
-}
-
 module.exports = function configure(argv, platformId, command) {
     const platformConfigure = util.platform.loadPlatformKey(platformId, 'configure');
     log.info(`Configuring options for platform ${platformId}`);
@@ -19,11 +11,7 @@ module.exports = function configure(argv, platformId, command) {
             if (typeof platformConfigure.enquire !== 'function') {
                 return;
             }
-            const customPrompt = (input) => {
-                const questions = Array.isArray(input) ? input : [input];
-                return prompt(questions.map(q => transformQuestion(q, platformId, cfg)));
-            };
-            return platformConfigure.enquire(customPrompt)
+            return platformConfigure.enquire(prompt, cfg[platformId] || {})
                 .then((answers) => {
                     if (typeof platformConfigure.generate !== 'function') {
                         return answers;
@@ -32,7 +20,7 @@ module.exports = function configure(argv, platformId, command) {
                 })
                 .then((answers) => {
                     const scopedAnswers = {
-                        [platformId]: answers,
+                        [platformId]: answers || {},
                     };
                     return deepMerge(cfg, scopedAnswers);
                 })

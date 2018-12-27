@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const chalk = require('chalk');
 
 const request = require('request');
 
@@ -56,14 +57,19 @@ function upload(app, { user, key } = {}) {
     });
 }
 
+function getConfig(opts, key) {
+    const value = opts[key];
+    
+    if (typeof value === 'undefined') {
+        throw new Error(`Could not run test: Missing '${key}' in your rc file. Run ${chalk.cyan('kash configure test')} to fix this.`);
+    }
+
+    return value;
+}
+
 function kobitonSetup(app, wd, mocha, opts) {
     // Retrieve saucelabs options
-    const { kobiton } = opts;
-    // Authentication options are required, throw an error
-    if (!kobiton) {
-        // Be explicit enough so people know what to do next
-        throw new Error(`Could not run test on kobiton: Missing 'kobiton' in your rc file`);
-    }
+    const kobiton = getConfig(opts, 'kobiton');
     const { user, key } = kobiton;
     // Send the apk to kobiton's servers
     return upload(app, {
