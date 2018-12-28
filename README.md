@@ -104,11 +104,9 @@ With tha in mind, every packages in this repository need to rely on the same pac
 
 ## Roadmap
 
-TODOs for 0.0.3-alpha.1:
+TODOs for 0.0.3-alpha.2:
 
- - IOS splashscreen generation
- - Tighten test module (README, guards, explicit errors, improved feedback)
- - Use rollup-plugin-inject as an alternative to the global replace strategy (Should increase build time and perf by a lot) (BREAKING)
+ - TBD
 
 ## TODO:
  - Create a Dockerfile with the setup to create on any platform. Host the image on dockerhub 

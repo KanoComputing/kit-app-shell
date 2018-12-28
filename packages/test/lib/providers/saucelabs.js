@@ -11,13 +11,7 @@ const post = promisify(request.post);
 
 function uploadForEmulator(app, { user, key } = {}) {
     const filename = path.basename(app);
-    const stat = fs.statSync(app);
     const stream = fs.createReadStream(app);
-    let uploaded = 0;
-    stream.on('data', (d) => {
-        uploaded += d.length;
-        console.log(uploaded / stat.size);
-    });
     return post({
         headers: {
             'Content-Type': 'application/octet-stream',

@@ -50,12 +50,14 @@ function localSetup(app, wd, mocha, opts) {
  * Create a builder to create a driver for each test
  */
 module.exports = (wd, mocha, opts) => {
+    // Use local provider
+    if (opts.provider === 'local') {
+        return localSetup(opts.prebuiltApp, wd, mocha, opts);
+    }
     // Remote device providers are configured in the cordova platform to be shared between iOS
     // and Android
     const builder = getBuilder(wd, mocha, opts);
     if (!builder) {
-        // No provider matched, use local provider
-        return localSetup(opts.prebuiltApp, wd, mocha, opts);
+        throw new Error(`Could not run tests: '${opts.provider}' is not a valid device provider`);
     }
-    return builder;
 };

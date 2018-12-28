@@ -49,10 +49,13 @@ module.exports = (opts = {}) => {
                                     js: {
                                         bundleOnly: opts.bundleOnly,
                                         targets: opts.targets,
-                                        replaces: {
+                                        replaces: [{
                                             // Avoid jsZip to detect the define from requirejs
-                                            'typeof define': 'undefined',
-                                        },
+                                            // TODO: Scope this to the jszip file
+                                            values: {
+                                                'typeof define': 'undefined',
+                                            },
+                                        }],
                                     },
                                     html: {
                                         injectScript: `<script src="/${wcFilename}"></script>`,

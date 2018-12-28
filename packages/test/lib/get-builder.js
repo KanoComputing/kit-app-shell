@@ -1,4 +1,4 @@
-
+console.warn('@kano/kit-app-shell-test is experimental');
 /**
  * This file is not under the test directory as it is not used directly to provide a platform test builder
  * It is meant to be loaded using the core's `loadPlatformKey('test', 'get-builder')`

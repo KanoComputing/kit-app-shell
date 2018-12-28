@@ -3,7 +3,7 @@ const path = require('path');
 const { promisify } = require('util');
 const rimraf = promisify(require('rimraf'));
 
-function build({ app, config = {}, out, bundleOnly, resources = [], polyfills = [], moduleContext = {}, replaces = {}, targets = {}, babelExclude = [] } = {}) {
+function build({ app, config = {}, out, bundleOnly, resources = [], polyfills = [], moduleContext = {}, replaces = [], targets = {}, babelExclude = [] } = {}) {
     return rimraf(out)
         .then(() => {
             return Bundler.bundle(

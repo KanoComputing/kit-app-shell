@@ -82,7 +82,7 @@ function createConfig(config, out) {
         });
 }
 
-function build({ app, config = {}, out, bundleOnly }, { resources = [], polyfills = [], moduleContext = {}, replaces = {} } = {}) {
+function build({ app, config = {}, out, bundleOnly, resources = [], polyfills = [], moduleContext = {}, replaces = [] } = {}) {
     processState.setStep(`Creating electron app '${config.APP_NAME}'`);
     const tasks = [
         copyElectronApp(out),

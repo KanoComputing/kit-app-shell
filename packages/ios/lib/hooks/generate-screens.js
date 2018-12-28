@@ -3,14 +3,14 @@ const path = require('path');
 const Config = require('cordova-config');
 const screens = require('../../data/screens');
 
-function getScreenPath(orientation, key, projectPath) {
-    return path.join(projectPath, 'res/screen/android', `${orientation}-${key}-screen.png`);
+function getScreenPath(key, projectPath) {
+    return path.join(projectPath, 'res/screen/ios', key);
 }
 
 function generateScreens(src, projectPath) {
-    const tasks = Object.keys(screens).map((key) => {
-        const [width, height] = screens[key];
-        const filePath = getScreenPath('land', key, projectPath);
+    const tasks = screens.map((screen) => {
+        const { width, height } = screen;
+        const filePath = getScreenPath(screen.name, projectPath);
         return util.resizeImage(src, filePath, width, height);
     });
     return Promise.all(tasks);
@@ -22,27 +22,27 @@ module.exports = (context) => {
     if (!shell) {
         return;
     }
-    shell.processState.setStep('Generating icons');
-    if (!shell.config.SPLASHSCREENS || !shell.config.SPLASHSCREENS.ANDROID) {
-        shell.processState.setWarning('No android splashscreen defined in the config');
+    shell.processState.setStep('Generating splashscreens');
+    if (!shell.config.SPLASHSCREENS || !shell.config.SPLASHSCREENS.IOS) {
+        shell.processState.setWarning('No iOS splashscreen defined in the config');
         return;
     }
-    const iconSrc = path.join(shell.app, shell.config.SPLASHSCREENS.ANDROID);
+    const iconSrc = path.join(shell.app, shell.config.SPLASHSCREENS.IOS);
     return generateScreens(iconSrc, projectRoot)
         .then(() => {
             shell.processState.setStep('Adding splashscreen to config.xml');
             const cfg = new Config(path.join(projectRoot, 'config.xml'));
-            const platformEl = xml.findInConfig(cfg, 'platform/[@name="android"]');
+            const platformEl = xml.findInConfig(cfg, 'platform/[@name="ios"]');
 
-            Object.keys(screens).forEach((screen) => {
+            screens.forEach((screen) => {
                 // Add or update element with new icon
                 xml.setElement(
                     platformEl,
-                    `splash/[@density="${screen}"]`,
+                    `splash/[@width="${screen.width}"]`,
                     'splash',
                     '',
                     // No project root. Make it relative to the config.xml
-                    { density: screen, src: getScreenPath('land', screen, '') },
+                    { width: screen.width, height: screen.width, src: getScreenPath(screen.name, '') },
                 );
             });
             
