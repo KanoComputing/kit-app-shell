@@ -21,6 +21,7 @@ const escapeRegExp = require('escape-regexp');
 
 const writeFile = promisify(fs.writeFile);
 
+
 // Resolve modules here. Allows tests to mock the file system after this has been resolved
 const babelPluginSyntaxDynamicImport = require.resolve('@babel/plugin-syntax-dynamic-import');
 const babelPresetEnv = require.resolve('@babel/preset-env');

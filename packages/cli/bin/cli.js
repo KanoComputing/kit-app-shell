@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 const path = require('path');
 const Api = require('sywac/Api');
-const { processState, util } = require('@kano/kit-app-shell-core');
+// Use the file directly. Might break when moving stuff but tests will tell us
+// This saves a lot of time as the big modules for building are not loaded is not needed
+const util = require('@kano/kit-app-shell-core/lib/util');
+const processState = require('@kano/kit-app-shell-core/lib/process-state');
 const chalk = require('chalk');
 
 function parseCommon(sywac) {
