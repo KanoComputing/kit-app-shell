@@ -25,4 +25,8 @@ kash configure test
 
 Choose a provider, input your credentials and they will be saved in your RC file. You can change the values at any time by running the same command again. To open your RC file run `kash open config`.
 
+You can now run tour test on one of the available provider using:
 
+```
+kash test <platform> --prebuilt-app <path-to-app> --provider [browserstack|bitbar|kobiton|saucelabs]
+```

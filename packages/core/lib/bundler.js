@@ -2,7 +2,7 @@ const fs = require('fs');
 const rollup = require('rollup');
 const path = require('path');
 const nodeResolve = require('rollup-plugin-node-resolve');
-const replace = require('rollup-plugin-replace');
+const replace = require('./plugins/replace');
 const polyfill = require('rollup-plugin-polyfill');
 const babel = require('rollup-plugin-babel');
 const minifyHTML = require('rollup-plugin-minify-html-literals').default;
@@ -95,7 +95,7 @@ class Bundler {
             return replacements[g0] || '';
         });
     }
-    static bundleSources(input, config, { polyfills = [], moduleContext = {}, replaces = {}, targets = {}, babelExclude = [], bundleOnly = false, appSrcName = 'index.js' } = {}) {
+    static bundleSources(input, config, { polyfills = [], moduleContext = {}, replaces = [], targets = {}, babelExclude = [], bundleOnly = false, appSrcName = 'index.js' } = {}) {
         const tracker = new ProgressTracker();
         tracker.on('progress', (e) => {
             processState.setStep(`(${e.loaded}) Bundling '${e.file}'`);
@@ -104,6 +104,9 @@ class Bundler {
         // TODO: This does not work on non root files, figure out a solution
         const inputRoot = path.dirname(input);
         const configPath = path.join(inputRoot, 'config.js');
+        const replacers = replaces.map((opts) => {
+            return replace(Object.assign({ delimiters: ['', ''] }, opts));
+        });
         const defaultOptions = {
             input: [input],
             experimentalCodeSplitting: true,
@@ -111,11 +114,13 @@ class Bundler {
                 tracker.plugin(),
                 replace({
                     delimiters: ['', ''],
+                    exclude: path.join(inputRoot, 'node_modules/**'),
                     values: {
-                        ...replaces,
+                        // ...replaces,
                         'window.KitAppShellConfig.APP_SRC': `'./www/${appSrcName}'`,
                     },
                 }),
+                ...replacers,
                 virtual({
                     // Config is external, let rollup import it
                     [configPath]: `export default Object.assign(${JSON.stringify(config)}, window.KitAppShellConfig || {});`,
