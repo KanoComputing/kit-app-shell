@@ -3,10 +3,14 @@ const fs = require('fs');
 const { promisify } = require('util');
 const glob = promisify(require('glob'));
 const mkdirp = promisify(require('mkdirp'));
-const { Bundler, util, processState } = require('@kano/kit-app-shell-core');
+const processState = require('@kano/kit-app-shell-core/lib/process-state');
+const util = require('@kano/kit-app-shell-core/lib/util');
+const Bundler = require('@kano/kit-app-shell-core/lib/bundler');
 
 const writeFile = promisify(fs.writeFile);
 
+// Do not embbed any of this in the app, these are not required to run
+// Ignoring these files will help reducing the overall app size
 const cleanIgnore = [
     '**/.npmrc',
     '**/*.md',
@@ -50,6 +54,10 @@ const babelTargets = {
     chrome: 66, // Electron 3 = Chromium 66
 };
 
+/**
+ * Copies the electron app from the `app` directory as a template
+ * @param {String} out Path to the copy destination
+ */
 function copyElectronApp(out) {
     const cwd = path.join(__dirname, '../app');
     return glob('**/*.*', {
@@ -72,6 +80,12 @@ function copyElectronApp(out) {
     });
 }
 
+/**
+ * Create a config.json file in the defined target from a given config object
+ * This is used to embbed a config with a built app, ensuring it frozen
+ * @param {Object} config The config to save in the app
+ * @param {String} out Target directory
+ */
 function createConfig(config, out) {
     return mkdirp(out)
         .then(() => {

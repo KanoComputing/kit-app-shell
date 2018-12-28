@@ -1,5 +1,5 @@
-const { processState } = require('@kano/kit-app-shell-core');
-const { build } = require('@kano/kit-app-shell-electron');
+const processState = require('@kano/kit-app-shell-core/lib/process-state');
+const build = require('@kano/kit-app-shell-electron/lib/build');
 const path = require('path');
 const os = require('os');
 const mkdirp = require('mkdirp');
@@ -58,7 +58,7 @@ function windowsBuild({ app, config = {}, out, skipInstaller = false, bundleOnly
     const icon = config.ICONS ? config.ICONS.WINDOWS : DEFAULT_ICON;
     return build({ app, config, out: BUILD_DIR, bundleOnly })
         .then((buildDir) => {
-            processState.setStep(`Creating windows application`);
+            processState.setInfo(`Creating windows application`);
             const targetDir = skipInstaller ? out : PKG_DIR;
             const packagerOptions = {
                 dir: buildDir,
@@ -78,7 +78,7 @@ function windowsBuild({ app, config = {}, out, skipInstaller = false, bundleOnly
                     ProductName: config.APP_NAME,
                 },
                 icon,
-                quiet: true,
+                quiet: false,
             };
             return packager(packagerOptions)
                 .then(() => targetDir);

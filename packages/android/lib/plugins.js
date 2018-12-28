@@ -1,4 +1,4 @@
-const { util } = require('@kano/kit-app-shell-cordova');
+const util = require('@kano/kit-app-shell-cordova/lib/util');
 
 // Load plugins and platforms from the local dependencies.
 // This avoid using cordova-fetch and having to download deps on every build

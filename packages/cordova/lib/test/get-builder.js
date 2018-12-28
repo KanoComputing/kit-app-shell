@@ -1,4 +1,4 @@
-const { util } = require('@kano/kit-app-shell-core');
+const util = require('@kano/kit-app-shell-core/lib/util');
 
 /**
  * Find the builder matching the provided target device provider

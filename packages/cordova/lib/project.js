@@ -1,4 +1,4 @@
-const { processState } = require('@kano/kit-app-shell-core');
+const processState = require('@kano/kit-app-shell-core/lib/process-state');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
@@ -47,8 +47,13 @@ function createProject(opts, hash) {
                 .then(() => chdir(PROJECT_DIR))
                 .then(() => {
                     const cfg = new Config(path.join(PROJECT_DIR, 'config.xml'));
+                    const { preferences = {} } = opts;
                     Object.keys(hooks).forEach((type) => {
                         hooks[type].forEach(src => cfg.addHook(type, path.relative(PROJECT_DIR, src)));
+                    });
+                    // Set preferences from options
+                    Object.keys(preferences).forEach((key) => {
+                        cfg.setPreference(key, preferences[key]);
                     });
                     return cfg.write();
                 })

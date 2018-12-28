@@ -1,5 +1,5 @@
-const { processState } = require('@kano/kit-app-shell-core');
-const { build } = require('@kano/kit-app-shell-electron');
+const processState = require('@kano/kit-app-shell-core/lib/process-state');
+const build = require('@kano/kit-app-shell-electron/lib/build');
 const path = require('path');
 const os = require('os');
 const packager = require('electron-packager');
@@ -28,7 +28,7 @@ function macosBuild({ app, config = {}, out, bundleOnly }) {
             bundleOnly,
         }))
         .then((buildDir) => {
-            processState.setStep('Creating macOS app');
+            processState.setInfo('Creating macOS app');
             const packagerOptions = {
                 dir: buildDir,
                 packageManager: 'yarn',
@@ -42,7 +42,7 @@ function macosBuild({ app, config = {}, out, bundleOnly }) {
                 platform: 'darwin',
                 arch: 'x64',
                 icon,
-                quiet: true,
+                quiet: false,
                 mac: true,
             };
             return packager(packagerOptions);

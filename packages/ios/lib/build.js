@@ -1,4 +1,5 @@
-const { build } = require('@kano/kit-app-shell-cordova');
+const build = require('@kano/kit-app-shell-cordova/lib/build');
+const processState = require('@kano/kit-app-shell-core/lib/process-state');
 const { promisify } = require('util');
 const glob = promisify(require('glob'));
 const path = require('path');
@@ -35,6 +36,7 @@ module.exports = (opts) => {
                     const target = path.join(opts.out, result);
                     return mkdirp(opts.out)
                         .then(() => rename(path.join(dest, result), target))
+                        .then(() => processState.setSuccess(`Built iOS app at ${target}`))
                         .then(() => target);
                 });
         });

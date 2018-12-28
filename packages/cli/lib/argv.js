@@ -1,4 +1,5 @@
-const { ConfigLoader, RcLoader } = require('@kano/kit-app-shell-core');
+const ConfigLoader = require('@kano/kit-app-shell-core/lib/config');
+const RcLoader = require('@kano/kit-app-shell-core/lib/rc');
 const deepMerge = require('deepmerge');
 
 function deleteCommandKeys(obj) {

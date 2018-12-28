@@ -1,5 +1,6 @@
-const { processState, util } = require('@kano/kit-app-shell-core');
-const { build } = require('@kano/kit-app-shell-electron');
+const util = require('@kano/kit-app-shell-core/lib/util');
+const processState = require('@kano/kit-app-shell-core/lib/process-state');
+const build = require('@kano/kit-app-shell-electron/lib/build');
 const path = require('path');
 const os = require('os');
 const glob = require('glob');
@@ -14,11 +15,17 @@ const commandExists = require('command-exists');
 
 const templateDir = path.join(__dirname, '../deb');
 
+/**
+ * Create the control directory for the target .deb package
+ * @param {String} out Target directory
+ * @param {Object} config Config for the app
+ */
 function createControl(out, config) {
     let version = config.UI_VERSION;
     if (process.env.BUILD_NUMBER) {
         version += `-${process.env.BUILD_NUMBER}`;
     }
+    // Create options for the templates
     const options = {
         VERSION: version,
         APP_NAME: config.APP_NAME,
@@ -26,8 +33,7 @@ function createControl(out, config) {
         KEBAB_NAME: kebab(config.APP_NAME),
         SNAKE_NAME: snake(config.APP_NAME),
     };
-    path.join(out, 'control/control')
-    path.join(out, 'control/postinst')
+    // Create all the files from the templates
     return util.fs.fromTemplate(
         path.join(templateDir, 'control'),
         path.join(out, 'control/control'),

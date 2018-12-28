@@ -4,9 +4,6 @@ const path = require('path');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const replace = require('./plugins/replace');
 const polyfill = require('rollup-plugin-polyfill');
-const babel = require('rollup-plugin-babel');
-const minifyHTML = require('rollup-plugin-minify-html-literals').default;
-const uglify = require('rollup-plugin-uglify-es');
 const inject = require('rollup-plugin-inject');
 const virtual = require('rollup-plugin-virtual');
 const mkdirp = require('mkdirp');
@@ -20,11 +17,6 @@ const glob = promisify(require('glob'));
 const escapeRegExp = require('escape-regexp');
 
 const writeFile = promisify(fs.writeFile);
-
-
-// Resolve modules here. Allows tests to mock the file system after this has been resolved
-const babelPluginSyntaxDynamicImport = require.resolve('@babel/plugin-syntax-dynamic-import');
-const babelPresetEnv = require.resolve('@babel/preset-env');
 
 function write(file, outputDir) {
     const filePath = path.join(outputDir, file.fileName);
@@ -140,6 +132,14 @@ class Bundler {
             onwarn: () => {},
         };
         if (!bundleOnly) {
+            // Skip babel loading if it's not going to be used
+            const babel = require('rollup-plugin-babel');
+            const minifyHTML = require('rollup-plugin-minify-html-literals').default;
+            const uglify = require('rollup-plugin-uglify-es');
+            // Manual resolving eable an easy mock-require, otherwise babel tries to do it on its own
+            const babelPluginSyntaxDynamicImport = require.resolve('@babel/plugin-syntax-dynamic-import');
+            const babelPresetEnv = require.resolve('@babel/preset-env');
+
             defaultOptions.plugins.push(minifyHTML());
             defaultOptions.plugins.push(babel({
                 exclude: babelExclude,

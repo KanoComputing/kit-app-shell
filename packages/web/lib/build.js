@@ -1,4 +1,4 @@
-const { Bundler } = require('@kano/kit-app-shell-core');
+const Bundler = require('@kano/kit-app-shell-core/lib/bundler');
 const path = require('path');
 const { promisify } = require('util');
 const rimraf = promisify(require('rimraf'));

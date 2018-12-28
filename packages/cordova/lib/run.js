@@ -1,4 +1,6 @@
-const { ConfigLoader, Bundler, processState } = require('@kano/kit-app-shell-core');
+const processState = require('@kano/kit-app-shell-core/lib/process-state');
+const ConfigLoader = require('@kano/kit-app-shell-core/lib/config');
+const Bundler = require('@kano/kit-app-shell-core/lib/bundler');
 const project = require('./project');
 const ngrok = require('ngrok');
 const connect = require('connect');
@@ -11,14 +13,21 @@ const livereload = require('livereload');
 
 const namedResolutionMiddleware = require('@kano/es6-server/named-resolution-middleware');
 
+// Finding the machine's IP address in a local network can be unreliable
+// This allows users to define the name of their network interface
 const { KASH_NET_INTERFACE_NAME } = process.env;
 
+/**
+ * Serves the app, resolve named modules, create an endpoint to GET the config
+ * @param {String} app Path to the app to run
+ */
 function serve(app) {
     return connect()
         .use(cors())
         .use((req, res, next) => {
             if (req.method === 'GET') {
                 if (req.url === '/_config') {
+                    // Load on every request to get the latest config
                     const config = ConfigLoader.load(app);
                     res.writeHead(200, { 'Content-Type': 'application/json' });
                     config.APP_SRC = './www/index.js';
@@ -31,6 +40,11 @@ function serve(app) {
         .use(serveStatic(app));
 }
 
+/**
+ * Create a server and tunnels it using ngrok
+ * Also creates a livereload server and watches the files in the app directory
+ * @param {String} app Path to the app to tunnel
+ */
 function setupTunnel(app) {
     const server = serve(app).listen(0);
     const { port } = server.address();

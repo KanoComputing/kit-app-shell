@@ -4,7 +4,7 @@ const chaiFs = require('chai-fs');
 const chaiJSONSchema = require('chai-json-schema');
 const mock = require('mock-require');
 const mockFs = require('mock-fs');
-const { util } = require('@kano/kit-app-shell-core');
+const util = require('@kano/kit-app-shell-core/lib/util');
 
 chai.use(chaiFs);
 chai.use(chaiJSONSchema);

@@ -1,4 +1,5 @@
-const { util, xml } = require('@kano/kit-app-shell-cordova');
+const util = require('@kano/kit-app-shell-cordova/lib/util');
+const xml = require('@kano/kit-app-shell-cordova/lib/xml');
 const path = require('path');
 const Config = require('cordova-config');
 const icons = require('../../data/icons');

@@ -1,7 +1,7 @@
 const appium = require('appium');
 const adbkit = require('adbkit');
 const url = require('url');
-const { processState } = require('@kano/kit-app-shell-core');
+const processState = require('@kano/kit-app-shell-core/lib/process-state');
 const getBuilder = require('@kano/kit-app-shell-cordova/lib/test/get-builder');
 
 /**

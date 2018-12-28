@@ -1,4 +1,5 @@
-const { Bundler, util } = require('@kano/kit-app-shell-core');
+const util = require('@kano/kit-app-shell-core/lib/util');
+const Bundler = require('@kano/kit-app-shell-core/lib/bundler');
 const path = require('path');
 const { cordova } = require('cordova-lib');
 const { promisify } = require('util');

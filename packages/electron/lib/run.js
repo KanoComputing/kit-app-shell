@@ -1,12 +1,11 @@
-
-const { ConfigLoader, util, processState } = require('@kano/kit-app-shell-core');
+const util = require('@kano/kit-app-shell-core/lib/util');
+const processState = require('@kano/kit-app-shell-core/lib/process-state');
 const { spawn } = require('child_process');
 const electronPath = require('electron');
 const livereload = require('livereload');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-
 
 function run({ app, config = {} }, {}) {
     processState.setStep('Launching electron app');

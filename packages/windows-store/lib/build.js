@@ -1,5 +1,5 @@
-const { processState } = require('@kano/kit-app-shell-core');
-const { build } = require('@kano/kit-app-shell-windows');
+const processState = require('@kano/kit-app-shell-core/lib/process-state');
+const build = require('@kano/kit-app-shell-windows/lib/build');
 const path = require('path');
 const os = require('os');
 const { promisify } = require('util');
