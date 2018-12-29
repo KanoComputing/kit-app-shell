@@ -41,8 +41,6 @@ class Bundler {
         if (bundle.appStatic) {
             const { root, files } = bundle.appStatic;
             // Write assets in series
-            // TODO: Move all this to a module that could run in a separate thread
-            // TODO: Design a parallel worker type module to run tasks using all cores
             const p = files.reduce((p, file) => p.then(() => writeStatic(root, file, appOutputDir)), Promise.resolve());
             tasks.push(p);
         }

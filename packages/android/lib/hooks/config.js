@@ -42,20 +42,6 @@ module.exports = (context) => {
         }
     }
 
-    const preferences = {
-        'android-targetSdkVersion': 28,
-        ShowSplashScreenSpinner: false,
-        SplashMaintainAspectRatio: true,
-        loadUrlTimeoutValue: 30000
-    };
-
-    Object.keys(preferences).forEach((preference) => {
-        xml.addElement(cfg._doc._root, 'preference', '', {
-            name: preference,
-            value: preferences[preference],
-        });
-    });
-
     xml.setElement(cfg._doc._root, 'content', 'content', '', {
         src: 'http://localhost:8080/index.html',
     });

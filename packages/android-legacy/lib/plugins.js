@@ -1,4 +1,4 @@
-const { util } = require('@kano/kit-app-shell-cordova');
+const util = require('@kano/kit-app-shell-cordova/lib/util');
 const androidPlatform = require('@kano/kit-app-shell-android/lib/plugins');
 
 const plugins = [
@@ -10,7 +10,6 @@ const hooks = {
     ...androidPlatform.hooks,
     before_prepare: [
         ...androidPlatform.hooks.before_prepare,
-        require.resolve('./hooks/config'),
     ],
 };
 

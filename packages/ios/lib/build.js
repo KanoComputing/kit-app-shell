@@ -1,4 +1,5 @@
 const build = require('@kano/kit-app-shell-cordova/lib/build');
+const { collectPreference } = require('@kano/kit-app-shell-cordova/lib/preferences');
 const processState = require('@kano/kit-app-shell-core/lib/process-state');
 const { promisify } = require('util');
 const glob = promisify(require('glob'));
@@ -9,7 +10,21 @@ const mkdirp = promisify(require('mkdirp'));
 
 const rename = promisify(fs.rename);
 
+const DEFAULT_PREFERENCES = {
+    Scheme: 'kit-app',
+    DisallowOverscroll: true,
+};
+
+function collectPreferences(opts) {
+    opts.preferences = opts.preferences || {};
+    collectPreference(opts, 'target-device', 'targetDevice');
+    collectPreference(opts, 'deployment-target', 'deploymentTarget');
+    collectPreference(opts, 'Scheme', 'scheme');
+    opts.preferences = Object.assign({}, DEFAULT_PREFERENCES, opts.preferences);
+}
+
 module.exports = (opts) => {
+    collectPreferences(opts);
     return build({
         ...opts,
         cacheId: 'ios',

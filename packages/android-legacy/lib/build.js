@@ -2,6 +2,10 @@ const { build } = require('@kano/kit-app-shell-cordova');
 const plugins = require('./plugins');
 
 module.exports = (opts) => {
+    // Force a false on this preference
+    // TODO: More advanced configuration of preferences
+    opts.preferences = opts.preferences || {};
+    opts.preferences.xwalkMultipleApk = false;
     return build({
         ...opts,
         cacheId: 'android-legacy',

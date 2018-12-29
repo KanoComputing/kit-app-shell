@@ -22,21 +22,9 @@ module.exports = (context) => {
         }
     }
 
+    const scheme = shell.opts.preferences.Scheme;
+
     const platformEl = xml.findInConfig(cfg, 'platform/[@name="ios"]');
-
-    const preferences = {
-        Scheme: 'kit-app',
-        DisallowOverscroll: true,
-        'target-device': 'tablet',
-        'deployment-target': '10.0',
-    };
-
-    Object.keys(preferences).forEach((preference) => {
-        xml.addElement(cfg._doc._root, 'preference', '', {
-            name: preference,
-            value: preferences[preference],
-        });
-    });
 
     xml.addRaw(platformEl, `
 <config-file parent="ITSAppUsesNonExemptEncryption" target="*-Info.plist">
@@ -54,10 +42,7 @@ module.exports = (context) => {
 </config-file>
     `);
 
-    xml.addRaw(platformEl, `<allow-navigation href="kit-app://*"></allow-navigation>`);
-
-
-    const scheme = 'kit-app';
+    xml.addRaw(platformEl, `<allow-navigation href="${scheme}://*"></allow-navigation>`);
 
     xml.setElement(cfg._doc._root, 'content', 'content', '', {
         src: `${scheme}:///index.html`,

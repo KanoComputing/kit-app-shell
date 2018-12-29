@@ -13,6 +13,12 @@ const { chdir } = require('./chdir');
 
 const exists = promisify(fs.exists);
 
+const DEFAULT_PREFERENCES = {
+    ShowSplashScreenSpinner: false,
+    SplashMaintainAspectRatio: true,
+    loadUrlTimeoutValue: 30000,
+};
+
 /**
  * Deletes the contents of the www directory of a project
  */
@@ -47,13 +53,16 @@ function createProject(opts, hash) {
                 .then(() => chdir(PROJECT_DIR))
                 .then(() => {
                     const cfg = new Config(path.join(PROJECT_DIR, 'config.xml'));
+                    // Grab preferences from user input
                     const { preferences = {} } = opts;
+                    // Merge with the default preferences
+                    const finalPreferences = Object.assign({}, DEFAULT_PREFERENCES, preferences);
                     Object.keys(hooks).forEach((type) => {
                         hooks[type].forEach(src => cfg.addHook(type, path.relative(PROJECT_DIR, src)));
                     });
                     // Set preferences from options
-                    Object.keys(preferences).forEach((key) => {
-                        cfg.setPreference(key, preferences[key]);
+                    Object.keys(finalPreferences).forEach((key) => {
+                        cfg.setPreference(key, finalPreferences[key]);
                     });
                     return cfg.write();
                 })
