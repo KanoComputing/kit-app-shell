@@ -29,6 +29,43 @@ Options:
   --version  Show version number                                       [commands: version] [boolean]
 ```
 
+## Config files
+
+Configuration files can define options for commands and platforms. THere are two kinds of configuration files, the local rc, a personal file containing options specific to the current machine or user and the project's config, containing the options for a specific project.
+
+You can see your own config file by running `kash open config`.
+
+A project's config file must be located at the root of the porject and be named either:
+
+ - 'kit-app-shell.conf.js'
+ - '.kit-app-shell.conf.js'
+ - 'kash.conf.js'
+ - '.kash.conf.js'
+
+The config file being a js module, you must export the configuration object.
+
+### Personal config
+
+This config is mainly used to store your personal preferences and credentials. You can modify the JSON file manually, but `kash` provides a way to update this file through the `configure` CLI command.
+
+`kash configure` Will let you configure the CLI while `kash configure <platform>` will let you configure a specific platform.
+
+### Project config
+
+You can import the types from the core module to have access to autocompletion of your configuration file
+```js
+/**
+ * @type {import('@kano/kit-app-shell-core/types').KashConfig}
+ */
+module.exports = {
+  run: {/* ... */},
+  build: {/* ... */},
+};
+```
+
+![Autocomplete example 1](./docs/autocomplete1.jpg)
+![Autocomplete example 2](./docs/autocomplete2.jpg)
+
 ## Development
 
 ### Speed
@@ -59,3 +96,10 @@ To provide some context, here are the times for printing the version of some CLI
 |`yarn --version`|~300ms|
 |`kash --version`|~200ms|
 |`git --version`|~50ms|
+
+
+## TODO:
+
+ - Add a flag for the reporter
+ - Add a JSON reporter
+ - Add `kash configure` to configure the choosen reporter and other personal options

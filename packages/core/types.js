@@ -35,18 +35,17 @@
 
 /**
  * @typedef {Object} KashConfig
- * @property {AndroidConfig} android
- * @property {AndroidLegacyConfig} 'android-legacy'
- * @property {IOSConfig} ios
- * @property {WindowsConfig} windows
- * @property {WindowsStoreConfig} 'windows-store'
- * @property {MacOSConfig} macos
- * @property {KanoConfig} kano
- * @property {IOSConfig} ios
- * @property {WebConfig} web
- * @property {BuildConfig} build
- * @property {RunConfig} run
- * @property {TestConfig} test
+ * @property {AndroidConfig} android Android platform configuration
+ * @property {AndroidLegacyConfig} 'android-legacy' Android legacy platform configuration
+ * @property {IOSConfig} ios iOS platform configuration
+ * @property {WindowsConfig} windows Windows platform configuration
+ * @property {WindowsStoreConfig} 'windows-store' Windows Store platform configuration
+ * @property {MacOSConfig} macos macOS platform configuration
+ * @property {KanoConfig} kano KanoOS platform configuration
+ * @property {WebConfig} web Web platform configuration
+ * @property {BuildConfig} build Build options
+ * @property {RunConfig} run Run options
+ * @property {TestConfig} test Test options
  */
 
 export {};

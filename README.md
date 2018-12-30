@@ -104,9 +104,10 @@ With tha in mind, every packages in this repository need to rely on the same pac
 
 ## Roadmap
 
-TODOs for 0.0.3-alpha.2:
+TODOs for 0.0.3-alpha.4:
 
- - TBD
+ - Allow for env var defining tmp directory. This can be used in docker containers so thay can persist the cache across builds
+ - ...
 
 ## TODO:
  - Create a Dockerfile with the setup to create on any platform. Host the image on dockerhub 

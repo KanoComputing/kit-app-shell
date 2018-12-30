@@ -1,6 +1,5 @@
-const { xml } = require('@kano/kit-app-shell-cordova');
 const path = require('path');
-const Config = require('cordova-config');
+const Config = require('@kano/kit-app-shell-cordova/lib/cordova-config');
 
 /**
  * Transform a number into a string while contaraining its length
@@ -45,5 +44,19 @@ module.exports = (context) => {
     cfg.setElement('content', '', {
         src: 'http://localhost:8080/index.html',
     });
+
+    const { supportsScreens } = shell.opts;
+
+    if (typeof supportsScreens === 'object') {
+        // Add the android namespace
+        cfg.setWidgetAttribute('xmlns:android', 'http://schemas.android.com/apk/res/android');
+        const attrs = Object.keys(supportsScreens);
+        // Generate the supports-screens element
+        const contents = `<supports-screens ${attrs.map(a => `android:${a}="${supportsScreens[a]}"`).join(' ')}/>`;
+        cfg.selectPlatform('android');
+        cfg.addEditConfig('AndroidManifest.xml', '/manifest/supports-screens', 'merge', contents);
+        cfg.selectRoot();
+    }
+
     return cfg.write();
 };
