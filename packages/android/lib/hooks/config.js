@@ -42,7 +42,7 @@ module.exports = (context) => {
         }
     }
 
-    xml.setElement(cfg._doc._root, 'content', 'content', '', {
+    cfg.setElement('content', '', {
         src: 'http://localhost:8080/index.html',
     });
     return cfg.write();

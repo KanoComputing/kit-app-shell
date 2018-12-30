@@ -10,7 +10,6 @@ const plugins = [
 const hooks = {
     before_prepare: [
         require.resolve('./hooks/generate-icons'),
-        require.resolve('./hooks/generate-screens'),
         require.resolve('./hooks/config'),
     ],
     after_prepare: [

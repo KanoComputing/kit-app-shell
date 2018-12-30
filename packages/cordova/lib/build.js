@@ -1,4 +1,5 @@
 const util = require('@kano/kit-app-shell-core/lib/util');
+const processState = require('@kano/kit-app-shell-core/lib/process-state');
 const Bundler = require('@kano/kit-app-shell-core/lib/bundler');
 const path = require('path');
 const { cordova } = require('cordova-lib');
@@ -77,6 +78,7 @@ module.exports = (opts = {}) => {
             // if the run flag is passed, run the built app on device
             const command = opts.run ? 'run' : 'build';
             const options = Object.assign(opts.buildOpts || {}, { platforms: platformIds });
+            processState.setInfo('Building cordova app');
             return cordova[command](options)
                 .then(() => projectPath);
         });

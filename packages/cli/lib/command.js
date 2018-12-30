@@ -10,7 +10,7 @@ function runCommand(command, platformId, argv) {
         .then((opts) => {
             addConfig(opts, argv.app);
             log.trace('OPTIONS', opts);
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
                 // Run the command and deal with the result
                 const result = platformCommand(opts);
                 // Resutl is a thenable object, resolve when resolves

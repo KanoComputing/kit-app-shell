@@ -1,6 +1,5 @@
-const { xml } = require('@kano/kit-app-shell-cordova');
+const Config = require('@kano/kit-app-shell-cordova/lib/cordova-config');
 const path = require('path');
-const Config = require('cordova-config');
 
 const fs = require('fs');
 
@@ -11,6 +10,7 @@ module.exports = (context) => {
         return;
     }
     const cfg = new Config(path.join(projectRoot, 'config.xml'));
+    cfg.selectPlatform('ios');
 
     if (shell.config.APP_DESCRIPTION) {
         cfg.setDescription(config.APP_DESCRIPTION);
@@ -24,27 +24,25 @@ module.exports = (context) => {
 
     const scheme = shell.opts.preferences.Scheme;
 
-    const platformEl = xml.findInConfig(cfg, 'platform/[@name="ios"]');
-
-    xml.addRaw(platformEl, `
+    cfg.addRawXML(`
 <config-file parent="ITSAppUsesNonExemptEncryption" target="*-Info.plist">
     <false />
 </config-file>
     `);
-    xml.addRaw(platformEl, `
+    cfg.addRawXML(`
 <config-file parent="UIStatusBarHidden" platform="ios" target="*-Info.plist">
     <true />
 </config-file>
     `);
-    xml.addRaw(platformEl, `
+    cfg.addRawXML(`
 <config-file parent="UIViewControllerBasedStatusBarAppearance" platform="ios" target="*-Info.plist">
     <false />
 </config-file>
     `);
 
-    xml.addRaw(platformEl, `<allow-navigation href="${scheme}://*"></allow-navigation>`);
+    cfg.addAllowNavigation(`${scheme}://*`);
 
-    xml.setElement(cfg._doc._root, 'content', 'content', '', {
+    cfg.setElement('content', '', {
         src: `${scheme}:///index.html`,
     });
 

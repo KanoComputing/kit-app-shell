@@ -99,6 +99,7 @@ suite('project', () => {
             }
             class MockCordovaConfig {
                 addHook() {}
+                setPreference() {}
                 write() {
                     return Promise.resolve();
                 }

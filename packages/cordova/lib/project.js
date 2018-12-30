@@ -8,9 +8,10 @@ const rimraf = promisify(require('rimraf'));
 const { cordova } = require('cordova-lib');
 const ProjectCacheManager = require('./cache');
 const { getModulePath } = require('./util');
-const Config = require('cordova-config');
+const Config = require('./cordova-config');
 const { chdir } = require('./chdir');
 
+const realpath = promisify(fs.realpath);
 const exists = promisify(fs.exists);
 
 const DEFAULT_PREFERENCES = {
@@ -19,8 +20,11 @@ const DEFAULT_PREFERENCES = {
     loadUrlTimeoutValue: 30000,
 };
 
+const STEP_PREFIX = 'Setting up cordova';
+
 /**
  * Deletes the contents of the www directory of a project
+ * @param {String} root Path to the root of the cordova project
  */
 function cleanProject(root) {
     const wwwPath = path.join(root, 'www');
@@ -29,10 +33,12 @@ function cleanProject(root) {
 }
 /**
  * Creates a cordova project with the platforms, plugins and hooks provided
+ * @param {Object} opts All the options provided to the command
+ * @param {String} hash Hash key of the config
  */
 function createProject(opts, hash) {
-    const { app, config, plugins, platforms, hooks } = opts;
-    const TMP_DIR = path.join(os.tmpdir(), 'kash-cordova-build', hash);
+    const { app, config, plugins, platforms, hooks, cacheId = 'cordova' } = opts;
+    const TMP_DIR = path.join(os.tmpdir(), `kash-${cacheId}-build`, hash);
 
     const defaultPluginNames = [
         'cordova-plugin-bluetoothle',
@@ -40,18 +46,29 @@ function createProject(opts, hash) {
         'cordova-plugin-splashscreen',
     ];
 
+    // Resolve the location of the default plugins
     const defaultPlugins = defaultPluginNames.map(name => getModulePath(name));
 
+    // Merge default plugins and platform plugins
     const allPlugins = defaultPlugins.concat(plugins);
 
+    processState.setStep(`${STEP_PREFIX}: (1/5) Creating project`);
+
+    // Clear previous projects
     return rimraf(TMP_DIR)
+        // Ensure the directory exists
         .then(() => mkdirp(TMP_DIR))
-        .then(() => {
-            const REAL_TMP_DIR = fs.realpathSync(TMP_DIR);
+        // Resolve the location on the disk. This is required on macOS as their tmp directory is a symlink
+        .then(() => realpath(TMP_DIR))
+        .then((REAL_TMP_DIR) => {
             const PROJECT_DIR = path.join(REAL_TMP_DIR, 'project');
+            // Create the project
             return cordova.create(PROJECT_DIR, config.APP_ID, config.APP_NAME)
+                // Move the process to the project dir.
+                // This is required as cordova-lib expects to run in a cordova project directory
                 .then(() => chdir(PROJECT_DIR))
                 .then(() => {
+                    processState.setStep(`${STEP_PREFIX}: (2/5) Updating config`);
                     const cfg = new Config(path.join(PROJECT_DIR, 'config.xml'));
                     // Grab preferences from user input
                     const { preferences = {} } = opts;
@@ -66,9 +83,17 @@ function createProject(opts, hash) {
                     });
                     return cfg.write();
                 })
-                .then(() => cordova.platform('add', platforms))
-                .then(() => cordova.plugin('add', allPlugins))
                 .then(() => {
+                    processState.setStep(`${STEP_PREFIX}: (3/5) Adding platform`);
+                    return cordova.platform('add', platforms);
+                })
+                .then(() => {
+                    processState.setStep(`${STEP_PREFIX}: (4/5) Adding plugins`);
+                    return cordova.plugin('add', allPlugins);
+                })
+                .then(() => {
+                    processState.setStep(`${STEP_PREFIX}: (5/5) Preparing`);
+                    // Provide a `shell` property to the hooks 
                     return cordova.prepare({ shell: { app, config, processState, opts } });
                 })
                 .then(() => {
@@ -84,7 +109,7 @@ function createProject(opts, hash) {
 function getProject(opts) {
     const cache = new ProjectCacheManager(opts.cacheId);
 
-    processState.setStep('Setting up cordova project');
+    processState.setStep(STEP_PREFIX);
 
     // Using a cache can be skipped by setting cache to false
     const getCache = opts.skipCache ? Promise.resolve(null) : cache.getProject(opts.config);

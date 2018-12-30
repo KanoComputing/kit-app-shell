@@ -16,7 +16,6 @@ const hooks = {
     before_prepare: [
         require.resolve('./hooks/config'),
         require.resolve('./hooks/generate-icons'),
-        require.resolve('./hooks/generate-screens'),
     ],
 };
 
