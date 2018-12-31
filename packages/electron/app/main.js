@@ -21,6 +21,6 @@ const defaultConfig = path.join(__dirname, 'config.json');
 
 const desktopApp = new App(ui || defaultApp, config || defaultConfig, args);
 
-process.on('uncaughtException', function(e) {
+process.on('uncaughtException', (e) => {
     console.error(e);
 });

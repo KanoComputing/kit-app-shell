@@ -34,7 +34,7 @@ function serve(app) {
                     return res.end(JSON.stringify(config));
                 }
             }
-            next();
+            return next();
         })
         .use(namedResolutionMiddleware({ root: app }))
         .use(serveStatic(app));
@@ -65,47 +65,46 @@ function setupTunnel(app) {
         });
 }
 
-module.exports = (opts) => {
-    return Promise.all([
-        setupTunnel(opts.app),
-        project.getProject({
-            ...opts,
-            skipCache: !opts.cache,
-        }),
-    ])
-        .then(([server, projectPath]) => {
-            const wwwPath = path.join(projectPath, 'www');
-            // Bundle the cordova shell and provided app into the www directory
-            return Bundler.bundle(
-                require.resolve('../www/index.html'),
-                require.resolve('../www/index.js'),
-                path.join(__dirname, '../www/run.js'),
-                opts.config,
-                {
-                    appJs: {
-                        replaces: {
-                            TUNNEL_URL: `'${server.tunnel.url}'`,
-                            LR_URL: `'http://${ip.address(KASH_NET_INTERFACE_NAME)}:35729'`,
-                        },
+module.exports = opts => Promise.all([
+    setupTunnel(opts.app),
+    project.getProject({
+        ...opts,
+        skipCache: !opts.cache,
+    }),
+])
+    .then(([server, projectPath]) => {
+        const wwwPath = path.join(projectPath, 'www');
+        // Bundle the cordova shell and provided app into the www directory
+        return Bundler.bundle(
+            require.resolve('../www/index.html'),
+            require.resolve('../www/index.js'),
+            path.join(__dirname, '../www/run.js'),
+            opts.config,
+            {
+                appJs: {
+                    replaces: {
+                        TUNNEL_URL: `'${server.tunnel.url}'`,
+                        LR_URL: `'http://${ip.address(KASH_NET_INTERFACE_NAME)}:35729'`,
                     },
-                    js: {
-                        replaces: {
-                            // Avoid jsZip to detect the define from requirejs
-                            'typeof define': 'undefined',
-                        },
+                },
+                js: {
+                    replaces: {
+                        // Avoid jsZip to detect the define from requirejs
+                        'typeof define': 'undefined',
                     },
-                })
-                .then(bundle => Bundler.write(bundle, wwwPath))
-                .then(() => processState.setStep('Starting dev app on device'))
-                .then(() => {
-                    const platformIds = opts.platforms.map(platform => path.basename(platform).replace('cordova-', ''));
-                    return cordova.run({ platforms: platformIds });
-                })
-                .then(() => processState.setSuccess('Dev app started'))
-                .then(() => projectPath)
-                .catch((e) => {
-                    server.stop();
-                    throw e;
-                });
-        });
-};
+                },
+            },
+        )
+            .then(bundle => Bundler.write(bundle, wwwPath))
+            .then(() => processState.setStep('Starting dev app on device'))
+            .then(() => {
+                const platformIds = opts.platforms.map(platform => path.basename(platform).replace('cordova-', ''));
+                return cordova.run({ platforms: platformIds });
+            })
+            .then(() => processState.setSuccess('Dev app started'))
+            .then(() => projectPath)
+            .catch((e) => {
+                server.stop();
+                throw e;
+            });
+    });

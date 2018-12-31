@@ -35,22 +35,22 @@ module.exports = (opts) => {
         },
         clean: ['platforms/android/app/build/outputs/apk'],
     })
-    .then((projectPath) => {
-        // Find the generated apk
-        const dest = path.join(projectPath, 'platforms/android/app/build/outputs/apk');
-        return glob('**/*.apk', { cwd: dest })
-            .then((results) => {
-                const [result] = results;
-                if (!result) {
-                    throw new Error('Could not find generated .apk file');
-                }
-                // Move the generated apk to the out directory
-                const target = path.join(opts.out, path.basename(result));
-                // Ensure the directory exists
-                return mkdirp(opts.out)
-                    .then(() => rename(path.join(dest, result), target))
-                    .then(() => processState.setSuccess(`Built android app at ${target}`))
-                    .then(() => target);
-            });
-    });
+        .then((projectPath) => {
+            // Find the generated apk
+            const dest = path.join(projectPath, 'platforms/android/app/build/outputs/apk');
+            return glob('**/*.apk', { cwd: dest })
+                .then((results) => {
+                    const [result] = results;
+                    if (!result) {
+                        throw new Error('Could not find generated .apk file');
+                    }
+                    // Move the generated apk to the out directory
+                    const target = path.join(opts.out, path.basename(result));
+                    // Ensure the directory exists
+                    return mkdirp(opts.out)
+                        .then(() => rename(path.join(dest, result), target))
+                        .then(() => processState.setSuccess(`Built android app at ${target}`))
+                        .then(() => target);
+                });
+        });
 };

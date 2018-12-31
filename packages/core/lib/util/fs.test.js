@@ -1,3 +1,4 @@
+/* globals suite, test, teardown */
 const mock = require('mock-fs');
 const mockRequire = require('mock-require');
 const chai = require('chai');
@@ -15,13 +16,13 @@ function mockFsAssertWriteOptions(testOptions) {
             return new Readable({
                 read() {
                     this.push(null);
-                }
+                },
             });
         },
         createWriteStream(a, options) {
             assert.equal(options, testOptions);
             return new Writable({
-                write() {}
+                write() {},
             });
         },
     });
@@ -66,10 +67,10 @@ suite('fs', () => {
                 });
         });
         test('proxy writeOptions to fs bindings', () => {
-            const testOptions = Symbol();
-            const { copy } = mockFsAssertWriteOptions(testOptions);
+            const testOptions = Symbol('options');
+            const fsUtils = mockFsAssertWriteOptions(testOptions);
             mock();
-            return copy('/src/file.txt', '/dest/file.txt', { writeOptions: testOptions });
+            return fsUtils.copy('/src/file.txt', '/dest/file.txt', { writeOptions: testOptions });
         });
         teardown(() => {
             mockRequire.stopAll();
@@ -78,8 +79,9 @@ suite('fs', () => {
     });
     suite('fromTemplate', () => {
         test('replaces correctly', () => {
+            /* eslint no-template-curly-in-string: 'off' */
             mock({
-                '/file.tpl.txt': 'Test is ${STATUS}'
+                '/file.tpl.txt': 'Test is ${STATUS}',
             });
             return fromTemplate('/file.tpl.txt', '/dest.txt', {
                 STATUS: 'successful',
@@ -89,9 +91,9 @@ suite('fs', () => {
                 });
         });
         test('proxies writeOptions', () => {
-            const testOptions = Symbol();
-            const { fromTemplate } = mockFsAssertWriteOptions(testOptions);
-            return fromTemplate('/file.tpl.txt', '/dest.txt', {}, testOptions);
+            const testOptions = Symbol('options');
+            const fsUtils = mockFsAssertWriteOptions(testOptions);
+            return fsUtils.fromTemplate('/file.tpl.txt', '/dest.txt', {}, testOptions);
         });
         teardown(() => {
             mockRequire.stopAll();

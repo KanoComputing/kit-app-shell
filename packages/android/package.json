@@ -12,6 +12,7 @@
     "cordova-config": "^0.7.0",
     "cordova-httpd": "git+https://github.com/paulvarache/cordova-httpd.git",
     "glob": "^7.1.3",
+    "mkdirp": "^0.5.1",
     "rimraf": "^2.6.2"
   },
   "publishConfig": {

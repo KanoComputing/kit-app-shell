@@ -47,10 +47,12 @@ function generateScreens(src, projectPath) {
 module.exports = (context) => {
     const warnings = [];
     const tasks = [];
-    // TODO: Check on every build the timestamp of the source icon to regenerate if necessary. Use a config db at the root of the project with a library to read and write from it. Store the image mtime and compare it for next time
+    // TODO: Check on every build the timestamp of the source icon to regenerate if necessary.
+    // Use a config db at the root of the project with a library to read and write from it.
+    // Store the image mtime and compare it for next time
     const { projectRoot, shell } = context.opts;
     if (!shell) {
-        return;
+        return null;
     }
     shell.processState.setStep('Generating icons and splashcreens');
     const cfg = new Config(path.join(projectRoot, 'config.xml'));

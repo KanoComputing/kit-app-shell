@@ -1,8 +1,14 @@
+/* globals suite, test */
 const { assert } = require('chai');
 const { createScript, createScriptWithContent } = require('./util');
 
 function randomString() {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    return Math.random()
+        .toString(36)
+        .substring(2, 15)
+    + Math.random()
+        .toString(36)
+        .substring(2, 15);
 }
 
 suite('parse5/util.js', () => {

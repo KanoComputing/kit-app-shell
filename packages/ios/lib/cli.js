@@ -7,5 +7,5 @@ module.exports = Object.assign({}, cli, {
             defaultValue: false,
             desc: 'Run the tests on browserstack',
         });
-    }
+    },
 });

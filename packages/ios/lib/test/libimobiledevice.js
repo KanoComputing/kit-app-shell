@@ -3,14 +3,14 @@ const { spawn } = require('child_process');
 function id() {
     return new Promise((resolve, reject) => {
         const p = spawn('idevice_id', ['-l']);
-    
+
         let output = '';
         let error = '';
-    
+
         p.stdout.on('data', (chunk) => {
             output += chunk.toString();
         });
-    
+
         p.stderr.on('data', (chunk) => {
             error += chunk.toString();
         });
@@ -18,7 +18,7 @@ function id() {
             if (parseInt(code, 10) !== 0) {
                 return reject(new Error(`Could not run idevice_id: ${error}`));
             }
-            resolve(output.split('\n').filter(id => id && id !== ''));
+            return resolve(output.split('\n').filter(i => i && i !== ''));
         });
     });
 }

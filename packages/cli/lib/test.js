@@ -5,8 +5,7 @@ const { agregateArgv, addConfig } = require('./argv');
 module.exports = function runTest(argv, platformId, command) {
     // Load the builder from the platform
     const getBuilder = platform.loadPlatformKey(platformId, 'test/get-builder');
-    // Collect the options and run the tests using the 
     return agregateArgv(argv, platformId, command)
-            .then((opts) => addConfig(opts, argv.app))
-            .then((opts) => test({ getBuilder }, opts));
-}
+        .then(opts => addConfig(opts, argv.app))
+        .then(opts => test({ getBuilder }, opts));
+};

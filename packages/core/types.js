@@ -1,4 +1,4 @@
-
+/* eslint max-len: 'off' */
 /**
  * @typedef {Object} BuildConfig
  * @property {Array<String>} resources List of glob patterns of files to add to the generated packages

@@ -10,11 +10,13 @@ class ElectronChromedriver {
         } catch (e) {
             command = require.resolve('electron-chromedriver/bin/chromedriver.exe');
         }
-    
+
         // TODO: Subprocess managment
         this._process = spawn(command, ['--url-base=wd/hub', `--port=${port}`]);
-        this._process.on('close', (code) => {});
-        this._process.on('error', (error) => { throw new Error(error) })
+        this._process.on('close', () => {});
+        this._process.on('error', (error) => {
+            throw new Error(error);
+        });
     }
     stop() {
         if (!this._process) {

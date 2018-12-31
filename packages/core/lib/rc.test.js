@@ -1,3 +1,4 @@
+/* globals suite, test, teardown */
 const path = require('path');
 const mockFs = require('mock-fs');
 const mock = require('mock-require');
@@ -10,9 +11,9 @@ suite('RcLoader', () => {
             '/file.txt': '',
         });
         return RcLoader.check('/file.txt')
-            .then((exists) => assert.equal(exists, true))
+            .then(exists => assert.equal(exists, true))
             .then(() => RcLoader.check('/nope.txt'))
-            .then((exists) => assert.equal(exists, false));
+            .then(exists => assert.equal(exists, false));
     });
     suite('findAll', () => {
         test('all files', () => {
@@ -21,7 +22,7 @@ suite('RcLoader', () => {
                     return '/homedir';
                 },
             });
-            const RcLoader = mock.reRequire('./rc');
+            const TestRcLoader = mock.reRequire('./rc');
             const allFiles = [
                 '/kit-app-shell.conf.js',
                 '/.kit-app-shell.conf.js',
@@ -33,7 +34,7 @@ suite('RcLoader', () => {
                 acc[file] = '';
                 return acc;
             }, {}));
-            return RcLoader.findAll('/')
+            return TestRcLoader.findAll('/')
                 .then((files) => {
                     allFiles.forEach((f) => {
                         assert.include(files, path.normalize(f));
@@ -46,8 +47,8 @@ suite('RcLoader', () => {
                     return '/homedir';
                 },
             });
-            const RcLoader = mock.reRequire('./rc');
-            return RcLoader.findAll('/')
+            const TestRcLoader = mock.reRequire('./rc');
+            return TestRcLoader.findAll('/')
                 .then((files) => {
                     assert.equal(files.length, 0);
                 });
@@ -67,18 +68,16 @@ suite('RcLoader', () => {
             '/homedir/.kashrc.json',
         ];
         allFiles.forEach((file) => {
-            if (file.indexOf('.json') !== -1) {
-            }
             mock(file, {
                 [file]: true,
             });
         });
-        const RcLoader = mock.reRequire('./rc');
+        const TestRcLoader = mock.reRequire('./rc');
         mockFs(allFiles.reduce((acc, file) => {
             acc[file] = '';
             return acc;
         }, {}));
-        return RcLoader.load('/')
+        return TestRcLoader.load('/')
             .then((data) => {
                 assert.containsAllKeys(data, allFiles);
             });

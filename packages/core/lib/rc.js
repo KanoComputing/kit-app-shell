@@ -18,29 +18,23 @@ const RC_PATH = path.join(os.homedir(), '.kashrc.json');
 const RcLoader = {
     check(filePath) {
         // Use fs.access to test if file exists. resolve with a boolean
-        return new Promise((r) => fs.access(filePath, fs.F_OK, e => r(!e)));
+        return new Promise(r => fs.access(filePath, fs.F_OK, e => r(!e)));
     },
     findAll(app) {
         const resolved = [];
-        const files = NAMES.map((name) => path.join(app, name));
+        const files = NAMES.map(name => path.join(app, name));
         files.push(RC_PATH);
-        const tasks = files.map((filePath) => {
-            return RcLoader.check(filePath)
-                .then((exists) => {
-                    if (exists) {
-                        resolved.push(filePath);
-                    }
-                });
-        });
+        const tasks = files.map(filePath => RcLoader.check(filePath)
+            .then((exists) => {
+                if (exists) {
+                    resolved.push(filePath);
+                }
+            }));
         return Promise.all(tasks).then(() => resolved);
     },
     load(app) {
         return RcLoader.findAll(app)
-            .then((files) => {
-                return files.reduce((acc, file) => {
-                    return deepMerge(acc, require(file));
-                }, {});
-            });
+            .then(files => files.reduce((acc, file) => deepMerge(acc, require(file)), {}));
     },
     hasHomeRc() {
         return RcLoader.check(RC_PATH);
@@ -58,6 +52,6 @@ const RcLoader = {
         return writeFile(RC_PATH, JSON.stringify(contents, null, '    '));
     },
     RC_PATH,
-}
+};
 
 module.exports = RcLoader;

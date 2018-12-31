@@ -9,6 +9,8 @@ yarn add @kano/kit-app-shell-macos
 kash run macos ./ # Current directory being an app directory 
 ```
 
+For the full CLI documentation see [@kano/kit-app-shell-cli](./packages/cli)
+
 ## Development
 
 This repository contains the CLI, core module and platform implementation for the App Shell platform
@@ -100,7 +102,7 @@ With tha in mind, every packages in this repository need to rely on the same pac
 |XML parsing|`elementtree`|Used by `cordova-config` TODO: move away from `cordova-config` if it improves performances|
 |Image manipulation|`sharp`|Cross platform, high speed, no dependencies|
 |HTTP and HTTPS|`request`|Complete, supports stream|
-|Server|`connect`<br>`cors`<br>`serve-stativ`|Fast, lots of middlewares|
+|Server|`connect`<br>`cors`<br>`serve-static`|Fast, lots of middlewares|
 
 ## Roadmap
 

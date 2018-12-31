@@ -10,9 +10,7 @@ const defaultCompileReg = /defaultCompileSdkVersion=(\d+)/;
 
 function replace(filePath, replacements) {
     const content = fs.readFileSync(filePath, 'utf-8');
-    const replaced = replacements.reduce((acc, rep) => {
-        return acc.replace(rep.reg, rep.replace);
-    }, content);
+    const replaced = replacements.reduce((acc, rep) => acc.replace(rep.reg, rep.replace), content);
     fs.writeFileSync(filePath, replaced);
 }
 
@@ -22,19 +20,13 @@ function replace(filePath, replacements) {
 module.exports = (ctx) => {
     replace(path.join(ctx.opts.projectRoot, projectPath), [{
         reg: targetReg,
-        replace: () => {
-            return `target=android-28`;
-        },
+        replace: () => 'target=android-28',
     }]);
     replace(path.join(ctx.opts.projectRoot, buildPath), [{
         reg: defaultTargetReg,
-        replace: () => {
-            return `defaultTargetSdkVersion=28`;
-        },
+        replace: () => 'defaultTargetSdkVersion=28',
     }, {
         reg: defaultCompileReg,
-        replace: () => {
-            return `defaultCompileSdkVersion=28`;
-        },
+        replace: () => 'defaultCompileSdkVersion=28',
     }]);
 };

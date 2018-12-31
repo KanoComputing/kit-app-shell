@@ -1,3 +1,4 @@
+/* eslint no-console: 'off' */
 const Reporter = require('./reporter');
 
 class ConsoleReporter extends Reporter {

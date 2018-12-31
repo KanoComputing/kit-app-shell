@@ -1,6 +1,7 @@
 #!/usr/bin/env node
+/* eslint no-console: 'off' */
 const path = require('path');
-const Api = require('sywac/Api');
+const Api = require('sywac/api');
 // Use the file directly. Might break when moving stuff but tests will tell us
 // This saves a lot of time as the big modules for building are not loaded is not needed
 const platformUtils = require('@kano/kit-app-shell-core/lib/util/platform');
@@ -12,7 +13,7 @@ const chalk = require('chalk');
 class CLI {
     constructor(processArgv) {
         this.processArgv = processArgv;
-    } 
+    }
     start() {
         this.startedAt = Date.now();
         // Parse the output once to deal with command discovery and help
@@ -23,7 +24,7 @@ class CLI {
                     return this.secondPass(result.argv.platform);
                 }
                 console.log(result.output);
-                this.end(result.code);
+                return this.end(result.code);
             });
     }
     end(code) {
@@ -69,13 +70,15 @@ class CLI {
     }
     static patchSywacOptions(sywac, forcedOptions) {
         const originalOptions = sywac._addOptionType.bind(sywac);
-        sywac._addOptionType = (flags, opts, type) => {
-            return originalOptions(flags, Object.assign({}, opts, forcedOptions), type);
-        };
+        sywac._addOptionType = (flags, opts, type) => originalOptions(
+            flags,
+            Object.assign({}, opts, forcedOptions),
+            type,
+        );
         return {
             dispose() {
                 sywac._addOptionType = originalOptions;
-            }
+            },
         };
     }
     mountReporter(argv) {
@@ -103,61 +106,57 @@ class CLI {
     firstPass() {
         // Create local sywac
         const sywac = new Api();
-    
+
         // All commands available
         const commands = ['run', 'build', 'test', 'configure'];
-    
+
         sywac.configure({ name: 'kash' });
-    
+
         // Generate all commands with generic help message
         commands.forEach((cmd) => {
             sywac.command(`${cmd} <platform> --help`, {
                 desc: `Show help for the ${cmd} command`,
-                run: (argv) => {
-                    return this.secondPass(argv.platform);
-                }
+                run: argv => this.secondPass(argv.platform),
             });
         });
-    
+
         sywac.command('open config', {
             desc: 'Open the location of your configuration',
-            run: (argv) => {
-                return require('../lib/open-config')();
-            },
+            run: () => require('../lib/open-config')(),
         });
-    
+
         sywac.help();
         sywac.showHelpByDefault();
-    
+
         sywac.version();
-    
+
         CLI.applyStyles(sywac);
-    
+
         return sywac.parse(this.processArgv);
     }
     secondPass(platformId) {
         const sywac = new Api();
-        let platformCli
+        let platformCli;
         // catch synchronous error and reject as a result
         try {
             platformCli = platformUtils.loadPlatformKey(platformId, 'cli');
         } catch (e) {
-            let context = sywac.initContext(false);
+            const context = sywac.initContext(false);
             context.unexpectedError(e);
             const result = context.toResult();
             console.log(result.output);
             return this.end(result.code);
         }
-    
+
         const platform = {
             cli: platformCli,
         };
-    
+
         sywac.command('build <platform>', {
             desc: 'build the application',
-            setup: (sywac) => {
-                CLI.parseCommon(sywac);
-                sywac.array('resources')
+            setup: (s) => {
+                CLI.parseCommon(s);
+                s.array('resources')
                     .string('--out, -o', {
                         desc: 'Output directory',
                         coerce: path.resolve,
@@ -171,23 +170,27 @@ class CLI {
                         aliases: ['bundle-only', 'bundleOnly'],
                         defaultValue: false,
                     });
-                const sywacPatch = CLI.patchSywacOptions(sywac, { group: platform.cli.group || 'Platform: ' });
-                platformUtils.registerOptions(sywac, platform, 'build');
+                const sywacPatch = CLI.patchSywacOptions(s, {
+                    group: platform.cli.group || 'Platform: ',
+                });
+                platformUtils.registerOptions(s, platform, 'build');
                 sywacPatch.dispose();
             },
             run: (argv) => {
                 this.mountReporter(argv);
                 const { runCommand } = require('../lib/command');
                 return runCommand('build', platformId, argv);
-            }
+            },
         });
-    
-        sywac.command(`run <platform>`, {
+
+        sywac.command('run <platform>', {
             desc: 'run the application',
-            setup: (sywac) => {
-                CLI.parseCommon(sywac);
-                const sywacPatch = CLI.patchSywacOptions(sywac, { group: platform.cli.group || 'Platform: ' });
-                platformUtils.registerOptions(sywac, platform, 'run');
+            setup: (s) => {
+                CLI.parseCommon(s);
+                const sywacPatch = CLI.patchSywacOptions(s, {
+                    group: platform.cli.group || 'Platform: ',
+                });
+                platformUtils.registerOptions(s, platform, 'run');
                 sywacPatch.dispose();
             },
             run: (argv) => {
@@ -198,19 +201,21 @@ class CLI {
                 return task;
             },
         });
-    
-        sywac.command(`test <platform>`, {
+
+        sywac.command('test <platform>', {
             desc: 'test the application',
-            setup: (sywac) => {
-                CLI.parseCommon(sywac);
-                sywac.string('--prebuilt-app', {
+            setup: (s) => {
+                CLI.parseCommon(s);
+                s.string('--prebuilt-app', {
                     aliases: ['prebuilt-app', 'prebuiltApp'],
                     desc: 'Path to the built app to test',
                     required: true,
                     coerce: path.resolve,
                 });
-                const sywacPatch = CLI.patchSywacOptions(sywac, { group: platform.cli.group || 'Platform: ' });
-                platformUtils.registerOptions(sywac, platform, 'test');
+                const sywacPatch = CLI.patchSywacOptions(s, {
+                    group: platform.cli.group || 'Platform: ',
+                });
+                platformUtils.registerOptions(s, platform, 'test');
                 sywacPatch.dispose();
             },
             run: (argv) => {
@@ -221,12 +226,14 @@ class CLI {
                 return task;
             },
         });
-    
-        sywac.command(`configure <platform>`, {
+
+        sywac.command('configure <platform>', {
             desc: 'configure kash',
-            setup: (sywac) => {
-                const sywacPatch = CLI.patchSywacOptions(sywac, { group: platform.cli.group || 'Platform: ' });
-                platformUtils.registerOptions(sywac, platform, 'configure');
+            setup: (s) => {
+                const sywacPatch = CLI.patchSywacOptions(s, {
+                    group: platform.cli.group || 'Platform: ',
+                });
+                platformUtils.registerOptions(s, platform, 'configure');
                 sywacPatch.dispose();
             },
             run: (argv) => {
@@ -237,31 +244,33 @@ class CLI {
                 return task;
             },
         });
-    
+
         sywac.boolean('--quiet, -q', {
             desc: 'Silence all outputs',
             defaultValue: false,
         });
-    
+
         sywac.boolean('--verbose', {
             desc: 'Displays verbose logs',
-            defaultValue: false
+            defaultValue: false,
         });
-    
+
         sywac.help();
         sywac.showHelpByDefault();
-    
+
         sywac.version();
-    
+
         sywac.configure({ name: 'kash' });
-    
+
         // Register the global commands for the platform
-        const sywacPatch = CLI.patchSywacOptions(sywac, { group: platform.cli.group || 'Platform: ' });
+        const sywacPatch = CLI.patchSywacOptions(sywac, {
+            group: platform.cli.group || 'Platform: ',
+        });
         platformUtils.registerCommands(sywac, platform);
         sywacPatch.dispose();
-    
+
         CLI.applyStyles(sywac);
-        
+
         return sywac.parse(this.processArgv)
             .then((result) => {
                 if (result.output.length) {

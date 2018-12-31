@@ -31,23 +31,28 @@ function createAppx(dir, config, out) {
     }).then(() => out);
 }
 
-module.exports = ({ app, config = {}, out, bundleOnly }) => {
+module.exports = (opts) => {
+    const {
+        app,
+        config = {},
+        out,
+        bundleOnly,
+    } = opts;
     // Prepare a temp directory for the build
     const TMP_DIR = path.join(os.tmpdir(), 'kash-windows-store-build');
     return rimraf(TMP_DIR)
         .then(() => mkdirp(TMP_DIR))
-        .then(() => {
+        .then(() =>
             // Build using the windows platform, skip the installer as we will create an .appx
-            return build({
+            build({
                 app,
                 config,
                 out: TMP_DIR,
                 skipInstaller: true,
                 bundleOnly,
-            });
-        })
+            }))
         .then((buildDir) => {
-            processState.setStep(`Creating appx`);
+            processState.setStep('Creating appx');
             // Create the .appx from the bundled app
             return createAppx(buildDir, config, out);
         })
@@ -55,4 +60,4 @@ module.exports = ({ app, config = {}, out, bundleOnly }) => {
             processState.setSuccess('Created appx');
             return outDir;
         });
-}
+};

@@ -45,14 +45,14 @@ function localSetup(app, wd, mocha, opts) {
                             // Path to the prebuilt app
                             app,
                         }).then(() => driver);
-                    }
+                    };
                     return builder;
                 })
                 .catch((e) => {
                     server.close();
                     throw e;
                 });
-            });
+        });
 }
 
 /**
@@ -62,7 +62,7 @@ module.exports = (wd, mocha, opts) => {
     // Replace refresh method to prevent android from opening a browser
     wd.addAsyncMethod(
         'refresh',
-        function(cb) {
+        function refresh(cb) {
             // Get the current URL
             this.url((err, contextUrl) => {
                 if (err) {
@@ -70,9 +70,9 @@ module.exports = (wd, mocha, opts) => {
                 }
                 // Parse and rebuild the original content URL
                 const parsed = url.parse(contextUrl);
-                this.get(`${parsed.protocol}//${parsed.host}/index.html`, cb);
+                return this.get(`${parsed.protocol}//${parsed.host}/index.html`, cb);
             });
-        }
+        },
     );
     if (opts.provider === 'local') {
         return localSetup(opts.prebuiltApp, wd, mocha, opts);
@@ -83,4 +83,5 @@ module.exports = (wd, mocha, opts) => {
     if (!builder) {
         throw new Error(`Could not run tests: '${opts.provider}' is not a valid device provider`);
     }
+    return builder;
 };

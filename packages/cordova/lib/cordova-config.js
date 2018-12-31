@@ -37,7 +37,7 @@ class CordovaConfig extends Config {
         } else {
             el.text = content || '';
         }
-        
+
         el.attrib = {};
         el.attrib = Object.assign({}, attribs);
     }

@@ -1,3 +1,4 @@
+/* globals suite, teardown, test */
 const mockFS = require('mock-fs');
 const path = require('path');
 const ConfigLoader = require('./config');
@@ -25,7 +26,7 @@ suite('ConfigLoader', () => {
     const fakeAppDir = '/test-app';
     suite('load', () => {
         test('succeeds on missing files', () => {
-            const mocker = mockConfig(fakeAppDir, {}, '1.0.0');
+            mockConfig(fakeAppDir, {}, '1.0.0');
             const value = ConfigLoader.load(fakeAppDir);
             assert.equal(value.UI_VERSION, '1.0.0');
         });

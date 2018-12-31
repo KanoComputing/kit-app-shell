@@ -8,7 +8,7 @@ const deepMerge = require('deepmerge');
 const DEFAULTS = {
     APP_NAME: 'Unnamed App',
     APP_ID: 'com.kano.unknown',
-}
+};
 
 /**
  * Behaves like require, but can provide a fallback
@@ -17,7 +17,7 @@ function softRequire(moduleId, fallback = {}) {
     try {
         const content = fs.readFileSync(moduleId, 'utf-8');
         return JSON.parse(content);
-    } catch(e) {
+    } catch (e) {
         return fallback;
     }
 }

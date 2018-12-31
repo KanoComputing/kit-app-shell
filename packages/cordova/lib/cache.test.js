@@ -1,3 +1,4 @@
+/* globals suite, setup, test, teardown */
 const mock = require('mock-require');
 const mockFs = require('mock-fs');
 const path = require('path');
@@ -26,9 +27,9 @@ suite('ProjectCacheManager', () => {
     test('contructor', () => {
         const ProjectCacheManager = mock.reRequire('./cache');
         applyMockFs();
-        
+
         const cache = new ProjectCacheManager('test-id');
-        
+
         assert.equal(cache._dbPath, path.join('/test-homedir', '.kit-app-shell-cordova/cache', 'test-id'));
     });
     test('load', () => {

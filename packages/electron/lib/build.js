@@ -88,15 +88,23 @@ function copyElectronApp(out) {
  */
 function createConfig(config, out) {
     return mkdirp(out)
-        .then(() => {
-            return writeFile(
-                path.join(out, 'config.json'),
-                JSON.stringify(Object.assign({ BUNDLED: true }, config)),
-            );
-        });
+        .then(() => writeFile(
+            path.join(out, 'config.json'),
+            JSON.stringify(Object.assign({ BUNDLED: true }, config)),
+        ));
 }
 
-function build({ app, config = {}, out, bundleOnly, resources = [], polyfills = [], moduleContext = {}, replaces = [] } = {}) {
+function build(opts = {}) {
+    const {
+        app,
+        config = {},
+        out,
+        bundleOnly,
+        resources = [],
+        polyfills = [],
+        moduleContext = {},
+        replaces = [],
+    } = opts;
     processState.setStep(`Creating electron app '${config.APP_NAME}'`);
     const tasks = [
         copyElectronApp(out),
@@ -119,8 +127,9 @@ function build({ app, config = {}, out, bundleOnly, resources = [], polyfills = 
                     replaces,
                     targets: babelTargets,
                 },
-            })
-            .then(bundle => Bundler.write(bundle, out))
+            },
+        )
+            .then(bundle => Bundler.write(bundle, out)),
     ];
     return Promise.all(tasks)
         .then((results) => {

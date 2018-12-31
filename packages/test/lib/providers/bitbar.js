@@ -1,6 +1,7 @@
 const { promisify } = require('util');
 const fs = require('fs');
 const request = require('request');
+const chalk = require('chalk');
 
 const post = promisify(request.post);
 
@@ -9,7 +10,7 @@ const BITBAR_UPLOAD = 'https://appium.bitbar.com/upload';
 
 function upload(app, { key } = {}) {
     const stream = fs.createReadStream(app);
-    const auth = `Basic ${new Buffer(`${key}:`).toString('base64')}`;
+    const auth = `Basic ${Buffer.from(`${key}:`).toString('base64')}`;
     // Post to the bitbar API
     return post({
         headers: {
@@ -25,10 +26,7 @@ function upload(app, { key } = {}) {
                 },
             },
         },
-    }).then((response) => {
-        // The response will contain the uploaded files to be used during tests
-        return JSON.parse(response.body);
-    });
+    }).then(response => JSON.parse(response.body));
 }
 
 function saucelabsSetup(app, wd, mocha, opts) {
@@ -37,7 +35,7 @@ function saucelabsSetup(app, wd, mocha, opts) {
     // Authentication options are required, throw an error
     if (!bitbar) {
         // Be explicit enough so people know what to do next
-        throw new Error(`Could not run test on bitbar: Missing 'bitbar' in your rc file`);
+        throw new Error(`Could not run test: Missing 'bitbar' configuration. Run ${chalk.cyan('kash configure test')} to fix this`);
     }
     const { key } = bitbar;
     // Send the apk to bitbar
@@ -54,7 +52,7 @@ function saucelabsSetup(app, wd, mocha, opts) {
                 testdroid_device: '',
                 testdroid_apiKey: key,
                 // Create custom build name using the options from the config
-                build : `${opts.config.APP_NAME} v${opts.config.UI_VERSION} Android`,
+                build: `${opts.config.APP_NAME} v${opts.config.UI_VERSION} Android`,
                 // Set the test name to be the mocha test name
                 name: test.fullTitle(),
                 testdroid_testrun: test.fullTitle(),

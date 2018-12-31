@@ -6,8 +6,8 @@
 
 /**
  * @typedef {Object} supportsScreens Android Screen filtering. See https://developer.android.com/guide/topics/manifest/supports-screens-element
- * @property {Boolean} resizeable 
- * @property {Boolean} anyDensity 
+ * @property {Boolean} resizeable
+ * @property {Boolean} anyDensity
  * @property {Boolean} smallScreens
  * @property {Boolean} normalScreens
  * @property {Boolean} largeScreens

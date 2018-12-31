@@ -9,14 +9,20 @@ const rimraf = promisify(require('rimraf'));
 
 const defaultIconPath = path.join(__dirname, '../icons/1024.png.icns');
 
-function macosBuild({ app, config = {}, out, bundleOnly }) {
+function macosBuild(opts) {
+    const {
+        app,
+        config = {},
+        out,
+        bundleOnly,
+    } = opts;
     const warnings = [];
     const TMP_DIR = path.join(os.tmpdir(), 'kash-macos-build');
     const icon = config.ICONS && config.ICONS.MACOS ?
         path.join(app, config.ICONS.MACOS) : defaultIconPath;
     let name = config.APP_NAME;
     if (!config.APP_NAME) {
-        warnings.push(`'APP_NAME' missing in config, will use 'App' as name`);
+        warnings.push('\'APP_NAME\' missing in config, will use \'App\' as name');
         name = 'App';
     }
     return rimraf(TMP_DIR)
@@ -35,7 +41,8 @@ function macosBuild({ app, config = {}, out, bundleOnly }) {
                 overwrite: true,
                 out,
                 prune: true,
-                // TODO: use asar package. This does not work at the moment as it causes an issue with the PIXI loader
+                // TODO: use asar package.
+                // This does not work at the moment as it causes an issue with the PIXI loader
                 // XHR maybe?
                 asar: false,
                 name,

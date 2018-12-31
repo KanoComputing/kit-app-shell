@@ -21,7 +21,7 @@ class KashTestFramework {
                 .catch(e => cb(e));
         });
         return this.driver.waitFor(asserter)
-                .then((ctxs) => this.driver.context(ctxs[1]));
+            .then(ctxs => this.driver.context(ctxs[1]));
     }
     _beforeEach(test) {
         if (this.driver) {
@@ -47,17 +47,17 @@ class KashTestFramework {
 
 module.exports = (platform, opts) => {
     const framework = new KashTestFramework();
-    // Create new mocha UI inhecting the test framework 
+    // Create new mocha UI inhecting the test framework
     Mocha.interfaces['selenium-bdd'] = (suite) => {
         Mocha.interfaces.bdd(suite);
-        suite.on('pre-require', function(context, file, mocha) {
+        suite.on('pre-require', (context) => {
             context.kash = framework;
         });
-        suite.beforeEach(function () {
+        suite.beforeEach(function beforeEach() {
             this.timeout(120000);
             return framework._beforeEach(this.currentTest);
         });
-        suite.afterEach(function () {
+        suite.afterEach(function afterEach() {
             this.timeout(120000);
             return framework._afterEach();
         });
@@ -71,9 +71,7 @@ module.exports = (platform, opts) => {
     // This needs to be registered here so that individual platforms defining their
     // builders can use the same lifecycle to stop whatever process they started after
     // the framework did its cleanup
-    mocha.suite.afterAll(() => {
-        return framework.dispose();
-    });
+    mocha.suite.afterAll(() => framework.dispose());
     return platform.getBuilder(wd, mocha, opts)
         .then((builder) => {
             framework._setBuilder(builder);
@@ -97,5 +95,5 @@ module.exports = (platform, opts) => {
                         runner.on('error', reject);
                     });
                 });
-        });    
+        });
 };

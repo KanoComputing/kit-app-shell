@@ -12,54 +12,45 @@ const put = promisify(request.put);
 function upload(app, { user, key } = {}) {
     const stat = fs.statSync(app);
     const stream = fs.createReadStream(app);
-    const auth = `Basic ${new Buffer([user, key].join(':')).toString('base64')}`;
+    const auth = `Basic ${Buffer.from([user, key].join(':')).toString('base64')}`;
     const filename = path.basename(app);
     return post({
         headers: {
             'Content-Type': 'application/json',
             Authorization: auth,
-            'Accept':'application/json',
+            Accept: 'application/json',
         },
         url: 'https://api.kobiton.com/v1/apps/uploadUrl',
         body: JSON.stringify({
             filename,
             appId: '23313',
         }),
-    }).then((response) => {
-        return JSON.parse(response.body);
-    }).then(({ appPath, url }) => {
-        return put({
+    }).then(response => JSON.parse(response.body)).then(({ appPath, url }) => put({
+        headers: {
+            'Content-Length': stat.size,
+            'Content-Type': 'application/octet-stream',
+            'x-amz-tagging': 'unsaved=true',
+        },
+        url,
+        body: stream,
+    })
+        .then(() => post({
             headers: {
-                'Content-Length': stat.size,
-                'Content-Type': 'application/octet-stream',
-                'x-amz-tagging': 'unsaved=true',
+                'Content-Type': 'application/json',
+                Authorization: auth,
+                Accept: 'application/json',
             },
-            url,
-            body: stream,
-        })
-        .then(() => {
-            return post({
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: auth,
-                    'Accept':'application/json',
-                },
-                url: 'https://api.kobiton.com/v1/apps',
-                body: JSON.stringify({
-                    appPath,
-                    filename,
-                }),
-            }).then((r) => {
-                return JSON.parse(r.body);
-            });
-        })
-        .catch(e => console.error(e));
-    });
+            url: 'https://api.kobiton.com/v1/apps',
+            body: JSON.stringify({
+                appPath,
+                filename,
+            }),
+        }).then(r => JSON.parse(r.body))));
 }
 
 function getConfig(opts, key) {
     const value = opts[key];
-    
+
     if (typeof value === 'undefined') {
         throw new Error(`Could not run test: Missing '${key}' in your rc file. Run ${chalk.cyan('kash configure test')} to fix this.`);
     }
@@ -75,7 +66,7 @@ function kobitonSetup(app, wd, mocha, opts) {
     return upload(app, {
         user,
         key,
-    }).then(({ appId, versionId }) => {
+    }).then(({ appId }) => {
         const builder = (test) => {
             const browser = wd.promiseChainRemote({
                 protocol: 'https',

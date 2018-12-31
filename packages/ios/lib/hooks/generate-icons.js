@@ -35,7 +35,7 @@ module.exports = (context) => {
     // TODO: Check on every build the timestamp of the source icon to regenerate if necessary
     const { projectRoot, shell } = context.opts;
     if (!shell) {
-        return;
+        return null;
     }
     shell.processState.setStep('Generating icons and splashcreens');
     const cfg = new Config(path.join(projectRoot, 'config.xml'));
@@ -48,7 +48,7 @@ module.exports = (context) => {
             .then(() => {
                 icons.forEach((icon) => {
                     const src = getIconPath(icon.name, '');
-                    cfg.addIcon({ width: icon.width, height: icon.width, src, });
+                    cfg.addIcon({ width: icon.width, height: icon.width, src });
                 });
             }));
     } else {
@@ -57,15 +57,15 @@ module.exports = (context) => {
     if (shell.config.SPLASHSCREENS && shell.config.SPLASHSCREENS.IOS) {
         const screenSrc = path.join(shell.app, shell.config.SPLASHSCREENS.IOS);
         tasks.push(generateScreens(screenSrc, projectRoot)
-        .then(() => {
-            screens.forEach((screen) => {
-                cfg.addScreen({
-                    width: screen.width,
-                    height: screen.height,
-                    src: getScreenPath(screen.name, ''),
+            .then(() => {
+                screens.forEach((screen) => {
+                    cfg.addScreen({
+                        width: screen.width,
+                        height: screen.height,
+                        src: getScreenPath(screen.name, ''),
+                    });
                 });
-            });
-        }));
+            }));
     } else {
         warnings.push('No iOS splashscreen defined in the config');
     }

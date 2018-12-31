@@ -15,7 +15,7 @@ module.exports = function configure(argv, platformId) {
             // No prompts dfined for this platform
             if (typeof platformConfigure.enquire !== 'function') {
                 processState.setInfo(`Platform '${platformId}' does not require any configuration`);
-                return;
+                return null;
             }
             // Let the platform ask the user questions
             return platformConfigure.enquire(prompt, cfg[platformId] || {})
@@ -35,11 +35,12 @@ module.exports = function configure(argv, platformId) {
                         [platformId]: answers || {},
                     };
                     // Merge the current config with the user's answers
-                    // TODO: decide what to do with arrrays, deepmerge concatenate them by default, this might not be the desired behavior
+                    // TODO: decide what to do with arrrays, deepmerge concatenate them by default,
+                    // this might not be the desired behavior
                     return deepMerge(cfg, scopedAnswers);
                 })
                 // Persist the new config
-                .then((updatedCfg) => RcLoader.saveHomeRc(updatedCfg))
+                .then(updatedCfg => RcLoader.saveHomeRc(updatedCfg))
                 .then(() => {
                     processState.setSuccess(`Your local config has been updated. Use ${chalk.cyan('kash open config')} to see it`);
                 });

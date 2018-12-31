@@ -6,7 +6,7 @@ module.exports = (context) => {
 
     const content = fs.readFileSync(file, 'utf-8');
 
-    const replaced = content.replace('jcenter()', 'google()\n        jcenter()')
+    const replaced = content.replace('jcenter()', 'google()\n        jcenter()');
 
     fs.writeFileSync(file, replaced, 'utf-8');
-}
+};

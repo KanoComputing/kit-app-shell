@@ -37,13 +37,10 @@ function copy(src, dest, opts) {
     const out = path.dirname(dest);
     return mkdirp(out)
         .then(() => _copy(src, dest, opts));
-    
 }
 
 function fromTemplate(tmpPath, dest, options, writeOptions) {
-    const transform = replace(/\$\{(.*?)\}/g, (match, g1) => {
-        return options[g1] || '';
-    });
+    const transform = replace(/\$\{(.*?)\}/g, (match, g1) => options[g1] || '');
     return copy(tmpPath, dest, {
         transform,
         writeOptions,

@@ -32,11 +32,9 @@ class ProjectCacheManager {
         }
         // Read the cache DB file and populate the in-memory object
         return readFile(this._dbPath, 'utf-8')
-            .then((contents) => JSON.parse(contents))
-            .catch((e) => {
-                // Any error up there, create a new cache
-                return {};
-            })
+            .then(contents => JSON.parse(contents))
+            // Any error up there, create a new cache
+            .catch(() => ({}))
             .then((cache) => {
                 this._cache = cache;
                 return cache;
@@ -65,7 +63,7 @@ class ProjectCacheManager {
         // Always load first, if the data was loaded previously,
         // it will be returned immediately
         return this.load()
-            .then((cache) =>{
+            .then((cache) => {
                 const hash = ProjectCacheManager.configToHash(config);
                 return cache[hash];
             });

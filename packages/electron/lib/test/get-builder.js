@@ -32,5 +32,4 @@ module.exports = (wd, mocha, { app, config = {} }) => {
     };
 
     return Promise.resolve(builder);
-
 };

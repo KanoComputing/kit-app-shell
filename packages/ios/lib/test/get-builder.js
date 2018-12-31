@@ -8,41 +8,41 @@ const getBuilder = require('@kano/kit-app-shell-cordova/lib/test/get-builder');
 function localSetup(app, wd, mocha, opts) {
     // Start appium server
     return appium.main({ loglevel: 'error' })
-    .then((server) => {
-        mocha.suite.afterAll(() => {
-            server.close();
-        });
-        // Retrieve appium port
-        const { port } = server.address();
-        return lib.id()
-            .then((deviceIds) => {
-                const [udid] = deviceIds;
-                if (!udid) {
-                    throw new Error('Could not run test: No connected device found');
-                }
-                const builder = () => {
-                    const driver = wd.promiseChainRemote('0.0.0.0', port);
-                    return driver.init({
-                        browserName: '',
-                        // Can run wihout deviceName while udid is provided
-                        // But need to provide an non-empty string
-                        deviceName: '-',
-                        platformName: 'iOS',
-                        app,
-                        automationName: 'XCUITest',
-                        // Pass down the found connected devices
-                        udid,
-                        xcodeOrgId: opts.developmentTeam,
-                        xcodeSigningId: opts.codeSignIdentity,
-                        startIWDP: true,
-                    }).then(() => driver);
-                };
-                return builder;
-            })
-            .catch((e) => {
+        .then((server) => {
+            mocha.suite.afterAll(() => {
                 server.close();
-                throw e;
             });
+            // Retrieve appium port
+            const { port } = server.address();
+            return lib.id()
+                .then((deviceIds) => {
+                    const [udid] = deviceIds;
+                    if (!udid) {
+                        throw new Error('Could not run test: No connected device found');
+                    }
+                    const builder = () => {
+                        const driver = wd.promiseChainRemote('0.0.0.0', port);
+                        return driver.init({
+                            browserName: '',
+                            // Can run wihout deviceName while udid is provided
+                            // But need to provide an non-empty string
+                            deviceName: '-',
+                            platformName: 'iOS',
+                            app,
+                            automationName: 'XCUITest',
+                            // Pass down the found connected devices
+                            udid,
+                            xcodeOrgId: opts.developmentTeam,
+                            xcodeSigningId: opts.codeSignIdentity,
+                            startIWDP: true,
+                        }).then(() => driver);
+                    };
+                    return builder;
+                })
+                .catch((e) => {
+                    server.close();
+                    throw e;
+                });
         });
 }
 
@@ -60,4 +60,5 @@ module.exports = (wd, mocha, opts) => {
     if (!builder) {
         throw new Error(`Could not run tests: '${opts.provider}' is not a valid device provider`);
     }
+    return builder;
 };

@@ -1,3 +1,4 @@
+/* globals suite, test, teardown */
 const path = require('path');
 const chai = require('chai');
 const chaiFs = require('chai-fs');
@@ -36,7 +37,7 @@ suite('electron run', () => {
                         watch() {},
                         close() {
                             resolve();
-                        }
+                        },
                     };
                 },
             });
@@ -50,7 +51,7 @@ suite('electron run', () => {
     });
     test('electron throws an error', () => {
         mock('child_process', {
-            spawn(cmd, args, opts) {
+            spawn() {
                 // Throw an error on spanwn, expect the server to close
                 throw new Error();
             },
@@ -62,7 +63,7 @@ suite('electron run', () => {
                         watch() {},
                         close() {
                             resolve();
-                        }
+                        },
                     };
                 },
             });
@@ -71,11 +72,11 @@ suite('electron run', () => {
         return Promise.all([
             expectServerToClose,
             // Ignore error as it comes from our test
-            run({ app: '/app' }, {}).catch(() => {})
+            run({ app: '/app' }, {}).catch(() => {}),
         ]);
     });
     teardown(() => {
         mock.stopAll();
         mockFs.restore();
-    })
+    });
 });

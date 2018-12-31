@@ -16,7 +16,7 @@ function deleteCommandKeys(obj) {
  * Collect all options into one object
  * Merges the data following this rule:
  * rc <= rc-cmd <= rc-platform <= rc-platform-cmd <= opts
- * 
+ *
  *  - Given opts
  *  - Platform command options ( Configures a command for a specific platform )
  * {
@@ -36,10 +36,10 @@ function deleteCommandKeys(obj) {
  * {
  *     ...
  * }
- * 
- * @param {Object} opts 
- * @param {String} platformId 
- * @param {String} command 
+ *
+ * @param {Object} argv Arguments received from the CLI
+ * @param {String} platformId Which platform the command should run with
+ * @param {String} command The command parsed from the CLI
  */
 function agregateArgv(argv, platformId, command) {
     // Load config files
@@ -63,14 +63,12 @@ function agregateArgv(argv, platformId, command) {
                 rcPlatformCommandOpts,
                 argv,
             ];
-            const opts = allOpts.reduce((acc, item) => {
-                return deepMerge(acc, item);
-            }, {});
+            const opts = allOpts.reduce((acc, item) => deepMerge(acc, item), {});
             return opts;
         });
 }
 
-function addConfig(opts, app) {
+function addConfig(opts) {
     const config = ConfigLoader.load(opts.app, opts.env);
     config.BUILD_NUMBER = parseInt(process.env.BUILD_NUMBER, 10) || opts.buildNumber;
     opts.config = config;

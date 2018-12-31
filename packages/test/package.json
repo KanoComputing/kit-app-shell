@@ -17,6 +17,7 @@
     "url": "https://github.com/KanoComputing/kit-app-shell/issues"
   },
   "dependencies": {
+    "chalk": "^2.4.1",
     "log-symbols": "^2.2.0",
     "request": "^2.88.0"
   }

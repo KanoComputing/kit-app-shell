@@ -13,12 +13,20 @@ const DEFAULT_ICON = path.join(__dirname, '../icons/icon.ico');
 const DEFAULT_INSTALLER_ICON = path.join(__dirname, '../icons/installer.bmp');
 const DEFAULT_INSTALLER_BIG_ICON = path.join(__dirname, '../icons/installer-big.bmp');
 
-function createInstaller({ dir, app, config, out }) {
-    const installerIconFullPath = config.ICONS && config.ICONS.WINDOWS_INSTALLER ? path.resolve(app, config.ICONS.WINDOWS_INSTALLER) : DEFAULT_INSTALLER_ICON;
+function createInstaller(opts) {
+    const {
+        dir,
+        app,
+        config,
+        out,
+    } = opts;
+    const installerIconFullPath = config.ICONS && config.ICONS.WINDOWS_INSTALLER
+        ? path.resolve(app, config.ICONS.WINDOWS_INSTALLER) : DEFAULT_INSTALLER_ICON;
     const installerIconPath = path.relative(path.join(__dirname, '..'), installerIconFullPath);
-    const installerLeftIconFullPath = config.ICONS && config.ICONS.WINDOWS_INSTALLER_BIG ? path.resolve(app, config.ICONS.WINDOWS_INSTALLER_BIG) : DEFAULT_INSTALLER_BIG_ICON;
+    const installerLeftIconFullPath = config.ICONS && config.ICONS.WINDOWS_INSTALLER_BIG
+        ? path.resolve(app, config.ICONS.WINDOWS_INSTALLER_BIG) : DEFAULT_INSTALLER_BIG_ICON;
     const installerLeftIconPath = path.relative(path.join(__dirname, '..'), installerLeftIconFullPath);
-    let compilerOptions = {
+    const compilerOptions = {
         gui: false,
         verbose: false,
         definitions: {
@@ -36,7 +44,7 @@ function createInstaller({ dir, app, config, out }) {
     };
 
 
-    const build = new Promise((resolve, reject) => {
+    const builder = new Promise((resolve, reject) => {
         buildInnosetup(compilerOptions, (e) => {
             if (e) {
                 reject(new Error(`Installer build failed: ${e.message}`));
@@ -45,10 +53,17 @@ function createInstaller({ dir, app, config, out }) {
         });
     });
 
-    return build;
+    return builder;
 }
 
-function windowsBuild({ app, config = {}, out, skipInstaller = false, bundleOnly }) {
+function windowsBuild(opts) {
+    const {
+        app,
+        config = {},
+        out,
+        skipInstaller = false,
+        bundleOnly,
+    } = opts;
     const TMP_DIR = path.join(os.tmpdir(), 'kash-windows-build');
     const BUILD_DIR = path.join(TMP_DIR, 'build');
     const PKG_DIR = path.join(TMP_DIR, 'app');
@@ -56,9 +71,14 @@ function windowsBuild({ app, config = {}, out, skipInstaller = false, bundleOnly
     mkdirp.sync(BUILD_DIR);
     mkdirp.sync(PKG_DIR);
     const icon = config.ICONS ? config.ICONS.WINDOWS : DEFAULT_ICON;
-    return build({ app, config, out: BUILD_DIR, bundleOnly })
+    return build({
+        app,
+        config,
+        out: BUILD_DIR,
+        bundleOnly,
+    })
         .then((buildDir) => {
-            processState.setInfo(`Creating windows application`);
+            processState.setInfo('Creating windows application');
             const targetDir = skipInstaller ? out : PKG_DIR;
             const packagerOptions = {
                 dir: buildDir,
@@ -66,7 +86,8 @@ function windowsBuild({ app, config = {}, out, skipInstaller = false, bundleOnly
                 overwrite: true,
                 out: targetDir,
                 prune: true,
-                // TODO: use asar package. This does not work at the moment as it causes an issue with the PIXI loader
+                // TODO: use asar package.
+                // This does not work at the moment as it causes an issue with the PIXI loader
                 // XHR maybe?
                 asar: false,
                 name: config.APP_NAME,
@@ -95,10 +116,10 @@ function windowsBuild({ app, config = {}, out, skipInstaller = false, bundleOnly
                 config,
                 out,
             })
-            .then(() => {
-                processState.setSuccess('Created windows installer');
-                return out;
-            });
+                .then(() => {
+                    processState.setSuccess('Created windows installer');
+                    return out;
+                });
         });
 }
 

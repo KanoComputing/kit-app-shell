@@ -37,7 +37,14 @@ function cleanProject(root) {
  * @param {String} hash Hash key of the config
  */
 function createProject(opts, hash) {
-    const { app, config, plugins, platforms, hooks, cacheId = 'cordova' } = opts;
+    const {
+        app,
+        config,
+        plugins,
+        platforms,
+        hooks,
+        cacheId = 'cordova',
+    } = opts;
     const TMP_DIR = path.join(os.tmpdir(), `kash-${cacheId}-build`, hash);
 
     const defaultPluginNames = [
@@ -58,7 +65,8 @@ function createProject(opts, hash) {
     return rimraf(TMP_DIR)
         // Ensure the directory exists
         .then(() => mkdirp(TMP_DIR))
-        // Resolve the location on the disk. This is required on macOS as their tmp directory is a symlink
+        // Resolve the location on the disk.
+        // This is required on macOS as their tmp directory is a symlink
         .then(() => realpath(TMP_DIR))
         .then((REAL_TMP_DIR) => {
             const PROJECT_DIR = path.join(REAL_TMP_DIR, 'project');
@@ -75,7 +83,9 @@ function createProject(opts, hash) {
                     // Merge with the default preferences
                     const finalPreferences = Object.assign({}, DEFAULT_PREFERENCES, preferences);
                     Object.keys(hooks).forEach((type) => {
-                        hooks[type].forEach(src => cfg.addHook(type, path.relative(PROJECT_DIR, src)));
+                        hooks[type].forEach((src) => {
+                            cfg.addHook(type, path.relative(PROJECT_DIR, src));
+                        });
                     });
                     // Set preferences from options
                     Object.keys(finalPreferences).forEach((key) => {
@@ -93,12 +103,17 @@ function createProject(opts, hash) {
                 })
                 .then(() => {
                     processState.setStep(`${STEP_PREFIX}: (5/5) Preparing`);
-                    // Provide a `shell` property to the hooks 
-                    return cordova.prepare({ shell: { app, config, processState, opts } });
+                    // Provide a `shell` property to the hooks
+                    return cordova.prepare({
+                        shell: {
+                            app,
+                            config,
+                            processState,
+                            opts,
+                        },
+                    });
                 })
-                .then(() => {
-                    return PROJECT_DIR;
-                });
+                .then(() => PROJECT_DIR);
         });
 }
 
@@ -127,7 +142,7 @@ function getProject(opts) {
                     .then((doesExists) => {
                         if (!doesExists) {
                             // Path does not exists anymore
-                            return cache.deleteProject(config)
+                            return cache.deleteProject(opts.config)
                                 .then(() => null);
                         }
                         // Project found
@@ -150,14 +165,12 @@ function getProject(opts) {
             // No project yet, get a hash from the config and create one
             const hash = ProjectCacheManager.configToHash(opts.config);
             return createProject(opts, hash)
-                .then((newProjectPath) => {
-                    // Save the project path in cache. For future use
-                    return cache.setProject(opts.config, newProjectPath)
-                        .then(() => {
-                            processState.setSuccess('Created cordova project');
-                            return newProjectPath;
-                        });
-                });
+                // Save the project path in cache. For future use
+                .then(newProjectPath => cache.setProject(opts.config, newProjectPath)
+                    .then(() => {
+                        processState.setSuccess('Created cordova project');
+                        return newProjectPath;
+                    }));
         });
 }
 

@@ -16,7 +16,8 @@ function loadPlatform(name) {
 
 // Loads a platform sub-module
 // This allows us to load just the CLI config and only the required command
-// This speeds up the overall CLI by skipping eventual dependencies that will never run for a session
+// This speeds up the overall CLI by skipping eventual dependencies
+// that will never run for a session,
 // e.g. Do not load heavy testing frameworks when we only need to run the app
 // The default location is lib/<key>. It will fallback to loading the whole module if
 // getting the sub-module fails.

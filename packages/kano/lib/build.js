@@ -70,15 +70,23 @@ function copyExtra(app, out, config) {
     const icons = glob.sync('*.png', { cwd: appsPath, nodir: true });
     const apps = glob.sync('*.app', { cwd: appsPath, nodir: true });
     // Copy icons to the icons share
-    const tasks = icons.map(icon => util.deb.copy(path.join(appsPath, icon), path.join(iconsPath, icon)));
+    const tasks = icons.map(icon => util.deb.copy(
+        path.join(appsPath, icon),
+        path.join(iconsPath, icon),
+    ));
     // Copy icons to the desktop share
-    tasks.concat(icons.map(icon => util.deb.copy(path.join(appsPath, icon), path.join(desktopIconsPath, icon))));
-    tasks.concat(apps.map(app => util.deb.copy(path.join(appsPath, app), path.join(appsTargetPath, app))));
+    tasks.concat(icons.map(icon => util.deb.copy(
+        path.join(appsPath, icon),
+        path.join(desktopIconsPath, icon),
+    )));
+    tasks.concat(apps.map(a => util.deb.copy(
+        path.join(appsPath, a),
+        path.join(appsTargetPath, a),
+    )));
     return Promise.all(tasks);
 }
 
 function createDeb(dir, out, config) {
-    path.join(dir, 'control')
     return debian.createPackage({
         control: path.join(dir, 'control'),
         data: path.join(dir, 'data'),
@@ -109,7 +117,13 @@ function checkEnv(skipAr = false) {
         .then(() => checkCmd('ar'));
 }
 
-function kanoBuild({ app, config = {}, out, bundleOnly }) {
+function kanoBuild(opts) {
+    const {
+        app,
+        config = {},
+        out,
+        bundleOnly,
+    } = opts;
     const TMP_DIR = path.join(os.tmpdir(), 'kash-kano-build');
     const BUILD_DIR = path.join(TMP_DIR, 'build');
     const APP_DIR = path.join(TMP_DIR, 'app');
@@ -122,7 +136,12 @@ function kanoBuild({ app, config = {}, out, bundleOnly }) {
     const appName = snake(config.APP_NAME);
     return checkEnv(opts.skipAr)
         // Bundle app in tmp dir
-        .then(() => build({ app, config, out: BUILD_DIR, bundleOnly }))
+        .then(() => build({
+            app,
+            config,
+            out: BUILD_DIR,
+            bundleOnly,
+        }))
         .then((buildOut) => {
             processState.setStep('Creating linux app');
             // Create executable for linux using electron-packager
@@ -132,7 +151,8 @@ function kanoBuild({ app, config = {}, out, bundleOnly }) {
                 overwrite: true,
                 out: APP_DIR,
                 prune: true,
-                // TODO: use asar package. This does not work at the moment as it causes an issue with the PIXI loader
+                // TODO: use asar package.
+                // This does not work at the moment as it causes an issue with the PIXI loader
                 // XHR maybe?
                 asar: false,
                 name: appName,
@@ -158,12 +178,12 @@ function kanoBuild({ app, config = {}, out, bundleOnly }) {
                 createControl(targetDir, config),
                 copyExtra(app, targetDir, config),
             ];
-            return Promise.all(tasks).then(() => targetDir)
+            return Promise.all(tasks).then(() => targetDir);
         })
         .then((dir) => {
             processState.setSuccess('Debian package ready');
             if (opts.skipAr) {
-                return;
+                return null;
             }
             processState.setStep('Creating .deb file');
             // Create .deb file from debian structure

@@ -4,7 +4,13 @@
     "packages/*"
   ],
   "private": true,
+  "scripts": {
+    "checkstyle": "eslint ./",
+    "checkstyle-ci": "yarn checkstyle -f checkstyle -o eslint.xml"
+  },
   "devDependencies": {
+    "@kano/eslint-config": "^1.0.0",
+    "eslint": "^4.19.1",
     "lerna": "^3.5.1"
   }
 }

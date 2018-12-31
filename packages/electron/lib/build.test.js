@@ -1,3 +1,4 @@
+/* globals suite, test, teardown */
 const path = require('path');
 const chai = require('chai');
 const chaiFs = require('chai-fs');
@@ -26,7 +27,7 @@ suite('electron build', () => {
                     assert.equal(opts.appJs.targets.chrome, 66);
                     return Promise.resolve('/build');
                 },
-                write() {}
+                write() {},
             },
             util,
         });
@@ -39,7 +40,7 @@ suite('electron build', () => {
         const build = mock.reRequire('./build');
         mockFs({
             [path.join(__dirname, '../app')]: {
-                '_test': 'test-file',
+                _test: 'test-file',
             },
         });
         return build({
@@ -47,10 +48,10 @@ suite('electron build', () => {
             out: '/out',
         }).then(() => {
             assert.jsonSchemaFile('/out/config.json', {
-                "$schema": "http://json-schema.org/draft-06/schema#",
-                "$id": "http://example.com/product.schema.json",
-                "type": "object",
-                "required": ['BUNDLED'],
+                $schema: 'http://json-schema.org/draft-06/schema#',
+                $id: 'http://example.com/product.schema.json',
+                type: 'object',
+                required: ['BUNDLED'],
             });
             assert.fileContent('/out/_test', 'test-file');
         });

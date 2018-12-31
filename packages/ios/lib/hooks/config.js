@@ -1,19 +1,20 @@
 const Config = require('@kano/kit-app-shell-cordova/lib/cordova-config');
 const path = require('path');
-
 const fs = require('fs');
+const chalk = require('chalk');
+
 
 module.exports = (context) => {
     const { projectRoot, shell } = context.opts;
     // No shell means it's running more than once
     if (!shell) {
-        return;
+        return null;
     }
     const cfg = new Config(path.join(projectRoot, 'config.xml'));
     cfg.selectPlatform('ios');
 
     if (shell.config.APP_DESCRIPTION) {
-        cfg.setDescription(config.APP_DESCRIPTION);
+        cfg.setDescription(shell.config.APP_DESCRIPTION);
     }
     if (shell.config.UI_VERSION) {
         cfg.setVersion(shell.config.UI_VERSION);
@@ -50,10 +51,10 @@ module.exports = (context) => {
 
     // TODO: merge using a error util
     if (!opts.developmentTeam) {
-        throw new Error(`Could not build iOS app: Missing 'developmentTeam' key in config. Make sure you have a .kashrc.json file in your home directory`);
+        throw new Error(`Could not build iOS app: Missing 'developmentTeam' key in config. Run ${chalk.cyan('kash configure ios')} to fix this`);
     }
     if (!opts.codeSignIdentity) {
-        throw new Error(`Could not build iOS app: Missing 'codeSignIdentity' key in config. Make sure you have a .kashrc.json file in your home directory`);
+        throw new Error(`Could not build iOS app: Missing 'codeSignIdentity' key in config. Run ${chalk.cyan('kash configure ios')} to fix this`);
     }
 
     const { developmentTeam, codeSignIdentity } = opts;
@@ -75,9 +76,9 @@ module.exports = (context) => {
                     'SWIFT_VERSION = 3.0',
                     'EMBEDDED_CONTENT_CONTAINS_SWIFT = YES',
                     '-quiet',
-                ]
-            }
-        }
+                ],
+            },
+        },
     }));
 
     return cfg.write();

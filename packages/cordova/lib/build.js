@@ -13,14 +13,14 @@ module.exports = (opts = {}) => {
     // TODO: Catch all logs (error, warn, ...)
     // TODO: Find a console UI to display these logs and any subprocess logs
     // in parrallel of the spinner
-    cordova.on('log', (...args) => {
+    cordova.on('log', () => {
         // console.log(...args);
     });
-    cordova.on('error', (...args) => {
-        console.error(...args);
+    cordova.on('error', (e) => {
+        processState.setFailure(e);
     });
-    cordova.on('warn', (...args) => {
-        console.warn(...args);
+    cordova.on('warn', (w) => {
+        processState.setWarning(w);
     });
 
     // Get a corodva project ready to build
@@ -28,48 +28,47 @@ module.exports = (opts = {}) => {
         ...opts,
         skipCache: opts['no-cache'],
     })
+        .then(projectPath => Promise.all((opts.clean || []).map(p => rimraf(p)))
+            .then(() => {
+                const wwwPath = path.join(projectPath, 'www');
+                // TODO move this to core and make it an optional plugin
+                const wcPath = require.resolve('@webcomponents/webcomponentsjs/webcomponents-bundle.js');
+                const wcFilename = 'webcomponents-bundle.js';
+                // Copy webcomponents bundle
+                return util.fs.copy(wcPath, path.join(wwwPath, wcFilename))
+                    .then(() =>
+                    // Bundle the cordova shell and provided app into the www directory
+                        Bundler.bundle(
+                            path.join(__dirname, '/../www/index.html'),
+                            path.join(__dirname, '/../www/index.js'),
+                            path.join(opts.app, 'index.js'),
+                            opts.config,
+                            {
+                                appJs: {
+                                    ...opts,
+                                },
+                                js: {
+                                    bundleOnly: opts.bundleOnly,
+                                    targets: opts.targets,
+                                    replaces: [{
+                                        // Avoid jsZip to detect the define from requirejs
+                                        // TODO: Scope this to the jszip file
+                                        values: {
+                                            'typeof define': 'undefined',
+                                        },
+                                    }],
+                                },
+                                html: {
+                                    injectScript: `<script src="/${wcFilename}"></script>`,
+                                },
+                            },
+                        ))
+                    .then(bundle => Bundler.write(bundle, wwwPath))
+                    .then(() => projectPath);
+            }))
         .then((projectPath) => {
-            return Promise.all((opts.clean || []).map(p => rimraf(p)))
-                .then(() => {
-                    const wwwPath = path.join(projectPath, 'www');
-                    // TODO move this to core and make it an optional plugin
-                    const wcPath = require.resolve('@webcomponents/webcomponentsjs/webcomponents-bundle.js');
-                    const wcFilename = 'webcomponents-bundle.js';
-                    // Copy webcomponents bundle
-                    return util.fs.copy(wcPath, path.join(wwwPath, wcFilename))
-                        .then(() => {
-                            // Bundle the cordova shell and provided app into the www directory
-                            return Bundler.bundle(
-                                __dirname + '/../www/index.html',
-                                __dirname + '/../www/index.js',
-                                path.join(opts.app, 'index.js'),
-                                opts.config,
-                                {
-                                    appJs: {
-                                        ...opts,
-                                    },
-                                    js: {
-                                        bundleOnly: opts.bundleOnly,
-                                        targets: opts.targets,
-                                        replaces: [{
-                                            // Avoid jsZip to detect the define from requirejs
-                                            // TODO: Scope this to the jszip file
-                                            values: {
-                                                'typeof define': 'undefined',
-                                            },
-                                        }],
-                                    },
-                                    html: {
-                                        injectScript: `<script src="/${wcFilename}"></script>`,
-                                    },
-                                })
-                        })
-                        .then(bundle => Bundler.write(bundle, wwwPath))
-                        .then(() => projectPath);
-                });
-        })
-        .then((projectPath) => {
-            // A platform path can be provided to use as a local module, this resolves the name of a potential path
+            // A platform path can be provided to use as a local module,
+            // this resolves the name of a potential path
             // to its package name. We then strip the 'cordova-' prefix to extract the platform id
             // This is hacky and could in the future become unreliable.
             // TODO: Maybe we should pass the platforms as ids and resolve their local packages if

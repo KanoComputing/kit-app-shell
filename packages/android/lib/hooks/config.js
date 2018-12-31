@@ -15,12 +15,12 @@ module.exports = (context) => {
     const { projectRoot, shell } = context.opts;
     // No shell means it's running more than once
     if (!shell) {
-        return;
+        return null;
     }
     const cfg = new Config(path.join(projectRoot, 'config.xml'));
 
     if (shell.config.APP_DESCRIPTION) {
-        cfg.setDescription(config.APP_DESCRIPTION);
+        cfg.setDescription(shell.config.APP_DESCRIPTION);
     }
     if (shell.config.UI_VERSION) {
         cfg.setVersion(shell.config.UI_VERSION);
@@ -28,7 +28,7 @@ module.exports = (context) => {
         const [major, minor, patch] = shell.config.UI_VERSION.split('.');
 
         const buildNumber = shell.config.BUILD_NUMBER || 0;
-    
+
         const parts = [
             bindNumberAsString(major, 2),
             bindNumberAsString(minor, 2),

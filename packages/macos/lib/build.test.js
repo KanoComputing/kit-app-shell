@@ -1,3 +1,4 @@
+/* globals suite, test, teardown */
 const path = require('path');
 const chai = require('chai');
 const chaiFs = require('chai-fs');
@@ -29,7 +30,7 @@ suite('macOS build', () => {
                 processState: {
                     setStep() {},
                     setWarning(m) {
-                        assert.equal(m, `'APP_NAME' missing in config, will use 'App' as name`);
+                        assert.equal(m, '\'APP_NAME\' missing in config, will use \'App\' as name');
                         resolve();
                     },
                     setSuccess() {},
@@ -46,8 +47,8 @@ suite('macOS build', () => {
         const config = {
             APP_NAME: 'Test',
             ICONS: {
-                MACOS: 'assets/test-icons.png.icns'
-            }
+                MACOS: 'assets/test-icons.png.icns',
+            },
         };
         mock('electron-packager', (opts) => {
             assert.equal(opts.dir, '/build');
@@ -67,7 +68,7 @@ suite('macOS build', () => {
         mock('@kano/kit-app-shell-core', {
             processState: {
                 setStep() {},
-                setWarning(m) {
+                setWarning() {
                     throw new Error('Should not have triggered a warning');
                 },
                 setSuccess() {},

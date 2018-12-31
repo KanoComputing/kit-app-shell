@@ -1,9 +1,10 @@
+/* globals suite, test */
 const ProgressTracker = require('./progress');
 const { assert } = require('chai');
 
 suite('ProgressTracker', () => {
     test('plugin()', (done) => {
-        const testFile = Symbol();
+        const testFile = Symbol('file');
         const tracker = new ProgressTracker();
         assert.equal(tracker.loaded, 0);
         tracker.on('progress', (e) => {

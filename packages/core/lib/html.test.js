@@ -1,3 +1,4 @@
+/* globals suite, test */
 const { assert } = require('chai');
 const { addRequirejs, replaceIndex } = require('./html');
 

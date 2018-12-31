@@ -1,4 +1,4 @@
-const { EventEmitter } = require('events');
+/* globals suite, setup, test, teardown */
 const mockFs = require('mock-fs');
 const mock = require('mock-require');
 const chai = require('chai');
@@ -51,7 +51,7 @@ suite('project', () => {
                 cordova: {
                     create() {
                         throw new Error('Should not create a new project when a cached one is available');
-                    }
+                    },
                 },
             });
             mock('./cache', CacheMock);
@@ -65,7 +65,7 @@ suite('project', () => {
                 cacheId: 'test',
                 platforms: [],
                 plugins: [],
-                hooks: {}
+                hooks: {},
             }, {});
         });
         test('non-existing project', () => {
@@ -82,8 +82,8 @@ suite('project', () => {
             ];
             // Store steps in order they run. They will be checked against the expected steps array
             const steps = [];
-            const testPlatforms = Symbol();
-            const testPlugin = Symbol();
+            const testPlatforms = Symbol('platform');
+            const testPlugin = Symbol('plugin');
             class CacheMock {
                 getProject() {
                     steps.push('get-project');
@@ -148,7 +148,7 @@ suite('project', () => {
                 cacheId: 'test',
                 platforms: testPlatforms,
                 plugins: [testPlugin],
-                hooks: {}
+                hooks: {},
             }, {}).then(() => {
                 assert.deepEqual(steps, expectedSteps);
             });
