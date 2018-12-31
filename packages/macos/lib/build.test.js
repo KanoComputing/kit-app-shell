@@ -18,23 +18,20 @@ suite('macOS build', () => {
             assert.equal(opts.name, 'App');
             return Promise.resolve('/out');
         });
-        mock('@kano/kit-app-shell-electron', {
-            build: (opts) => {
-                assert.equal(opts.app, '/app');
-                return Promise.resolve('/build');
-            },
+        mock('@kano/kit-app-shell-electron/lib/build', (opts) => {
+            assert.equal(opts.app, '/app');
+            return Promise.resolve('/build');
         });
         // Will resolve if a warning is sent using processState
         const didReceiveWarning = new Promise((resolve) => {
-            mock('@kano/kit-app-shell-core', {
-                processState: {
-                    setStep() {},
-                    setWarning(m) {
-                        assert.equal(m, '\'APP_NAME\' missing in config, will use \'App\' as name');
-                        resolve();
-                    },
-                    setSuccess() {},
+            mock('@kano/kit-app-shell-core/lib/process-state', {
+                setStep() {},
+                setWarning(m) {
+                    assert.equal(m, '\'APP_NAME\' missing in config, will use \'App\' as name');
+                    resolve();
                 },
+                setSuccess() {},
+                setInfo() {},
             });
         });
         const build = mock.reRequire('./build');
@@ -57,22 +54,19 @@ suite('macOS build', () => {
             assert.equal(opts.name, 'Test');
             return Promise.resolve('/out');
         });
-        mock('@kano/kit-app-shell-electron', {
-            build: (opts) => {
-                assert.equal(opts.app, '/app');
-                assert.equal(opts.config, config);
-                assert.equal(opts.bundleOnly, true);
-                return Promise.resolve('/build');
-            },
+        mock('@kano/kit-app-shell-electron/lib/build', (opts) => {
+            assert.equal(opts.app, '/app');
+            assert.equal(opts.config, config);
+            assert.equal(opts.bundleOnly, true);
+            return Promise.resolve('/build');
         });
-        mock('@kano/kit-app-shell-core', {
-            processState: {
-                setStep() {},
-                setWarning() {
-                    throw new Error('Should not have triggered a warning');
-                },
-                setSuccess() {},
+        mock('@kano/kit-app-shell-core/lib/process-state', {
+            setStep() {},
+            setWarning() {
+                throw new Error('Should not have triggered a warning');
             },
+            setSuccess() {},
+            setInfo() {},
         });
         const build = mock.reRequire('./build');
         return build({

@@ -5,6 +5,7 @@
   ],
   "private": true,
   "scripts": {
+    "test": "lerna run test",
     "checkstyle": "eslint ./",
     "checkstyle-ci": "yarn checkstyle -f checkstyle -o eslint.xml"
   },

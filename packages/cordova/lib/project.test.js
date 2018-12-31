@@ -71,7 +71,7 @@ suite('project', () => {
         test('non-existing project', () => {
             // Runs the build script in a sandbox ( No fs, fake cache, ... )
             // Expect the project creation steps to run in order with the right properties
-            const expectedProjectPath = path.normalize('/test-tmp/kash-cordova-build/hash/project');
+            const expectedProjectPath = path.normalize('/test-tmp/kash-test-build/hash/project');
             const expectedSteps = [
                 'get-project',
                 'create',
@@ -137,7 +137,7 @@ suite('project', () => {
                 },
             });
             mock('./cache', CacheMock);
-            mock('cordova-config', MockCordovaConfig);
+            mock('./cordova-config', MockCordovaConfig);
             const { getProject } = mock.reRequire('./project');
             mockFs({
                 '/project': mockFs.directory(),

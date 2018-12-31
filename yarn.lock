@@ -3922,6 +3922,11 @@ diagnostics@^1.1.1:
     enabled "1.0.x"
     kuler "1.0.x"
 
+diff@1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/diff/-/diff-1.0.7.tgz#24bbb001c4a7d5522169e7cabdb2c2814ed91cf4"
+  integrity sha1-JLuwAcSn1VIhaefKvbLCgU7ZHPQ=
+
 diff@3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-3.5.0.tgz#800c0dd1e0a8bfbc95835c202ad220fe317e5a12"
@@ -6956,6 +6961,16 @@ mksnapshot@^0.3.4:
     decompress-zip "0.3.0"
     fs-extra "0.26.7"
     request "2.x"
+
+mocha-jenkins-reporter@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/mocha-jenkins-reporter/-/mocha-jenkins-reporter-0.4.1.tgz#d944ce5f7fb157f4bbcea8de8d535db50ade2823"
+  integrity sha512-IqnIylrkKJG0lxeoawRkhv/uiYojMEw3o9TQOpDFarPYKVq4ymngVPwsyfMB0XMDqtDbOTOCviFg8xOLHb80/Q==
+  dependencies:
+    diff "1.0.7"
+    mkdirp "0.5.1"
+    mocha "^5.2.0"
+    xml "^1.0.1"
 
 mocha@^5.2.0:
   version "5.2.0"
@@ -10345,6 +10360,11 @@ xml2js@^0.4.17, xml2js@^0.4.5:
   dependencies:
     sax ">=0.6.0"
     xmlbuilder "~9.0.1"
+
+xml@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/xml/-/xml-1.0.1.tgz#78ba72020029c5bc87b8a81a3cfcd74b4a2fc1e5"
+  integrity sha1-eLpyAgApxbyHuKgaPPzXS0ovweU=
 
 xmlbuilder@8.2.2:
   version "8.2.2"

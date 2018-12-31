@@ -14,22 +14,21 @@ const { assert } = chai;
 
 suite('electron build', () => {
     test('default values', () => {
-        mock('@kano/kit-app-shell-core', {
-            processState: {
-                setStep() {},
+        mock('@kano/kit-app-shell-core/lib/bundler', {
+            bundle(html, js, appJs, config, opts) {
+                assert.equal(html, path.join(__dirname, '../app/index.html'));
+                assert.equal(js, path.join(__dirname, '../app/index.js'));
+                assert.equal(appJs, path.join('/app', 'index.js'));
+                assert.equal(opts.js.targets.chrome, 66);
+                assert.equal(opts.appJs.targets.chrome, 66);
+                return Promise.resolve('/build');
             },
-            Bundler: {
-                bundle(html, js, appJs, config, opts) {
-                    assert.equal(html, path.join(__dirname, '../app/index.html'));
-                    assert.equal(js, path.join(__dirname, '../app/index.js'));
-                    assert.equal(appJs, path.join('/app', 'index.js'));
-                    assert.equal(opts.js.targets.chrome, 66);
-                    assert.equal(opts.appJs.targets.chrome, 66);
-                    return Promise.resolve('/build');
-                },
-                write() {},
+            write() {
+                return Promise.resolve();
             },
-            util,
+        });
+        mock('@kano/kit-app-shell-core/lib/process-state', {
+            setStep() {},
         });
         mock('glob', (pattern, opts, cb) => {
             if (opts.cwd === path.join(__dirname, '../app')) {
