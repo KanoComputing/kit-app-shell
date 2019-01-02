@@ -28,6 +28,8 @@ suite('configure', () => {
 
         mock('electron-windows-store/lib/sign', signMock);
         mock('electron-windows-store/lib/utils', utilsMock);
+        mock('rimraf', (_, cb) => cb());
+        mock('mkdirp', (_, cb) => cb());
 
         const configure = mock.reRequire('./configure');
 
