@@ -13,10 +13,15 @@
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "test": "mocha",
+    "test-ci": "JUNIT_REPORT_PATH=./test-results.xml yarn run --silent test --reporter mocha-jenkins-reporter"
+  },
   "gitHead": "250044f792455c30f34f57965c31872beb03cfcb",
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
+    "mock-require": "^3.0.2",
     "nyc": "^13.1.0"
   }
 }

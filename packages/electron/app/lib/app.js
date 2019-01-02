@@ -101,8 +101,11 @@ class App {
             // First window created, setup the bus and adapters
             this.bus = new ElectronIpcBus(ipcMain, this.shell.window);
             this.adapter = new BusAdapter({ bus: this.bus, Devices });
-            // Binds the updater events with the updater module
-            updaterBusAdapter(this.bus, this.shell.log);
+            // Allow the updater to be disabled from the config
+            if (!this.config.UPDATER_DISABLED) {
+                // Binds the updater events with the updater module
+                updaterBusAdapter(this.bus, this.shell.log);
+            }
             Devices.setLogger(this.shell.log);
         } else {
             // Subsequent windows, just update the window reference in the bus

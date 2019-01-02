@@ -38,6 +38,8 @@ module.exports = (opts) => {
         out,
         bundleOnly,
     } = opts;
+    // Force disable updater
+    Object.assign(config, { UPDATER_DISABLED: true });
     // Prepare a temp directory for the build
     const TMP_DIR = path.join(os.tmpdir(), 'kash-windows-store-build');
     return rimraf(TMP_DIR)
