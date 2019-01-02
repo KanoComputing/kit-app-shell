@@ -22,6 +22,8 @@ suite('build', () => {
                 return '/test-tmp';
             },
         });
+        mock('mkdirp', (_, cb) => cb());
+        mock('rimraf', (_, cb) => cb());
 
         const build = mock.reRequire('./build');
 

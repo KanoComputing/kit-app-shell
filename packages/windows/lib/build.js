@@ -3,8 +3,9 @@ const util = require('@kano/kit-app-shell-core/lib/util');
 const build = require('@kano/kit-app-shell-electron/lib/build');
 const path = require('path');
 const os = require('os');
-const mkdirp = require('mkdirp');
-const rimraf = require('rimraf');
+const { promisify } = require('util');
+const mkdirp = promisify(require('mkdirp'));
+const rimraf = promisify(require('rimraf'));
 const packager = require('electron-packager');
 const buildInnosetup = require('./innosetup');
 
@@ -68,16 +69,16 @@ function windowsBuild(opts) {
     const TMP_DIR = path.join(os.tmpdir(), 'kash-windows-build');
     const BUILD_DIR = path.join(TMP_DIR, 'build');
     const PKG_DIR = path.join(TMP_DIR, 'app');
-    rimraf.sync(TMP_DIR);
-    mkdirp.sync(BUILD_DIR);
-    mkdirp.sync(PKG_DIR);
     const icon = config.ICONS ? config.ICONS.WINDOWS : DEFAULT_ICON;
-    return build({
-        app,
-        config,
-        out: BUILD_DIR,
-        bundleOnly,
-    })
+    return rimraf(TMP_DIR)
+        .then(() => mkdirp(BUILD_DIR))
+        .then(() => mkdirp(PKG_DIR))
+        .then(() => build({
+            app,
+            config,
+            out: BUILD_DIR,
+            bundleOnly,
+        }))
         // Add the vccorlib dll to the generated electron app
         .then(() => util.fs.copy(
             path.join(__dirname, '../vccorlib140.dll'),

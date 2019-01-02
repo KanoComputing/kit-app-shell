@@ -20,6 +20,12 @@ const DEFAULT_PREFERENCES = {
     loadUrlTimeoutValue: 30000,
 };
 
+const DEFAULT_PLUGINS = [
+    'cordova-plugin-bluetoothle',
+    'cordova-plugin-device',
+    'cordova-plugin-splashscreen',
+];
+
 const STEP_PREFIX = 'Setting up cordova';
 
 /**
@@ -47,14 +53,8 @@ function createProject(opts, hash) {
     } = opts;
     const TMP_DIR = path.join(os.tmpdir(), `kash-${cacheId}-build`, hash);
 
-    const defaultPluginNames = [
-        'cordova-plugin-bluetoothle',
-        'cordova-plugin-device',
-        'cordova-plugin-splashscreen',
-    ];
-
     // Resolve the location of the default plugins
-    const defaultPlugins = defaultPluginNames.map(name => getModulePath(name));
+    const defaultPlugins = DEFAULT_PLUGINS.map(name => getModulePath(name));
 
     // Merge default plugins and platform plugins
     const allPlugins = defaultPlugins.concat(plugins);
