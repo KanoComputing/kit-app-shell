@@ -1,4 +1,5 @@
 const processState = require('@kano/kit-app-shell-core/lib/process-state');
+const util = require('@kano/kit-app-shell-core/lib/util');
 const build = require('@kano/kit-app-shell-electron/lib/build');
 const path = require('path');
 const os = require('os');
@@ -77,11 +78,16 @@ function windowsBuild(opts) {
         out: BUILD_DIR,
         bundleOnly,
     })
-        .then((buildDir) => {
+        // Add the vccorlib dll to the generated electron app
+        .then(() => util.fs.copy(
+            path.join(__dirname, '../vccorlib140.dll'),
+            path.join(BUILD_DIR, 'vccorlib140.dll'),
+        ))
+        .then(() => {
             processState.setInfo('Creating windows application');
             const targetDir = skipInstaller ? out : PKG_DIR;
             const packagerOptions = {
-                dir: buildDir,
+                dir: BUILD_DIR,
                 packageManager: 'yarn',
                 overwrite: true,
                 out: targetDir,
