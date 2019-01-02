@@ -14,11 +14,6 @@
  * @property {Array<String>} spec List of glob patterns for the test files of this project
  */
 
-/**
- * @typedef {Object} RunConfig
- * @property {Boolean} enabled
- */
-
 // Here we load the types from the platforms we know about. Fails gracefully if not installed.
 // This smoothen the autocomplete experience
 
@@ -44,7 +39,6 @@
  * @property {KanoConfig} kano KanoOS platform configuration
  * @property {WebConfig} web Web platform configuration
  * @property {BuildConfig} build Build options
- * @property {RunConfig} run Run options
  * @property {TestConfig} test Test options
  */
 

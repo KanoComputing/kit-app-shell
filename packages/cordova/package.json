@@ -7,7 +7,6 @@
     "@kano/devices-sdk": "git+ssh://git@github.com:KanoComputing/kano-devices-sdk.git",
     "@kano/es6-server": "^1.0.1",
     "@kano/kit-app-shell-core": "^0.0.3-alpha.2",
-    "@kano/kit-app-shell-test": "^0.0.3-alpha.2",
     "@webcomponents/webcomponentsjs": "^2.2.1",
     "connect": "^3.6.6",
     "cordova-config": "^0.7.0",
@@ -22,7 +21,6 @@
     "livereload": "^0.7.0",
     "mkdirp": "^0.5.1",
     "ngrok": "^3.1.0",
-    "pascal-case": "^2.0.1",
     "rimraf": "^2.6.2",
     "serve-static": "^1.13.2",
     "sharp": "^0.21.0"

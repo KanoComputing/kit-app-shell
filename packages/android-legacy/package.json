@@ -6,7 +6,6 @@
   "dependencies": {
     "@kano/kit-app-shell-android": "^0.0.3-alpha.2",
     "@kano/kit-app-shell-cordova": "^0.0.3-alpha.2",
-    "@kano/kit-app-shell-core": "^0.0.3-alpha.2",
     "cordova-plugin-crosswalk-webview": "^2.4.0"
   },
   "publishConfig": {

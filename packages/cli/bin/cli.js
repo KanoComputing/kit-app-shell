@@ -44,7 +44,11 @@ class CLI {
         if (!this.processState) {
             return;
         }
-        task.catch(e => this.processState.setFailure(e));
+        task.catch(e => this.processState.setFailure(e))
+            // Caught errors here are displayed using the reporter and we end the process
+            // This will skip sywac's logging and avoid duplicated error messages
+            // TODO: Map out error codes and use them here. Embed the code in the error object
+            .then(() => this.end(1));
     }
     static parseCommon(sywac) {
         return sywac
@@ -108,7 +112,7 @@ class CLI {
         const sywac = new Api();
 
         // All commands available
-        const commands = ['run', 'build', 'test', 'configure'];
+        const commands = ['run', 'build', 'test', 'sign', 'configure'];
 
         sywac.configure({ name: 'kash' });
 
@@ -179,7 +183,9 @@ class CLI {
             run: (argv) => {
                 this.mountReporter(argv);
                 const { runCommand } = require('../lib/command');
-                return runCommand('build', platformId, argv);
+                const task = runCommand('build', platformId, argv);
+                this.setTask(task);
+                return task;
             },
         });
 
@@ -222,6 +228,25 @@ class CLI {
                 this.mountReporter(argv);
                 const runTest = require('../lib/test');
                 const task = runTest(argv, platformId, 'test');
+                this.setTask(task);
+                return task;
+            },
+        });
+
+        sywac.command('sign <platform>', {
+            desc: 'sign an application package',
+            setup: (s) => {
+                CLI.parseCommon(s);
+                const sywacPatch = CLI.patchSywacOptions(s, {
+                    group: platform.cli.group || 'Platform: ',
+                });
+                platformUtils.registerOptions(s, platform, 'sign');
+                sywacPatch.dispose();
+            },
+            run: (argv) => {
+                this.mountReporter(argv);
+                const { runCommand } = require('../lib/command');
+                const task = runCommand('sign', platformId, argv);
                 this.setTask(task);
                 return task;
             },

@@ -1,4 +1,4 @@
-const { run } = require('@kano/kit-app-shell-cordova');
+const run = require('@kano/kit-app-shell-cordova/lib/run');
 const androidPlatform = require('./plugins');
 
 module.exports = opts => run({

@@ -1,4 +1,4 @@
-const { build } = require('@kano/kit-app-shell-cordova');
+const build = require('@kano/kit-app-shell-cordova/lib/build');
 const plugins = require('./plugins');
 
 module.exports = (opts) => {

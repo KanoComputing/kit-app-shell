@@ -1,19 +1,3 @@
-function loadPlatform(name) {
-    if (name === 'common' || name === 'cli') {
-        throw new Error(`Could not load platform: '${name}' is reserved`);
-    }
-    let loaded;
-    try {
-        loaded = require(`@kano/kit-app-shell-${name}`);
-    } catch (e) {
-        if (e.code === 'MODULE_NOT_FOUND') {
-            throw new Error(`Could load platform: '${name}' was not installed`);
-        }
-        throw e;
-    }
-    return loaded;
-}
-
 // Loads a platform sub-module
 // This allows us to load just the CLI config and only the required command
 // This speeds up the overall CLI by skipping eventual dependencies
@@ -21,19 +5,31 @@ function loadPlatform(name) {
 // e.g. Do not load heavy testing frameworks when we only need to run the app
 // The default location is lib/<key>. It will fallback to loading the whole module if
 // getting the sub-module fails.
-// TODO: Maybe only load submodule and force platforms to organise their files properly
 function loadPlatformKey(name, key) {
     if (name === 'core' || name === 'cli') {
         throw new Error(`Could not load platform: '${name}' is reserved`);
     }
-    let loaded;
     try {
-        loaded = require(`@kano/kit-app-shell-${name}/lib/${key}`);
-    } catch (e) {
-        const mod = loadPlatform(name);
-        loaded = mod[name];
+        const loaded = require(`@kano/kit-app-shell-${name}/lib/${key}`);
+        return loaded;
+    } catch (err) {
+        // Could not find the specific file. Need to figure out if the platform is not installed
+        // Or doesn't implement that file
+        // Use require.resolve here to avoid loading the whole module
+        try {
+            const modulePath = require.resolve(`@kano/kit-app-shell-${name}`);
+            if (modulePath) {
+                throw new Error(`Platform '${name}' does not implement '${key}'`);
+            }
+        } catch (e) {
+            // Failed to resolve the module, it is not installed
+            if (e.code === 'MODULE_NOT_FOUND') {
+                throw new Error(`Could load platform: '${name}' was not installed`);
+            }
+            throw e;
+        }
     }
-    return loaded;
+    return null;
 }
 
 function registerCommands(sywac, platform) {
@@ -63,7 +59,6 @@ function registerOptions(sywac, platform, command) {
 }
 
 module.exports = {
-    loadPlatform,
     loadPlatformKey,
     registerCommands,
     registerOptions,
