@@ -31,6 +31,8 @@ navigate to your app in Overview > [App] > App Managment > App identity
 
 ![App identity](./docs/app-identity.png)
 
+You will find here all the info to fill in the fields in your project's config files
+
 
 ## TODO
  - Generate icons: 300x300, 150x150, 71x71, banners etc
