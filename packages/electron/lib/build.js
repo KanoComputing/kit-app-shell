@@ -100,10 +100,6 @@ function build(opts = {}) {
         config = {},
         out,
         bundleOnly,
-        resources = [],
-        polyfills = [],
-        moduleContext = {},
-        replaces = [],
     } = opts;
     processState.setStep(`Creating electron app '${config.APP_NAME}'`);
     const tasks = [
@@ -120,11 +116,7 @@ function build(opts = {}) {
                     targets: babelTargets,
                 },
                 appJs: {
-                    bundleOnly,
-                    resources,
-                    polyfills,
-                    moduleContext,
-                    replaces,
+                    ...opts,
                     targets: babelTargets,
                 },
             },

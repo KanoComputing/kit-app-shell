@@ -29,8 +29,10 @@ class CLI {
     }
     end(code) {
         this.duration = Date.now() - this.startedAt;
-        const totalTime = (this.duration / 1000).toFixed(2);
-        const msg = `Done in ${totalTime}s.`;
+        const totalTime = this.duration / 1000;
+        const totalMinutes = Math.floor(totalTime / 60);
+        const totalSeconds = (totalTime % 60).toFixed(2);
+        const msg = `Done in ${totalMinutes}m${totalSeconds.toString().padStart(5, '0')}s.`;
         if (this.reporter) {
             this.reporter.onInfo(msg);
         }

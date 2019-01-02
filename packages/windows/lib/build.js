@@ -64,20 +64,19 @@ function windowsBuild(opts) {
         config = {},
         out,
         skipInstaller = false,
-        bundleOnly,
     } = opts;
     const TMP_DIR = path.join(os.tmpdir(), 'kash-windows-build');
     const BUILD_DIR = path.join(TMP_DIR, 'build');
     const PKG_DIR = path.join(TMP_DIR, 'app');
-    const icon = config.ICONS ? config.ICONS.WINDOWS : DEFAULT_ICON;
+    const icon = config.ICONS ? path.join(app, config.ICONS.WINDOWS) : DEFAULT_ICON;
     return rimraf(TMP_DIR)
         .then(() => mkdirp(BUILD_DIR))
         .then(() => mkdirp(PKG_DIR))
         .then(() => build({
+            ...opts,
             app,
             config,
             out: BUILD_DIR,
-            bundleOnly,
         }))
         // Add the vccorlib dll to the generated electron app
         .then(() => util.fs.copy(

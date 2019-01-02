@@ -5,58 +5,65 @@ const os = require('os');
 const { promisify } = require('util');
 const mkdirp = promisify(require('mkdirp'));
 const rimraf = promisify(require('rimraf'));
+const chalk = require('chalk');
 const convertToWindowsStore = require('electron-windows-store');
 
-function createAppx(dir, config, out) {
-    // Extract the windows store config from the provided config
-    // It contains essential information that cannot have a default or be infered
-    // throw an error if it is missing
-    // TODO: Check all required keys before continuing. This would provide explicit errors
-    const { WINDOWS_STORE } = config;
-    if (!WINDOWS_STORE) {
-        throw new Error('Could not create appx: Missing WINDOWS_STORE in config');
-    }
-    return convertToWindowsStore({
-        containerVirtualization: false,
-        inputDirectory: path.join(dir, `${config.APP_NAME}-win32-x64`),
-        outputDirectory: out,
-        packageVersion: `${config.UI_VERSION}.0`,
-        packageName: WINDOWS_STORE.PACKAGE_NAME,
-        packageDisplayName: WINDOWS_STORE.PACKAGE_DISPLAY_NAME,
-        packageDescription: config.DESCRIPTION,
-        packageExecutable: `app\\${config.APP_NAME}.exe`,
-        publisher: WINDOWS_STORE.PUBLISHER,
-        publisherDisplayName: WINDOWS_STORE.PUBLISHER_DISPLAY_NAME,
-        deploy: false,
-    }).then(() => out);
-}
+const TMP_DIRNAME = 'kash-windows-store-build';
+
+const TMP_DIR = path.join(os.tmpdir(), TMP_DIRNAME);
 
 module.exports = (opts) => {
     const {
         app,
         config = {},
         out,
-        bundleOnly,
+        certificates,
+        windowsKit,
     } = opts;
+    const { WINDOWS_STORE } = config;
+    if (!WINDOWS_STORE) {
+        throw new Error('Could not create appx: Missing \'WINDOWS_STORE\' in config');
+    }
+    if (!WINDOWS_STORE.PUBLISHER) {
+        throw new Error('Could not create appx: Missing \'PUBLISHER\' in \'WINDOWS_STORE\' config');
+    }
+    if (!windowsKit || !certificates || !certificates[WINDOWS_STORE.PUBLISHER]) {
+        throw new Error(`Could not create appx: Missing certificates in rc.\n    Run ${chalk.cyan('kash config windows-store')} and input certificate ${chalk.blue(WINDOWS_STORE.PUBLISHER)} when requested to fix this.`);
+    }
+    const devCert = certificates[WINDOWS_STORE.PUBLISHER];
     // Force disable updater
     Object.assign(config, { UPDATER_DISABLED: true });
+    // This is read by electron-windows-store to make logs silent
+    global.isModuleUse = true;
     // Prepare a temp directory for the build
-    const TMP_DIR = path.join(os.tmpdir(), 'kash-windows-store-build');
     return rimraf(TMP_DIR)
         .then(() => mkdirp(TMP_DIR))
         .then(() =>
             // Build using the windows platform, skip the installer as we will create an .appx
             build({
+                ...opts,
                 app,
-                config,
                 out: TMP_DIR,
                 skipInstaller: true,
-                bundleOnly,
             }))
         .then((buildDir) => {
             processState.setStep('Creating appx');
             // Create the .appx from the bundled app
-            return createAppx(buildDir, config, out);
+            return convertToWindowsStore({
+                containerVirtualization: false,
+                inputDirectory: path.join(buildDir, `${config.APP_NAME}-win32-x64`),
+                outputDirectory: out,
+                packageVersion: `${config.UI_VERSION}.0`,
+                packageName: WINDOWS_STORE.PACKAGE_NAME,
+                packageDisplayName: WINDOWS_STORE.PACKAGE_DISPLAY_NAME,
+                packageDescription: config.DESCRIPTION,
+                packageExecutable: `app\\${config.APP_NAME}.exe`,
+                publisher: WINDOWS_STORE.PUBLISHER,
+                publisherDisplayName: WINDOWS_STORE.PUBLISHER_DISPLAY_NAME,
+                windowsKit,
+                devCert,
+                deploy: false,
+            }).then(() => out);
         })
         .then((outDir) => {
             processState.setSuccess('Created appx');

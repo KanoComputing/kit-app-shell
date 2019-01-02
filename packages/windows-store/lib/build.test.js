@@ -10,11 +10,19 @@ suite('build', () => {
             return Promise.resolve('/');
         });
         mock('electron-windows-store', () => Promise.resolve());
+        mock('rimraf', (_, cb) => cb());
+        mock('mkdirp', (_, cb) => cb());
 
         const sample = {
             config: {
-                WINDOWS_STORE: {},
+                WINDOWS_STORE: {
+                    PUBLISHER: 'CN=TEST',
+                },
             },
+            certificates: {
+                'CN=TEST': '/cert.pfx',
+            },
+            windowsKit: '/',
         };
 
         const build = mock.reRequire('./build');
