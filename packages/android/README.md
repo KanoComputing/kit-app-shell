@@ -70,3 +70,5 @@ To support landsapce and portrait orientations, provide a large square splashcre
 ## TODO:
 
  - run: Only work on target platforms with Chrome 61+ for es6 imports. Add a flag to transpile on the fly with livereload watch. Rollup connect middleware?
+ - Maybe embed the android licenses hash to accept them automatically on CI servers. See https://developer.android.com/studio/intro/update#download-with-gradle
+ 

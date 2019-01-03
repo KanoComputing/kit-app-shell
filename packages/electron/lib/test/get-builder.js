@@ -7,12 +7,12 @@ const ElectronChromedriver = require('./electron-chromedriver');
 /**
  * Create a builder to create a driver for each test
  */
-module.exports = (wd, mocha, { app, config = {} }) => {
+module.exports = (wd, mocha, { app, config = {}, tmpdir }) => {
     const electronChromedriver = new ElectronChromedriver();
 
     electronChromedriver.start(9515);
 
-    const configPath = path.join(os.tmpdir(), '.kash-electron.config.json');
+    const configPath = path.join(tmpdir, '.kash-electron.config.json');
     fs.writeFileSync(configPath, JSON.stringify(config));
 
     mocha.suite.afterAll(() => {

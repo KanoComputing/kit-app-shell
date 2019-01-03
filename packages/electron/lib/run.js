@@ -7,15 +7,15 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
-function run({ app, config = {} }) {
+function run({ app, config = {}, tmpdir = os.tmpdir() }) {
     processState.setStep('Launching electron app');
     const server = livereload.createServer();
     // Write a temp file with the aggregated config
-    const configPath = path.join(os.tmpdir(), '.kash-electron.config.json');
+    const configPath = path.join(tmpdir, '.kash-electron.config.json');
     fs.writeFileSync(configPath, JSON.stringify(config));
 
     const runTplPath = path.join(__dirname, '../data/run.tpl');
-    const runPath = path.join(os.tmpdir(), '.kash-electron.run.js');
+    const runPath = path.join(tmpdir, '.kash-electron.run.js');
 
     server.watch(app);
 

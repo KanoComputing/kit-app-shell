@@ -10,8 +10,6 @@ const convertToWindowsStore = require('electron-windows-store');
 
 const TMP_DIRNAME = 'kash-windows-store-build';
 
-const TMP_DIR = path.join(os.tmpdir(), TMP_DIRNAME);
-
 module.exports = (opts) => {
     const {
         app,
@@ -19,6 +17,7 @@ module.exports = (opts) => {
         out,
         certificates,
         windowsKit,
+        tmpdir = os.tmpdir(),
     } = opts;
     const { WINDOWS_STORE } = config;
     if (!WINDOWS_STORE) {
@@ -35,6 +34,7 @@ module.exports = (opts) => {
     Object.assign(config, { UPDATER_DISABLED: true });
     // This is read by electron-windows-store to make logs silent
     global.isModuleUse = true;
+    const TMP_DIR = path.join(tmpdir, TMP_DIRNAME);
     // Prepare a temp directory for the build
     return rimraf(TMP_DIR)
         .then(() => mkdirp(TMP_DIR))

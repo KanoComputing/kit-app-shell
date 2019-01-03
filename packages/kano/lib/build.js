@@ -124,7 +124,7 @@ function kanoBuild(opts) {
         out,
         bundleOnly,
     } = opts;
-    const TMP_DIR = path.join(os.tmpdir(), 'kash-kano-build');
+    const TMP_DIR = path.join(opts.tmpdir, 'kash-kano-build');
     const BUILD_DIR = path.join(TMP_DIR, 'build');
     const APP_DIR = path.join(TMP_DIR, 'app');
     const DEB_DIR = path.join(TMP_DIR, 'deb');

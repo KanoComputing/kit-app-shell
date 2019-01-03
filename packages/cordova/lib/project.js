@@ -50,8 +50,9 @@ function createProject(opts, hash) {
         platforms,
         hooks,
         cacheId = 'cordova',
+        tmpdir = os.tmpdir(),
     } = opts;
-    const TMP_DIR = path.join(os.tmpdir(), `kash-${cacheId}-build`, hash);
+    const TMP_DIR = path.join(tmpdir, `kash-${cacheId}-build`, hash);
 
     // Resolve the location of the default plugins
     const defaultPlugins = DEFAULT_PLUGINS.map(name => getModulePath(name));

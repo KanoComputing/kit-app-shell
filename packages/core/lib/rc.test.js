@@ -21,6 +21,9 @@ suite('RcLoader', () => {
                 homedir() {
                     return '/homedir';
                 },
+                tmpdir() {
+                    return '/test-tmp';
+                },
             });
             const TestRcLoader = mock.reRequire('./rc');
             const allFiles = [
@@ -46,6 +49,9 @@ suite('RcLoader', () => {
                 homedir() {
                     return '/homedir';
                 },
+                tmpdir() {
+                    return '/test-tmp';
+                },
             });
             const TestRcLoader = mock.reRequire('./rc');
             return TestRcLoader.findAll('/')
@@ -58,6 +64,9 @@ suite('RcLoader', () => {
         mock('os', {
             homedir() {
                 return '/homedir';
+            },
+            tmpdir() {
+                return '/test-tmp';
             },
         });
         const allFiles = [

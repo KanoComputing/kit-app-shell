@@ -64,8 +64,9 @@ function windowsBuild(opts) {
         config = {},
         out,
         skipInstaller = false,
+        tmpdir = os.tmpdir(),
     } = opts;
-    const TMP_DIR = path.join(os.tmpdir(), 'kash-windows-build');
+    const TMP_DIR = path.join(tmpdir, 'kash-windows-build');
     const BUILD_DIR = path.join(TMP_DIR, 'build');
     const PKG_DIR = path.join(TMP_DIR, 'app');
     const icon = config.ICONS ? path.join(app, config.ICONS.WINDOWS) : DEFAULT_ICON;

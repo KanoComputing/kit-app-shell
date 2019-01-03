@@ -66,6 +66,12 @@ module.exports = {
 ![Autocomplete example 1](./docs/autocomplete1.jpg)
 ![Autocomplete example 2](./docs/autocomplete2.jpg)
 
+### Env config
+
+You can customize the temporaru directory for kash. This allows you to write to a directory you have the rights to, or avoid writing cached data to a volatile volume on systems like Docker.
+
+Use the `KASH_TMP_DIR` env variable to set it.
+
 ## Development
 
 ### Speed

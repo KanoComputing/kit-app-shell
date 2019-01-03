@@ -34,7 +34,12 @@ const RcLoader = {
     },
     load(app) {
         return RcLoader.findAll(app)
-            .then(files => files.reduce((acc, file) => deepMerge(acc, require(file)), {}));
+            .then(files => files.reduce((acc, file) => deepMerge(acc, require(file)), {}))
+            .then((opts) => {
+                // Get the defined temporary directory or use the system one
+                opts.tmpdir = process.env.KASH_TMP_DIR || os.tmpdir();
+                return opts;
+            });
     },
     hasHomeRc() {
         return RcLoader.check(RC_PATH);

@@ -15,9 +15,10 @@ function macosBuild(opts) {
         config = {},
         out,
         bundleOnly,
+        tmpdir = os.tmpdir(),
     } = opts;
     const warnings = [];
-    const TMP_DIR = path.join(os.tmpdir(), 'kash-macos-build');
+    const TMP_DIR = path.join(tmpdir, 'kash-macos-build');
     const icon = config.ICONS && config.ICONS.MACOS ?
         path.join(app, config.ICONS.MACOS) : defaultIconPath;
     let name = config.APP_NAME;
