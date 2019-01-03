@@ -2,3 +2,5 @@ test
 **/*.test.js
 .mocharc.js
 docs
+coverage
+out
