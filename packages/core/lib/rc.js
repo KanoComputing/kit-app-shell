@@ -37,7 +37,7 @@ const RcLoader = {
             .then(files => files.reduce((acc, file) => deepMerge(acc, require(file)), {}))
             .then((opts) => {
                 // Get the defined temporary directory or use the system one
-                opts.tmpdir = process.env.KASH_TMP_DIR || os.tmpdir();
+                opts.tmpdir = process.env.KASH_TMP_DIR ? path.resolve(process.env.KASH_TMP_DIR) : os.tmpdir();
                 return opts;
             });
     },
