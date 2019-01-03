@@ -34,7 +34,9 @@ class ConfigLoader {
         config.UI_ROOT = '/www/';
 
         const pck = softRequire(path.join(appDir, 'package.json'));
-        config.UI_VERSION = pck.version || '0.0.0';
+        config.VERSION = pck.version || '0.0.0';
+        // Property used to be called UI_VERSION, alias it for backward compatibility
+        config.UI_VERSION = config.VERSION;
 
         return deepMerge(DEFAULTS, config);
     }

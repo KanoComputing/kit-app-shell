@@ -7,7 +7,9 @@ window.Shell = {
         this.defined = true;
         this.UIClass = UIClass;
         const app = new window.Shell.UIClass(window.NativeBus, window.KitAppShellConfig);
-
+        if (!(app.root instanceof HTMLElement)) {
+            throw new Error('Could not run app: the property \'root\' in your App class is not of type HTMLElement');
+        }
         document.body.appendChild(app.root);
     },
 };
