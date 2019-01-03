@@ -69,7 +69,7 @@ module.exports = opts => Promise.all([
     setupTunnel(opts.app),
     project.getProject({
         ...opts,
-        skipCache: !opts.cache,
+        skipCache: opts['no-cache'],
     }),
 ])
     .then(([server, projectPath]) => {
@@ -82,27 +82,33 @@ module.exports = opts => Promise.all([
             opts.config,
             {
                 appJs: {
-                    replaces: {
-                        TUNNEL_URL: `'${server.tunnel.url}'`,
-                        LR_URL: `'http://${ip.address(KASH_NET_INTERFACE_NAME)}:35729'`,
-                    },
+                    replaces: [{
+                        values: {
+                            TUNNEL_URL: `'${server.tunnel.url}'`,
+                            LR_URL: `'http://${ip.address(KASH_NET_INTERFACE_NAME)}:35729'`,
+                        },
+                    }],
                 },
                 js: {
-                    replaces: {
-                        // Avoid jsZip to detect the define from requirejs
-                        'typeof define': 'undefined',
-                    },
+                    replaces: [{
+                        values: {
+                            // Avoid jsZip to detect the define from requirejs
+                            'typeof define': 'undefined',
+                        },
+                    }],
                 },
             },
         )
             .then(bundle => Bundler.write(bundle, wwwPath))
-            .then(() => processState.setStep('Starting dev app on device'))
+            .then(() => processState.setInfo('Starting dev app on device'))
             .then(() => {
                 const platformIds = opts.platforms.map(platform => path.basename(platform).replace('cordova-', ''));
                 return cordova.run({ platforms: platformIds });
             })
-            .then(() => processState.setSuccess('Dev app started'))
-            .then(() => projectPath)
+            .then(() => {
+                processState.setSuccess('Dev app started');
+                return new Promise(() => {});
+            })
             .catch((e) => {
                 server.stop();
                 throw e;

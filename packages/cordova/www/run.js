@@ -6,6 +6,9 @@ fetch(`${TUNNEL_URL}/_config`)
     .then(r => r.json())
     .then((config) => {
         Object.assign(window.KitAppShellConfig, config, { UI_ROOT: TUNNEL_URL });
-        return import(`${TUNNEL_URL}/index.js`);
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.src = `${TUNNEL_URL}/index.js`;
+        document.body.appendChild(script);
     });
 

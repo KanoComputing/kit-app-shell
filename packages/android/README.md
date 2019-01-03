@@ -66,3 +66,7 @@ In your project's config (`config/*.json`), you can add:
 
 The icon will be used to generate all the necessary icons for an android project, so make sure it is at least 512x512, same thing goes for the splashcreen, it will be cropped to fit the screens.
 To support landsapce and portrait orientations, provide a large square splashcreen.
+
+## TODO:
+
+ - run: Only work on target platforms with Chrome 61+ for es6 imports. Add a flag to transpile on the fly with livereload watch. Rollup connect middleware?
