@@ -1,9 +1,5 @@
-/**
- * Collect the key in the options and move it under the preferences key
- * @param {Object} opts Options provided by the command
- * @param {String} preference Key to set the cordova preference
- * @param {String} key Key in the opts object
- */
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 function collectPreference(opts, preference, key) {
     if (!opts[key]) {
         return;
@@ -11,7 +7,5 @@ function collectPreference(opts, preference, key) {
     opts.preferences[preference] = opts[key];
     delete opts[key];
 }
-
-module.exports = {
-    collectPreference,
-};
+exports.collectPreference = collectPreference;
+//# sourceMappingURL=preferences.js.map

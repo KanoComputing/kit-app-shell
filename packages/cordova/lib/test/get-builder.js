@@ -1,13 +1,13 @@
-const util = require('@kano/kit-app-shell-core/lib/util');
-
-/**
- * Find the builder matching the provided target device provider
- */
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const platform_1 = require("@kano/kit-app-shell-core/lib/util/platform");
 module.exports = (wd, mocha, opts) => {
-    // If not a local run, try to load the providers from the test module
-    // If the user didn't install that module they will be prompted to do so
     if (opts.provider !== 'local') {
-        return util.platform.loadPlatformKey('test', 'get-builder')(wd, mocha, opts);
+        return platform_1.loadPlatformKey('test', 'get-builder')
+            .then((getBuilder) => {
+            return getBuilder(wd, mocha, opts);
+        });
     }
     return null;
 };
+//# sourceMappingURL=get-builder.js.map
