@@ -10,3 +10,4 @@ eslint.xml
 packages/cli/lib
 packages/core/lib
 packages/cordova/lib
+packages/android/lib

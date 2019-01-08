@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as rollup from 'rollup';
 import * as path from 'path';
 import * as nodeResolve from 'rollup-plugin-node-resolve';
-import { replace } from './plugins/replace';
+import { replace, ReplaceOptions } from './plugins/replace';
 import * as polyfill from 'rollup-plugin-polyfill';
 import * as inject from 'rollup-plugin-inject';
 import * as virtual from 'rollup-plugin-virtual';
@@ -31,13 +31,15 @@ function writeStatic(root, file, outputDir) {
     return util.fs.copy(filePath, outFile);
 }
 
-interface BundleOptions {
+export interface BundleOptions {
     html : {};
     js : BundleSourceOptions;
-    appJs : BundleSourceOptions & {
-        resources : Array<string>;
-    };
+    appJs : BundleAppOptions;
 }
+
+export type BundleAppOptions = BundleSourceOptions & {
+    resources? : Array<string>;
+};
 
 interface BundledFile {
     fileName: string;
@@ -56,11 +58,7 @@ interface CopyTask {
     files: Array<string>;
 }
 
-interface ReplaceOptions {
-    include: Array<string>;
-    values : { [key : string] : string };
-}
-interface BundleSourceOptions {
+export interface BundleSourceOptions {
     polyfills? : Array<string>;
     moduleContext? : {
         [key : string] : string;

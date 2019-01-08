@@ -1,14 +1,24 @@
-const { util } = require('@kano/kit-app-shell-core/lib/util');
-const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
-const { Bundler } = require('@kano/kit-app-shell-core/lib/bundler');
-const path = require('path');
-const { cordova } = require('cordova-lib');
-const { promisify } = require('util');
-const rimraf = promisify(require('rimraf'));
+import { util } from '@kano/kit-app-shell-core/lib/util';
+import { processState } from '@kano/kit-app-shell-core/lib/process-state';
+import { Bundler, BundleAppOptions } from '@kano/kit-app-shell-core/lib/bundler';
+import * as path from 'path';
+import { cordova } from 'cordova-lib';
+import { promisify } from 'util';
+import * as rimrafCb from 'rimraf';
+const rimraf = promisify(rimrafCb);
 
 const { getProject } = require('./project');
 
-module.exports = (opts = {}) => {
+export type CordovaBuildOptions = BundleAppOptions & {
+    clean? : Array<string>;
+    app: string;
+    config: {};
+    platforms: Array<string>;
+    run: boolean;
+    buildOpts: {};
+}
+
+export default (opts : CordovaBuildOptions) => {
     // Catch cordova logs and displays them
     // TODO: Catch all logs (error, warn, ...)
     // TODO: Find a console UI to display these logs and any subprocess logs

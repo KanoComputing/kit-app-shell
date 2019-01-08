@@ -1,15 +1,15 @@
-const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
-const ConfigLoader = require('@kano/kit-app-shell-core/lib/config');
-const { Bundler } = require('@kano/kit-app-shell-core/lib/bundler');
-const project = require('./project');
-const ngrok = require('ngrok');
-const connect = require('connect');
-const path = require('path');
-const serveStatic = require('serve-static');
-const cors = require('cors');
-const { cordova } = require('cordova-lib');
-const ip = require('ip');
-const livereload = require('livereload');
+import { processState } from '@kano/kit-app-shell-core/lib/process-state';
+import { ConfigLoader } from '@kano/kit-app-shell-core/lib/config';
+import { Bundler } from '@kano/kit-app-shell-core/lib/bundler';
+import { getProject } from './project';
+import * as ngrok from 'ngrok';
+import * as connect from 'connect';
+import * as path from 'path';
+import * as serveStatic from 'serve-static';
+import * as cors from 'cors';
+import { cordova } from 'cordova-lib';
+import * as ip from 'ip';
+import * as livereload from 'livereload';
 
 const namedResolutionMiddleware = require('@kano/es6-server/named-resolution-middleware');
 
@@ -65,9 +65,9 @@ function setupTunnel(app) {
         });
 }
 
-module.exports = opts => Promise.all([
+const run = opts => Promise.all([
     setupTunnel(opts.app),
-    project.getProject({
+    getProject({
         ...opts,
         skipCache: opts['no-cache'],
     }),
@@ -97,6 +97,7 @@ module.exports = opts => Promise.all([
                         },
                     }],
                 },
+                html: {},
             },
         )
             .then(bundle => Bundler.write(bundle, wwwPath))
@@ -114,3 +115,5 @@ module.exports = opts => Promise.all([
                 throw e;
             });
     });
+
+export default run;

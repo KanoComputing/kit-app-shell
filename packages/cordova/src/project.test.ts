@@ -41,13 +41,16 @@ suite('project', () => {
             });
         });
         test('existing project', () => {
-            class CacheMock {
+            class CacheClassMock {
                 getProject() {
                     return Promise.resolve('/project');
                 }
                 static configToHash() {
                     return 'hash';
                 }
+            }
+            const CacheMock = {
+                ProjectCacheManager: CacheClassMock,
             }
             mock('cordova-lib', {
                 cordova: {
@@ -86,7 +89,8 @@ suite('project', () => {
             const steps = [];
             const testPlatforms = Symbol('platform');
             const testPlugin = Symbol('plugin');
-            class CacheMock {
+
+            class CacheClassMock {
                 getProject() {
                     steps.push('get-project');
                     return Promise.resolve(null);
@@ -99,13 +103,19 @@ suite('project', () => {
                     return 'hash';
                 }
             }
-            class MockCordovaConfig {
+            const CacheMock = {
+                ProjectCacheManager: CacheClassMock,
+            }
+            class MockCordovaConfigClass {
                 addHook() {}
                 setPreference() {}
                 write() {
                     return Promise.resolve();
                 }
             }
+            const MockCordovaConfig = {
+                CordovaConfig: MockCordovaConfigClass,
+            };
             mock('cordova-lib', {
                 cordova: {
                     create(projectPath, id, name) {

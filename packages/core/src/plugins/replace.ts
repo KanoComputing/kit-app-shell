@@ -39,14 +39,14 @@ function mapToFunctions(object) {
     }, {});
 }
 
-interface Options {
+export interface ReplaceOptions {
     include? : Array<string>;
     exclude? : Array<string>;
     delimiters? : Array<string>;
     values? : {};
 }
 
-export function replace(options : Options = {}) {
+export function replace(options : ReplaceOptions = {}) {
     const filter = createFilter(options.include, options.exclude);
     const { delimiters } = options;
     const functionValues = mapToFunctions(getReplacements(options));
