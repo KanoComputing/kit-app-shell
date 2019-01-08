@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     commands(sywac) {
         sywac.boolean('--no-cache', {
             defaultValue: false,

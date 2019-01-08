@@ -17,6 +17,9 @@ export function loadPlatformKey(name, key) : Promise<PlatformPart> {
         return Promise.reject(new Error(`Could not load platform: '${name}' is reserved`));
     }
     return import(`@kano/kit-app-shell-${name}/lib/${key}`)
+        .then((imported : { default : PlatformPart }) => {
+            return imported.default;
+        })
         .catch(() => {
             // Could not find the specific file. Need to figure out if the platform is not installed
             // Or doesn't implement that file

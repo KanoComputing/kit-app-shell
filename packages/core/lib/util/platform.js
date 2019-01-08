@@ -4,7 +4,10 @@ function loadPlatformKey(name, key) {
     if (name === 'core' || name === 'cli') {
         return Promise.reject(new Error(`Could not load platform: '${name}' is reserved`));
     }
-    return Promise.resolve().then(() => require(`@kano/kit-app-shell-${name}/lib/${key}`)).catch(() => {
+    return Promise.resolve().then(() => require(`@kano/kit-app-shell-${name}/lib/${key}`)).then((imported) => {
+        return imported.default;
+    })
+        .catch(() => {
         try {
             const modulePath = require.resolve(`@kano/kit-app-shell-${name}`);
             if (modulePath) {

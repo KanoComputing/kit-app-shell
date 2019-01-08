@@ -27,7 +27,7 @@ suite('ProjectCacheManager', () => {
         });
     });
     test('contructor', () => {
-        const ProjectCacheManager = mock.reRequire('./cache');
+        const { ProjectCacheManager } = mock.reRequire('./cache');
         applyMockFs();
 
         const cache = new ProjectCacheManager('test-id');
@@ -35,7 +35,7 @@ suite('ProjectCacheManager', () => {
         assert.equal(cache._dbPath, path.join('/test-homedir', '.kit-app-shell-cordova/cache', 'test-id'));
     });
     test('load', () => {
-        const ProjectCacheManager = mock.reRequire('./cache');
+        const { ProjectCacheManager } = mock.reRequire('./cache');
         applyMockFs();
 
         const cache = new ProjectCacheManager('test-1');
@@ -47,7 +47,7 @@ suite('ProjectCacheManager', () => {
             });
     });
     test('save', () => {
-        const ProjectCacheManager = mock.reRequire('./cache');
+        const { ProjectCacheManager } = mock.reRequire('./cache');
         applyMockFs();
 
         const cache = new ProjectCacheManager('test-save');
