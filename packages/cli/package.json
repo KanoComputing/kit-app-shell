@@ -7,7 +7,13 @@
     "kit-app-shell": "bin/cli.js",
     "kash": "bin/cli.js"
   },
-  "scripts": {},
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "directories": {
+    "lib": "lib",
+    "bin": "bin"
+  },
   "dependencies": {
     "@kano/kit-app-shell-core": "^0.0.3-alpha.4",
     "chalk": "^2.4.1",
@@ -18,6 +24,8 @@
     "sywac": "^1.2.1"
   },
   "devDependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/ora": "^3.0.0",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "mock-require": "^3.0.2",

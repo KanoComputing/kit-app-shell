@@ -1,6 +1,6 @@
-const ConfigLoader = require('@kano/kit-app-shell-core/lib/config');
-const RcLoader = require('@kano/kit-app-shell-core/lib/rc');
-const deepMerge = require('deepmerge');
+import * as ConfigLoader from '@kano/kit-app-shell-core/lib/config';
+import * as RcLoader from '@kano/kit-app-shell-core/lib/rc';
+import * as deepMerge from 'deepmerge';
 
 function deleteCommandKeys(obj) {
     [
@@ -41,7 +41,7 @@ function deleteCommandKeys(obj) {
  * @param {String} platformId Which platform the command should run with
  * @param {String} command The command parsed from the CLI
  */
-function agregateArgv(argv, platformId, command) {
+export function agregateArgv(argv, platformId, command) {
     // Load config files
     return RcLoader.load(argv.app)
         .then((rcOpts) => {
@@ -68,14 +68,9 @@ function agregateArgv(argv, platformId, command) {
         });
 }
 
-function addConfig(opts) {
+export function addConfig(opts) {
     const config = ConfigLoader.load(opts.app, opts.env);
     config.BUILD_NUMBER = parseInt(process.env.BUILD_NUMBER, 10) || opts.buildNumber;
     opts.config = config;
     return opts;
 }
-
-module.exports = {
-    agregateArgv,
-    addConfig,
-};

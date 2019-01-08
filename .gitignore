@@ -6,3 +6,5 @@ out
 coverage
 .DS_Store
 eslint.xml
+
+packages/cli/lib
