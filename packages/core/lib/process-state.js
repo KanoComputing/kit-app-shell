@@ -1,8 +1,7 @@
-const { EventEmitter } = require('events');
-
-// TODO: Rename to better name. Breaks dependencies so test are important
-// TODO: Find better name. Something like StepManager as it manages steps
-class ProcessState extends EventEmitter {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const events_1 = require("events");
+class ProcessState extends events_1.EventEmitter {
     setStep(message) {
         this.emit('step', { message });
     }
@@ -19,5 +18,5 @@ class ProcessState extends EventEmitter {
         this.emit('info', { message });
     }
 }
-
-module.exports = new ProcessState();
+exports.processState = new ProcessState();
+//# sourceMappingURL=process-state.js.map

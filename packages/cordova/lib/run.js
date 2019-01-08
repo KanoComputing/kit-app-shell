@@ -1,6 +1,6 @@
-const processState = require('@kano/kit-app-shell-core/lib/process-state');
+const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
 const ConfigLoader = require('@kano/kit-app-shell-core/lib/config');
-const Bundler = require('@kano/kit-app-shell-core/lib/bundler');
+const { Bundler } = require('@kano/kit-app-shell-core/lib/bundler');
 const project = require('./project');
 const ngrok = require('ngrok');
 const connect = require('connect');

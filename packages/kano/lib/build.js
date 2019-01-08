@@ -1,5 +1,5 @@
 const util = require('@kano/kit-app-shell-core/lib/util');
-const processState = require('@kano/kit-app-shell-core/lib/process-state');
+const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
 const build = require('@kano/kit-app-shell-electron/lib/build');
 const path = require('path');
 const os = require('os');
@@ -124,7 +124,7 @@ function kanoBuild(opts) {
         out,
         bundleOnly,
     } = opts;
-    const TMP_DIR = path.join(opts.tmpdir, 'kash-kano-build');
+    const TMP_DIR = path.join(opts.tmpdir || os.tmpdir(), 'kash-kano-build');
     const BUILD_DIR = path.join(TMP_DIR, 'build');
     const APP_DIR = path.join(TMP_DIR, 'app');
     const DEB_DIR = path.join(TMP_DIR, 'deb');

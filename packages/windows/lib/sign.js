@@ -1,4 +1,4 @@
-const processState = require('@kano/kit-app-shell-core/lib/process-state');
+const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
 const path = require('path');
 const cp = require('child_process');
 

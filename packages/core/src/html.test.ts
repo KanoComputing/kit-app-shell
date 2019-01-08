@@ -1,6 +1,8 @@
 /* globals suite, test */
-const { assert } = require('chai');
-const { addRequirejs, replaceIndex } = require('./html');
+import { assert } from 'chai';
+import { addRequirejs, replaceIndex } from './html';
+
+import 'mocha';
 
 suite('html.js', () => {
     test('addRequirejs', () => {

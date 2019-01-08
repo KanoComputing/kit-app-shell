@@ -1,6 +1,6 @@
-const util = require('@kano/kit-app-shell-core/lib/util');
-const processState = require('@kano/kit-app-shell-core/lib/process-state');
-const Bundler = require('@kano/kit-app-shell-core/lib/bundler');
+const { util } = require('@kano/kit-app-shell-core/lib/util');
+const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
+const { Bundler } = require('@kano/kit-app-shell-core/lib/bundler');
 const path = require('path');
 const { cordova } = require('cordova-lib');
 const { promisify } = require('util');

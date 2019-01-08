@@ -1,12 +1,13 @@
-const path = require('path');
-const wd = require('wd');
-const Mocha = require('mocha');
-const { promisify } = require('util');
-const glob = promisify(require('glob'));
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const path = require("path");
+const wd = require("wd");
+const Mocha = require("mocha");
+const util_1 = require("util");
+const globCb = require("glob");
+const glob = util_1.promisify(globCb);
 class KashTestFramework {
     constructor() {
-        // TODO: Add features to control API through web-bus
         this.wd = wd;
     }
     _setBuilder(builder) {
@@ -16,8 +17,8 @@ class KashTestFramework {
         const asserter = new wd.Asserter((target, cb) => {
             this.driver.contexts()
                 .then((ctxs) => {
-                    cb(null, ctxs.length > 1, ctxs);
-                })
+                cb(null, ctxs.length > 1, ctxs);
+            })
                 .catch(e => cb(e));
         });
         return this.driver.waitFor(asserter)
@@ -30,9 +31,9 @@ class KashTestFramework {
         }
         return this._builder(test)
             .then((d) => {
-                this.driver = d;
-                return this._switchContexts();
-            });
+            this.driver = d;
+            return this._switchContexts();
+        });
     }
     _afterEach() {
         return Promise.resolve();
@@ -44,10 +45,8 @@ class KashTestFramework {
         return this.driver.quit();
     }
 }
-
-module.exports = (platform, opts) => {
+exports.test = (platform, opts) => {
     const framework = new KashTestFramework();
-    // Create new mocha UI inhecting the test framework
     Mocha.interfaces['selenium-bdd'] = (suite) => {
         Mocha.interfaces.bdd(suite);
         suite.on('pre-require', (context) => {
@@ -62,38 +61,27 @@ module.exports = (platform, opts) => {
             return framework._afterEach();
         });
     };
-    // TODO: customise mocha through command options
-    const mocha = new Mocha({
-        ui: 'selenium-bdd',
-        timeout: 240000,
-    });
-    // After the main suite finished all tests, get rid of the framework
-    // This needs to be registered here so that individual platforms defining their
-    // builders can use the same lifecycle to stop whatever process they started after
-    // the framework did its cleanup
+    const mocha = new Mocha();
+    mocha.ui('selenium-bdd');
+    mocha.timeout(240000);
     mocha.suite.afterAll(() => framework.dispose());
     return platform.getBuilder(wd, mocha, opts)
         .then((builder) => {
-            framework._setBuilder(builder);
-            // Grab all spec files using glob
-            // TODO: research and mimic mocha's glob behaviour for consistency (e.g. minimist)
-            return Promise.all((opts.spec || []).map(s => glob(s, { cwd: opts.app })))
-                .then((specFiles) => {
-                    // Merge all results
-                    const allFiles = specFiles.reduce((acc, it) => acc.concat(it), []);
-                    // Add all files to the mocha instance
-                    allFiles.forEach((file) => {
-                        mocha.addFile(path.join(opts.app, file));
-                    });
-                    // Start mocha
-                    const runner = mocha.run();
-                    return new Promise((resolve, reject) => {
-                        // Kill driver at the end
-                        runner.on('end', () => {
-                            resolve();
-                        });
-                        runner.on('error', reject);
-                    });
+        framework._setBuilder(builder);
+        return Promise.all((opts.spec || []).map(s => glob(s, { cwd: opts.app })))
+            .then((specFiles) => {
+            const allFiles = specFiles.reduce((acc, it) => acc.concat(it), []);
+            allFiles.forEach((file) => {
+                mocha.addFile(path.join(opts.app, file));
+            });
+            const runner = mocha.run();
+            return new Promise((resolve, reject) => {
+                runner.on('end', () => {
+                    resolve();
                 });
+                runner.on('error', reject);
+            });
         });
+    });
 };
+//# sourceMappingURL=test.js.map

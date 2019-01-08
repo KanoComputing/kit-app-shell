@@ -1,5 +1,5 @@
-import * as ConfigLoader from '@kano/kit-app-shell-core/lib/config';
-import * as RcLoader from '@kano/kit-app-shell-core/lib/rc';
+import { ConfigLoader } from '@kano/kit-app-shell-core/lib/config';
+import { RcLoader } from '@kano/kit-app-shell-core/lib/rc';
 import * as deepMerge from 'deepmerge';
 
 function deleteCommandKeys(obj) {

@@ -1,34 +1,33 @@
-const fs = require('fs');
-const rollup = require('rollup');
-const path = require('path');
-const nodeResolve = require('rollup-plugin-node-resolve');
-const replace = require('./plugins/replace');
-const polyfill = require('rollup-plugin-polyfill');
-const inject = require('rollup-plugin-inject');
-const virtual = require('rollup-plugin-virtual');
-const mkdirp = require('mkdirp');
-const { replaceIndex, addRequirejs } = require('./html');
-const log = require('./log');
-const util = require('./util');
-const processState = require('./process-state');
-const ProgressTracker = require('./progress');
-const { promisify } = require('util');
-const glob = promisify(require('glob'));
-const escapeRegExp = require('escape-regexp');
-
-const writeFile = promisify(fs.writeFile);
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs");
+const rollup = require("rollup");
+const path = require("path");
+const nodeResolve = require("rollup-plugin-node-resolve");
+const replace_1 = require("./plugins/replace");
+const polyfill = require("rollup-plugin-polyfill");
+const inject = require("rollup-plugin-inject");
+const virtual = require("rollup-plugin-virtual");
+const mkdirp = require("mkdirp");
+const html_1 = require("./html");
+const log_1 = require("./log");
+const util_1 = require("./util");
+const process_state_1 = require("./process-state");
+const progress_1 = require("./progress");
+const util_2 = require("util");
+const globCb = require("glob");
+const escapeRegExp = require("escape-regexp");
+const glob = util_2.promisify(globCb);
+const writeFile = util_2.promisify(fs.writeFile);
 function write(file, outputDir) {
     const filePath = path.join(outputDir, file.fileName);
     return writeFile(filePath, file.code);
 }
-
 function writeStatic(root, file, outputDir) {
     const filePath = path.join(root, file);
     const outFile = path.join(outputDir, file);
-    return util.fs.copy(filePath, outFile);
+    return util_1.util.fs.copy(filePath, outFile);
 }
-
 class Bundler {
     static write(bundle, outputDir) {
         const tasks = [];
@@ -40,26 +39,21 @@ class Bundler {
         bundle.appJs.forEach(file => tasks.push(write(file, appOutputDir)));
         if (bundle.appStatic) {
             const { root, files } = bundle.appStatic;
-            // Write assets in series
-            const p = files.reduce(
-                (acc, file) => acc.then(() => writeStatic(root, file, appOutputDir)),
-                Promise.resolve(),
-            );
+            const p = files.reduce((acc, file) => acc.then(() => writeStatic(root, file, appOutputDir)), Promise.resolve());
             tasks.push(p);
         }
         return Promise.all(tasks)
             .then(() => {
-                processState.setSuccess('Bundled app');
-                return outputDir;
-            });
+            process_state_1.processState.setSuccess('Bundled app');
+            return outputDir;
+        });
     }
-    static bundle(html, js, appSrc, config, opts = {}) {
-        processState.setStep(`Bundling app at ${appSrc}`);
-        const pkg = {};
+    static bundle(html, js, appSrc, config, opts = { html: {}, js: {}, appJs: { resources: [] } }) {
+        process_state_1.processState.setStep(`Bundling app at ${appSrc}`);
         const appSrcName = path.basename(appSrc);
         const htmlOutput = Bundler.bundleHtml(html, opts.html || {});
-        const stage1 = replaceIndex(html, js, htmlOutput);
-        pkg.html = {
+        const stage1 = html_1.replaceIndex(html, js, htmlOutput);
+        const htmlBundle = {
             fileName: path.basename(html),
             code: stage1,
         };
@@ -71,7 +65,12 @@ class Bundler {
             tasks.push(Bundler.bundleStatic(opts.appJs.resources, path.dirname(appSrc)));
         }
         return Promise.all(tasks).then((results) => {
-            [pkg.js, pkg.appJs, pkg.appStatic] = results;
+            const pkg = {
+                html: htmlBundle,
+                js: results[0],
+                appJs: results[1],
+                appStatic: results[2],
+            };
             pkg.js.unshift({
                 fileName: 'require.js',
                 code: fs.readFileSync(require.resolve('requirejs/require.js'), 'utf-8'),
@@ -81,54 +80,37 @@ class Bundler {
     }
     static bundleHtml(input, replacements = {}) {
         const contents = fs.readFileSync(input, 'utf-8');
-        const stage1 = addRequirejs(contents);
+        const stage1 = html_1.addRequirejs(contents);
         const reg = /<!--\s?build:(.*?)\s?-->([\s\S]*)<!--\s?endbuild\s?-->/g;
-        // Replace html comment with build tag
         return stage1.replace(reg, (m, g0) => replacements[g0] || '');
     }
-    static bundleSources(input, config, opts = {}) {
-        const {
-            polyfills = [],
-            moduleContext = {},
-            replaces = [],
-            targets = {},
-            babelExclude = [],
-            bundleOnly = false,
-            appSrcName = 'index.js',
-        } = opts;
-        const tracker = new ProgressTracker();
+    static bundleSources(input, config, opts) {
+        const { polyfills = [], moduleContext = {}, replaces = [], targets = {}, babelExclude = [], bundleOnly = false, appSrcName = 'index.js', } = opts;
+        const tracker = new progress_1.ProgressTracker();
         tracker.on('progress', (e) => {
-            processState.setStep(`(${e.loaded}) Bundling '${e.file}'`);
+            process_state_1.processState.setStep(`(${e.loaded}) Bundling '${e.file}'`);
         });
-        // Generate future config path
-        // TODO: This does not work on non root files, figure out a solution
         const inputRoot = path.dirname(input);
         const configPath = path.join(inputRoot, 'config.js');
-        const replacers = replaces.map(replaceOpts => replace(Object.assign(
-            { delimiters: ['', ''] },
-            replaceOpts,
-        )));
+        const replacers = replaces.map(replaceOpts => replace_1.replace(Object.assign({ delimiters: ['', ''] }, replaceOpts)));
         const defaultOptions = {
             input: [input],
             experimentalCodeSplitting: true,
             plugins: [
                 tracker.plugin(),
-                replace({
+                replace_1.replace({
                     delimiters: ['', ''],
-                    exclude: path.join(inputRoot, 'node_modules/**'),
+                    exclude: [path.join(inputRoot, 'node_modules/**')],
                     values: {
-                        // ...replaces,
                         'window.KitAppShellConfig.APP_SRC': `'./www/${appSrcName}'`,
                     },
                 }),
                 ...replacers,
                 virtual({
-                    // Config is external, let rollup import it
                     [configPath]: `export default Object.assign(${JSON.stringify(config)}, window.KitAppShellConfig || {});`,
                 }),
                 inject({
                     modules: {
-                        // Replace every instance of the provided config with the added module
                         'window.KitAppShellConfig': configPath,
                     },
                 }),
@@ -136,19 +118,14 @@ class Bundler {
                 nodeResolve(),
             ],
             moduleContext,
-            // Silence for now
-            onwarn: () => {},
+            onwarn: () => { },
         };
         if (!bundleOnly) {
-            // Skip babel loading if it's not going to be used
             const babel = require('rollup-plugin-babel');
             const minifyHTML = require('rollup-plugin-minify-html-literals').default;
             const uglify = require('rollup-plugin-uglify-es');
-            // Manual resolving eable an easy mock-require,
-            // otherwise babel tries to do it on its own
             const babelPluginSyntaxDynamicImport = require.resolve('@babel/plugin-syntax-dynamic-import');
             const babelPresetEnv = require.resolve('@babel/preset-env');
-
             defaultOptions.plugins.push(minifyHTML());
             defaultOptions.plugins.push(babel({
                 exclude: babelExclude,
@@ -166,26 +143,28 @@ class Bundler {
             }));
             defaultOptions.plugins.push(uglify());
         }
-        log.trace('ROLLUP OPTIONS', defaultOptions);
+        log_1.log.trace('ROLLUP OPTIONS', defaultOptions);
         return rollup.rollup(defaultOptions)
             .then(bundle => bundle.generate({ format: 'amd' }))
-            .then(({ output }) => Object.keys(output).map(id => ({
-                fileName: output[id].fileName,
-                code: output[id].code,
-            })));
+            .then(({ output }) => Object.keys(output).map(id => {
+            return ({
+                fileName: id,
+                code: output[id].toString(),
+            });
+        }));
     }
     static bundleStatic(patterns = [], appRoot = '/') {
         const tasks = patterns.map(pattern => glob(pattern, { cwd: appRoot, nodir: true }));
         return Promise.all(tasks)
             .then((results) => {
-                const fileList = results
-                    .reduce((acc, files) => acc.concat(files), []);
-                return {
-                    root: appRoot,
-                    files: fileList,
-                };
-            });
+            const fileList = results
+                .reduce((acc, files) => acc.concat(files), []);
+            return {
+                root: appRoot,
+                files: fileList,
+            };
+        });
     }
 }
-
-module.exports = Bundler;
+exports.Bundler = Bundler;
+//# sourceMappingURL=bundler.js.map

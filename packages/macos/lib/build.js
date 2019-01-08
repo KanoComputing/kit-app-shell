@@ -1,4 +1,4 @@
-const processState = require('@kano/kit-app-shell-core/lib/process-state');
+const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
 const build = require('@kano/kit-app-shell-electron/lib/build');
 const path = require('path');
 const os = require('os');
