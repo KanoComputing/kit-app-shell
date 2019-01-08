@@ -1,6 +1,7 @@
 /* globals suite, test */
-const { assert } = require('chai');
-const { createScript, createScriptWithContent } = require('./util');
+import { assert } from 'chai';
+import { createScript, createScriptWithContent } from './util';
+import 'mocha';
 
 function randomString() {
     return Math.random()

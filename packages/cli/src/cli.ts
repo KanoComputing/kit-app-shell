@@ -5,6 +5,7 @@ import * as Api from 'sywac/api';
 // Use the file directly. Might break when moving stuff but tests will tell us
 // This saves a lot of time as the big modules for building are not loaded is not needed
 import * as platformUtils from '@kano/kit-app-shell-core/lib/util/platform';
+
 import chalk from 'chalk';
 
 /**
@@ -15,7 +16,7 @@ class CLI {
     startedAt : number;
     duration : number;
     reporter : import('./reporters/reporter').IReporter;
-    processState : import('@kano/kit-app-shell-core/lib/process-state');
+    processState : typeof import('@kano/kit-app-shell-core/lib/process-state').processState;
     constructor(processArgv) {
         this.processArgv = processArgv;
     }
@@ -98,10 +99,9 @@ class CLI {
         }
         // Late require speeds up small things like help and version
         return import('@kano/kit-app-shell-core/lib/process-state')
-            .then((processState) => {
+            .then(({ processState }) => {
                 this.processState = processState;
                 let p : Promise<any>;
-                let ReporterClass;
                 // Avoid wasting people's time by loading only the necessary code
                 if (process.stdout.isTTY) {
                     // Use spinner UI for humans
@@ -112,8 +112,8 @@ class CLI {
                 }
                 return p;
             })
-            .then((ReporterClass : any) => {
-                this.reporter = (new ReporterClass() as import('./reporters/reporter').IReporter);
+            .then((ReporterModule : { default: any }) => {
+                this.reporter = (new ReporterModule.default()) as import('./reporters/reporter').IReporter;
                 this.processState.on('step', ({ message = '' }) => this.reporter.onStep(message));
                 this.processState.on('success', ({ message = '' }) => this.reporter.onSuccess(message));
                 this.processState.on('failure', ({ message = new Error('') }) => this.reporter.onFailure(message));

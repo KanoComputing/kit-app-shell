@@ -1,12 +1,15 @@
 /* globals suite, teardown test */
-const path = require('path');
-const mockFs = require('mock-fs');
-const mock = require('mock-require');
-const Bundler = require('./bundler');
-const chai = require('chai');
-chai.use(require('chai-fs'));
+import * as path from 'path';
+import * as  mockFs from 'mock-fs';
+import * as mock from 'mock-require';
+import { Bundler } from './bundler';
+import * as chai from 'chai';
+import chaiFs = require('chai-fs');
+chai.use(chaiFs);
 
 const { assert } = chai;
+
+const MOCK_DEFAULTS = { createCwd: false, createTmp: false };
 
 function wait(t) {
     return new Promise(res => setTimeout(res, t));
@@ -41,7 +44,7 @@ suite('Bundler', () => {
         };
         mockFs({
             '/static/a.png': 'static-test',
-        });
+        }, MOCK_DEFAULTS);
         return Bundler.write(bundle, '/')
             // mock-fs seems to not have all files written after the stream finishes
             .then(() => wait(0))
@@ -77,7 +80,7 @@ suite('Bundler', () => {
         const html = '/index.html';
         const js = '/index.js';
         const appJs = '/app.js';
-        const TestBundler = mock.reRequire('./bundler');
+        const { Bundler } = mock.reRequire('./bundler');
         // Fake fs structure with all the input files and the requirejs library
         mockFs({
             '/index.html': 'html',
@@ -86,8 +89,8 @@ suite('Bundler', () => {
             [path.join(__dirname, '../../../node_modules/requirejs/require.js')]: 'requirejs',
             [path.join(__dirname, '../../../node_modules/@babel/plugin-syntax-dynamic-import/lib/index.js')]: '',
             [path.join(__dirname, '../../../node_modules/@babel/preset-env/lib/index.js')]: '',
-        });
-        return TestBundler.bundle(html, js, appJs, {}, { appJs: { resources: [] } });
+        }, MOCK_DEFAULTS);
+        return Bundler.bundle(html, js, appJs, {}, { appJs: { resources: [] } });
     });
     test('bundleStatic', () => {
         mock('glob', (patterns, opts, cb) => {
@@ -96,8 +99,8 @@ suite('Bundler', () => {
                 'path2',
             ]);
         });
-        const TestBundler = mock.reRequire('./bundler');
-        return TestBundler.bundleStatic(['testPattern'])
+        const { Bundler } = mock.reRequire('./bundler');
+        return Bundler.bundleStatic(['testPattern'])
             .then((result) => {
                 assert.equal(result.root, '/');
                 assert.equal(result.files.indexOf('path1'), 0);

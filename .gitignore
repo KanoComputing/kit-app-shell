@@ -8,3 +8,4 @@ coverage
 eslint.xml
 
 packages/cli/lib
+packages/core/lib

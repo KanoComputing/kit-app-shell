@@ -1,8 +1,11 @@
 /* globals suite, teardown, test */
-const mockFS = require('mock-fs');
-const path = require('path');
-const ConfigLoader = require('./config');
-const { assert } = require('chai');
+import * as mockFS from 'mock-fs';
+import * as path from 'path';
+import { ConfigLoader } from './config';
+import { assert } from 'chai';
+import 'mocha';
+
+const MOCK_DEFAULTS = { createCwd: false, createTmp: false };
 
 function mockConfig(appDir, files, version) {
     const mocks = {};
@@ -15,7 +18,7 @@ function mockConfig(appDir, files, version) {
     const pkgPath = path.join(appDir, 'package.json');
     mocks[pkgPath] = JSON.stringify({ version });
 
-    mockFS(mocks);
+    mockFS(mocks, MOCK_DEFAULTS);
 
     return {
         files,

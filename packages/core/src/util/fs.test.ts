@@ -1,14 +1,19 @@
 /* globals suite, test, teardown */
-const mock = require('mock-fs');
-const mockRequire = require('mock-require');
-const chai = require('chai');
-const chaiFs = require('chai-fs');
-const { Transform, Readable, Writable } = require('stream');
-const { copy, fromTemplate } = require('./fs');
+import * as  mock from 'mock-fs';
+import * as mockRequire from 'mock-require';
+import * as chai from 'chai';
+// Neede for chai-fs to work as it enhances the global namespace
+import chaiFs = require('chai-fs');
+import { Transform, Readable, Writable } from 'stream';
+import { copy, fromTemplate } from './fs';
+
+import 'mocha';
 
 chai.use(chaiFs);
 
 const { assert } = chai;
+
+const MOCK_DEFAULTS = { createCwd: false, createTmp: false };
 
 function mockFsAssertWriteOptions(testOptions) {
     mockRequire('fs', {
@@ -26,6 +31,7 @@ function mockFsAssertWriteOptions(testOptions) {
             });
         },
     });
+    mockRequire('mkdirp', (d, cb) => cb());
     return mockRequire.reRequire('./fs');
 }
 
@@ -34,7 +40,7 @@ suite('fs', () => {
         test('create directory', () => {
             mock({
                 '/src/file.txt': 'contents',
-            });
+            }, MOCK_DEFAULTS);
             return copy('/src/file.txt', '/new-dir/file.txt')
                 .then(() => {
                     assert.fileContent('/new-dir/file.txt', 'contents');
@@ -43,8 +49,8 @@ suite('fs', () => {
         test('existing directory', () => {
             mock({
                 '/src/file.txt': 'contents',
-                '/dest': mock.directory(),
-            });
+                '/dest': mock.directory({}),
+            }, MOCK_DEFAULTS);
             return copy('/src/file.txt', '/dest/file.txt')
                 .then(() => {
                     assert.fileContent('/dest/file.txt', 'contents');
@@ -53,8 +59,8 @@ suite('fs', () => {
         test('accepts transform', () => {
             mock({
                 '/src/file.txt': 'contents',
-                '/dest': mock.directory(),
-            });
+                '/dest': mock.directory({}),
+            }, MOCK_DEFAULTS);
             const transform = new Transform({
                 transform(chunk, encoding, callback) {
                     this.push(chunk.toString().toUpperCase());
@@ -67,9 +73,9 @@ suite('fs', () => {
                 });
         });
         test('proxy writeOptions to fs bindings', () => {
-            const testOptions = Symbol('options');
+            const testOptions = {};
             const fsUtils = mockFsAssertWriteOptions(testOptions);
-            mock();
+            mock({}, MOCK_DEFAULTS);
             return fsUtils.copy('/src/file.txt', '/dest/file.txt', { writeOptions: testOptions });
         });
         teardown(() => {
@@ -82,7 +88,7 @@ suite('fs', () => {
             /* eslint no-template-curly-in-string: 'off' */
             mock({
                 '/file.tpl.txt': 'Test is ${STATUS}',
-            });
+            }, MOCK_DEFAULTS);
             return fromTemplate('/file.tpl.txt', '/dest.txt', {
                 STATUS: 'successful',
             })

@@ -1,6 +1,6 @@
 const build = require('@kano/kit-app-shell-cordova/lib/build');
 const { collectPreference } = require('@kano/kit-app-shell-cordova/lib/preferences');
-const processState = require('@kano/kit-app-shell-core/lib/process-state');
+const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
 const { promisify } = require('util');
 const glob = promisify(require('glob'));
 const path = require('path');

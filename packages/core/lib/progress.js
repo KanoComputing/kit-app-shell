@@ -1,14 +1,9 @@
-const { EventEmitter } = require('events');
-
-/**
- * Progress tracker for rollup.
- * Create a tracker, use it as a plugin with `tracker.plugin()`
- * Listen to the `progress` event to get info about the
- * Total loaded files and the current file being processed
- */
-class ProgressTracker extends EventEmitter {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const events_1 = require("events");
+class ProgressTracker extends events_1.EventEmitter {
     constructor() {
-        super();
+        super(...arguments);
         this.loaded = 0;
     }
     plugin() {
@@ -25,5 +20,5 @@ class ProgressTracker extends EventEmitter {
         };
     }
 }
-
-module.exports = ProgressTracker;
+exports.ProgressTracker = ProgressTracker;
+//# sourceMappingURL=progress.js.map

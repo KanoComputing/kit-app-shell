@@ -1,5 +1,5 @@
 const util = require('@kano/kit-app-shell-core/lib/util');
-const processState = require('@kano/kit-app-shell-core/lib/process-state');
+const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
 const { spawn } = require('child_process');
 const electronPath = require('electron');
 const livereload = require('livereload');
