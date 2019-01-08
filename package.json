@@ -12,7 +12,9 @@
   },
   "devDependencies": {
     "@kano/eslint-config": "^1.0.0",
+    "@types/node": "^10.12.18",
     "eslint": "^4.19.1",
-    "lerna": "^3.5.1"
+    "lerna": "^3.5.1",
+    "typescript": "^3.2.2"
   }
 }

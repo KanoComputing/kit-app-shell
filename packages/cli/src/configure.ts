@@ -1,12 +1,12 @@
-const { prompt } = require('enquirer');
-const deepMerge = require('deepmerge');
+import { prompt } from 'enquirer';
+import * as deepMerge from 'deepmerge';
 // Individual require will load way less than using the whole library
-const util = require('@kano/kit-app-shell-core/lib/util');
-const RcLoader = require('@kano/kit-app-shell-core/lib/rc');
-const processState = require('@kano/kit-app-shell-core/lib/process-state');
-const chalk = require('chalk');
+import * as util from '@kano/kit-app-shell-core/lib/util';
+import * as RcLoader from '@kano/kit-app-shell-core/lib/rc';
+import * as processState from '@kano/kit-app-shell-core/lib/process-state';
+import chalk from 'chalk';
 
-module.exports = function configure(argv, platformId) {
+export default function configure(argv, platformId) {
     const platformConfigure = util.platform.loadPlatformKey(platformId, 'configure');
     processState.setInfo(`Configuring options for platform ${chalk.green(platformId)}`);
     // Load the current user configs
