@@ -1,19 +1,21 @@
 /* globals suite, setup, test, teardown */
-const mock = require('mock-require');
-const mockFs = require('mock-fs');
-const path = require('path');
-const chai = require('chai');
-const chaiFs = require('chai-fs');
+import * as mock from 'mock-require';
+import * as mockFs from 'mock-fs';
+import * as path from 'path';
+import * as chai from 'chai';
+import chaiFs = require('chai-fs');
 
 chai.use(chaiFs);
 
 const { assert } = chai;
 
+const MOCK_DEFAULTS = { createCwd: false, createTmp: false };
+
 function applyMockFs() {
     mockFs({
         '/test-homedir/.kit-app-shell-cordova/cache/test-1': JSON.stringify({ id: 'test-1' }),
         '/test-homedir/.kit-app-shell-cordova/cache/test-2': JSON.stringify({ id: 'test-2' }),
-    });
+    }, MOCK_DEFAULTS);
 }
 
 suite('ProjectCacheManager', () => {

@@ -1,9 +1,9 @@
 /* globals suite, setup, test, teardown */
-const mockFs = require('mock-fs');
-const mock = require('mock-require');
-const chai = require('chai');
-const path = require('path');
-const chaiFs = require('chai-fs');
+import * as mockFs from 'mock-fs';
+import * as mock from 'mock-require';
+import * as chai from 'chai';
+import * as path from 'path';
+import chaiFs = require('chai-fs');
 
 chai.use(chaiFs);
 
@@ -13,6 +13,8 @@ const TEST_CONFIG = {
     APP_ID: 'com.test.app',
     APP_NAME: 'App Name',
 };
+
+const MOCK_DEFAULTS = { createCwd: false, createTmp: false };
 
 suite('project', () => {
     suite('getProject()', () => {
@@ -57,8 +59,8 @@ suite('project', () => {
             mock('./cache', CacheMock);
             const { getProject } = mock.reRequire('./project');
             mockFs({
-                '/project': mockFs.directory(),
-            });
+                '/project': mockFs.directory({}),
+            }, MOCK_DEFAULTS);
             return getProject({
                 app: '/app',
                 config: TEST_CONFIG,
@@ -140,8 +142,8 @@ suite('project', () => {
             mock('./cordova-config', MockCordovaConfig);
             const { getProject } = mock.reRequire('./project');
             mockFs({
-                '/project': mockFs.directory(),
-            });
+                '/project': mockFs.directory({}),
+            }, MOCK_DEFAULTS);
             return getProject({
                 app: '/app',
                 config: TEST_CONFIG,

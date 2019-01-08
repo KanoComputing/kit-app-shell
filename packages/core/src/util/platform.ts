@@ -1,15 +1,10 @@
-export type PlatformBuild = (opts : any) => Promise<any>|any;
-
-export interface IPlatformCLI {
-    enquire?: (prompt : typeof import('enquirer').prompt, {}) => Promise<{}>;
-    generate?: ({}) => {}|Promise<{}>;
-}
-
 export type PlatformPart = {
     enquire? : (prompt : typeof import('enquirer').prompt, {}) => Promise<{}>;
     generate? : ({}) => {}|Promise<{}>;
     (opts : any) : Promise<any>|any;
 }
+
+export type GetBuilder = (wd : typeof import('wd'), mocha : import('mocha'), opts: any) => Promise<any>|any;
 
 // Loads a platform sub-module
 // This allows us to load just the CLI config and only the required command

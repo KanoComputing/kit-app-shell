@@ -1,6 +1,7 @@
-const Config = require('cordova-config');
-const et = require('elementtree');
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Config = require("cordova-config");
+const et = require("elementtree");
 class CordovaConfig extends Config {
     selectPlatform(name) {
         this._absoluteRoot = this._root;
@@ -31,13 +32,12 @@ class CordovaConfig extends Config {
     addElement(tagName, content, attribs = {}) {
         const el = new et.Element(tagName);
         this._root.append(el);
-
         if (typeof content === 'object') {
             el.append(content);
-        } else {
+        }
+        else {
             el.text = content || '';
         }
-
         el.attrib = {};
         el.attrib = Object.assign({}, attribs);
     }
@@ -48,5 +48,5 @@ class CordovaConfig extends Config {
         this.addElement('edit-config', et.XML(contents), { file, mode, target });
     }
 }
-
-module.exports = CordovaConfig;
+exports.CordovaConfig = CordovaConfig;
+//# sourceMappingURL=cordova-config.js.map
