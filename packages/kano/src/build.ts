@@ -1,17 +1,17 @@
-const util = require('@kano/kit-app-shell-core/lib/util');
-const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
-const build = require('@kano/kit-app-shell-electron/lib/build');
-const path = require('path');
-const os = require('os');
-const glob = require('glob');
-const fs = require('fs');
-const snake = require('snake-case');
-const kebab = require('dashify');
-const mkdirp = require('mkdirp');
-const rimraf = require('rimraf');
-const packager = require('electron-packager');
-const debian = require('debian-packaging');
-const commandExists = require('command-exists');
+import { copy, fromTemplate } from '@kano/kit-app-shell-core/lib/util/fs';
+import { processState } from '@kano/kit-app-shell-core/lib/process-state';
+import build from '@kano/kit-app-shell-electron/lib/build';
+import * as path from 'path';
+import * as os from 'os';
+import * as glob  from 'glob';
+import * as fs  from 'fs';
+import snake = require('snake-case');
+import * as kebab from 'dashify';
+import * as mkdirp from 'mkdirp';
+import * as rimraf from 'rimraf';
+import * as packager from 'electron-packager';
+import * as debian from 'debian-packaging';
+import * as commandExists from 'command-exists';
 
 const templateDir = path.join(__dirname, '../deb');
 
@@ -34,20 +34,20 @@ function createControl(out, config) {
         SNAKE_NAME: snake(config.APP_NAME),
     };
     // Create all the files from the templates
-    return util.fs.fromTemplate(
+    return fromTemplate(
         path.join(templateDir, 'control'),
         path.join(out, 'control/control'),
         options,
-    ).then(() => util.fs.fromTemplate(
+    ).then(() => fromTemplate(
         path.join(templateDir, 'postinst'),
         path.join(out, 'control/postinst'),
         options,
         { mode: 0o555 },
-    )).then(() => util.fs.fromTemplate(
+    )).then(() => fromTemplate(
         path.join(templateDir, 'so.conf'),
         path.join(out, `data/etc/ld.so.conf.d/${options.KEBAB_NAME}.conf`),
         options,
-    )).then(() => util.fs.fromTemplate(
+    )).then(() => fromTemplate(
         path.join(templateDir, 'bin'),
         path.join(out, `data/usr/bin/${options.SNAKE_NAME}`),
         options,
@@ -70,16 +70,16 @@ function copyExtra(app, out, config) {
     const icons = glob.sync('*.png', { cwd: appsPath, nodir: true });
     const apps = glob.sync('*.app', { cwd: appsPath, nodir: true });
     // Copy icons to the icons share
-    const tasks = icons.map(icon => util.deb.copy(
+    const tasks = icons.map(icon => copy(
         path.join(appsPath, icon),
         path.join(iconsPath, icon),
     ));
     // Copy icons to the desktop share
-    tasks.concat(icons.map(icon => util.deb.copy(
+    tasks.concat(icons.map(icon => copy(
         path.join(appsPath, icon),
         path.join(desktopIconsPath, icon),
     )));
-    tasks.concat(apps.map(a => util.deb.copy(
+    tasks.concat(apps.map(a => copy(
         path.join(appsPath, a),
         path.join(appsTargetPath, a),
     )));
@@ -90,7 +90,7 @@ function createDeb(dir, out, config) {
     return debian.createPackage({
         control: path.join(dir, 'control'),
         data: path.join(dir, 'data'),
-        dest: path.join(out, `${util.format.kebab(config.APP_NAME)}.deb`),
+        dest: path.join(out, `${kebab(config.APP_NAME)}.deb`),
     });
 }
 
@@ -108,16 +108,21 @@ function checkCmd(cmd) {
     });
 }
 
-function checkEnv(skipAr = false) {
+function checkEnv(skipAr = false) : Promise<void> {
     // No check if last packaging step is skipped
     if (skipAr) {
         return Promise.resolve();
     }
     return checkCmd('tar')
-        .then(() => checkCmd('ar'));
+        .then(() => checkCmd('ar'))
+        .then(() => null);
 }
 
-function kanoBuild(opts) {
+type KanoBuildOptions = {
+    ['skip-ar'] : boolean;
+}
+
+export default function kanoBuild(opts) {
     const {
         app,
         config = {},
@@ -134,7 +139,8 @@ function kanoBuild(opts) {
     mkdirp.sync(APP_DIR);
     mkdirp.sync(DEB_DIR);
     const appName = snake(config.APP_NAME);
-    return checkEnv(opts.skipAr)
+    const skipAr = opts['skip-ar'];
+    return checkEnv(skipAr)
         // Bundle app in tmp dir
         .then(() => build({
             app,
@@ -143,7 +149,7 @@ function kanoBuild(opts) {
             bundleOnly,
         }))
         .then((buildOut) => {
-            processState.setStep('Creating linux app');
+            processState.setInfo('Creating linux app');
             // Create executable for linux using electron-packager
             const packagerOptions = {
                 dir: buildOut,
@@ -172,7 +178,7 @@ function kanoBuild(opts) {
             );
             processState.setSuccess('Created linux app');
             processState.setStep('Preparing debian package');
-            const targetDir = opts.skipAr ? out : DEB_DIR;
+            const targetDir = skipAr ? out : DEB_DIR;
             // Create structure and files for debian package
             const tasks = [
                 createControl(targetDir, config),
@@ -182,7 +188,7 @@ function kanoBuild(opts) {
         })
         .then((dir) => {
             processState.setSuccess('Debian package ready');
-            if (opts.skipAr) {
+            if (skipAr) {
                 return null;
             }
             processState.setStep('Creating .deb file');
@@ -191,5 +197,3 @@ function kanoBuild(opts) {
                 .then(() => processState.setSuccess('Created .deb file'));
         });
 }
-
-module.exports = kanoBuild;
