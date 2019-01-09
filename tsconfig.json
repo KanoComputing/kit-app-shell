@@ -18,5 +18,7 @@
         "path": "packages/ios"
     }, {
         "path": "packages/kano"
+    }, {
+        "path": "packages/macos"
     }]
 }
