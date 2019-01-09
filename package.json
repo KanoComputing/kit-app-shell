@@ -5,6 +5,7 @@
   ],
   "private": true,
   "scripts": {
+    "tsc": "tsc",
     "publish": "lerna run tsc && lerna publish",
     "test": "lerna run test",
     "test-ci": "lerna run test-ci",
