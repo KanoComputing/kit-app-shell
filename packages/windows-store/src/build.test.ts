@@ -1,13 +1,15 @@
 /* globals suite, test, teardown */
 
-const mock = require('mock-require');
-const { assert } = require('chai');
+import * as mock from 'mock-require';
+import { assert } from 'chai';
 
 suite('build', () => {
     test('Disables updater', () => {
-        mock('@kano/kit-app-shell-windows/lib/build', (opts) => {
-            assert.equal(opts.config.UPDATER_DISABLED, true);
-            return Promise.resolve('/');
+        mock('@kano/kit-app-shell-windows/lib/build', {
+            default: (opts) => {
+                assert.equal(opts.config.UPDATER_DISABLED, true);
+                return Promise.resolve('/');
+            },
         });
         mock('electron-windows-store', () => Promise.resolve());
         mock('rimraf', (_, cb) => cb());
@@ -27,7 +29,7 @@ suite('build', () => {
 
         const build = mock.reRequire('./build');
 
-        return build(sample);
+        return build.default(sample);
     });
     teardown(() => {
         mock.stopAll();

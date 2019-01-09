@@ -1,13 +1,16 @@
-const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
-const util = require('@kano/kit-app-shell-core/lib/util');
-const build = require('@kano/kit-app-shell-electron/lib/build');
-const path = require('path');
-const os = require('os');
-const { promisify } = require('util');
-const mkdirp = promisify(require('mkdirp'));
-const rimraf = promisify(require('rimraf'));
-const packager = require('electron-packager');
-const buildInnosetup = require('./innosetup');
+import { processState } from '@kano/kit-app-shell-core/lib/process-state';
+import { copy } from '@kano/kit-app-shell-core/lib/util/fs';
+import build from '@kano/kit-app-shell-electron/lib/build';
+import * as path from 'path';
+import * as os from 'os';
+import { promisify } from 'util';
+import * as packager from 'electron-packager';
+import { buildWin32Setup } from './innosetup';
+import * as mkdirpCb from 'mkdirp';
+import * as rimrafCb from 'rimraf';
+
+const mkdirp = promisify(mkdirpCb);
+const rimraf = promisify(rimrafCb);
 
 const INSTALLER_FILE = path.join(__dirname, '../installer.iss');
 
@@ -47,7 +50,7 @@ function createInstaller(opts) {
 
 
     const builder = new Promise((resolve, reject) => {
-        buildInnosetup(compilerOptions, (e) => {
+        buildWin32Setup(compilerOptions, (e) => {
             if (e) {
                 reject(new Error(`Installer build failed: ${e.message}`));
             }
@@ -58,7 +61,7 @@ function createInstaller(opts) {
     return builder;
 }
 
-function windowsBuild(opts) {
+export default function windowsBuild(opts) {
     const {
         app,
         config = {},
@@ -69,7 +72,7 @@ function windowsBuild(opts) {
     const TMP_DIR = path.join(tmpdir, 'kash-windows-build');
     const BUILD_DIR = path.join(TMP_DIR, 'build');
     const PKG_DIR = path.join(TMP_DIR, 'app');
-    const icon = config.ICONS ? path.join(app, config.ICONS.WINDOWS) : DEFAULT_ICON;
+    const icon = config.ICONS && config.ICONS.WINDOWS ? path.join(app, config.ICONS.WINDOWS) : DEFAULT_ICON;
     return rimraf(TMP_DIR)
         .then(() => mkdirp(BUILD_DIR))
         .then(() => mkdirp(PKG_DIR))
@@ -80,7 +83,7 @@ function windowsBuild(opts) {
             out: BUILD_DIR,
         }))
         // Add the vccorlib dll to the generated electron app
-        .then(() => util.fs.copy(
+        .then(() => copy(
             path.join(__dirname, '../vccorlib140.dll'),
             path.join(BUILD_DIR, 'vccorlib140.dll'),
         ))
@@ -129,5 +132,3 @@ function windowsBuild(opts) {
                 });
         });
 }
-
-module.exports = windowsBuild;

@@ -18,3 +18,5 @@ packages/ios/lib
 packages/kano/lib
 packages/macos/lib
 packages/web/lib
+packages/windows/lib
+packages/windows-store/lib

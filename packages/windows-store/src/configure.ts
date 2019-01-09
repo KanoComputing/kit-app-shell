@@ -1,9 +1,12 @@
-const sign = require('electron-windows-store/lib/sign');
-const utils = require('electron-windows-store/lib/utils');
-const path = require('path');
-const { promisify } = require('util');
-const mkdirp = promisify(require('mkdirp'));
-const rimraf = promisify(require('rimraf'));
+import * as sign from 'electron-windows-store/lib/sign';
+import * as utils from 'electron-windows-store/lib/utils';
+import * as path from 'path';
+import { promisify } from 'util';
+import * as mkdirpCb from 'mkdirp';
+import * as rimrafCb from 'rimraf';
+
+const mkdirp = promisify(mkdirpCb);
+const rimraf = promisify(rimrafCb);
 
 const appData = process.env.APPDATA || (process.platform === 'darwin' ? path.join(process.env.HOME, 'Library/Preferences') : '/var/local');
 
@@ -66,7 +69,7 @@ function enquireCert(prompt, config) {
     }));
 }
 
-module.exports = {
+export default {
     enquire(prompt, config) {
         return prompt({
             type: 'select',

@@ -1,16 +1,19 @@
-const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
-const build = require('@kano/kit-app-shell-windows/lib/build');
-const path = require('path');
-const os = require('os');
-const { promisify } = require('util');
-const mkdirp = promisify(require('mkdirp'));
-const rimraf = promisify(require('rimraf'));
-const chalk = require('chalk');
-const convertToWindowsStore = require('electron-windows-store');
+import { processState } from '@kano/kit-app-shell-core/lib/process-state';
+import build from '@kano/kit-app-shell-windows/lib/build';
+import * as path from 'path';
+import * as os from 'os';
+import { promisify } from 'util';
+import chalk from 'chalk';
+import * as convertToWindowsStore from 'electron-windows-store';
+import * as mkdirpCb from 'mkdirp';
+import * as rimrafCb from 'rimraf';
+
+const mkdirp = promisify(mkdirpCb);
+const rimraf = promisify(rimrafCb);
 
 const TMP_DIRNAME = 'kash-windows-store-build';
 
-module.exports = (opts) => {
+export default (opts) => {
     const {
         app,
         config = {},
@@ -33,6 +36,7 @@ module.exports = (opts) => {
     // Force disable updater
     Object.assign(config, { UPDATER_DISABLED: true });
     // This is read by electron-windows-store to make logs silent
+    // @ts-ignore
     global.isModuleUse = true;
     const TMP_DIR = path.join(tmpdir, TMP_DIRNAME);
     // Prepare a temp directory for the build
