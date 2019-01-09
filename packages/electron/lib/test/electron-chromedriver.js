@@ -1,29 +1,27 @@
-const { spawn } = require('child_process');
-
-// TODO: TESTS!!!!
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const child_process_1 = require("child_process");
 class ElectronChromedriver {
     start(port) {
         let command;
-        // Try to find the chrome driver for all platforms
         try {
             command = require.resolve('electron-chromedriver/bin/chromedriver');
-        } catch (e) {
+        }
+        catch (e) {
             command = require.resolve('electron-chromedriver/bin/chromedriver.exe');
         }
-
-        // TODO: Subprocess managment
-        this._process = spawn(command, ['--url-base=wd/hub', `--port=${port}`]);
-        this._process.on('close', () => {});
-        this._process.on('error', (error) => {
-            throw new Error(error);
+        this.process = child_process_1.spawn(command, ['--url-base=wd/hub', `--port=${port}`]);
+        this.process.on('close', () => { });
+        this.process.on('error', (error) => {
+            throw error;
         });
     }
     stop() {
-        if (!this._process) {
+        if (!this.process) {
             return;
         }
-        this._process.kill();
+        this.process.kill();
     }
 }
-
-module.exports = ElectronChromedriver;
+exports.ElectronChromedriver = ElectronChromedriver;
+//# sourceMappingURL=electron-chromedriver.js.map

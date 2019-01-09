@@ -1,33 +1,35 @@
-/* globals suite, test, teardown */
-const path = require('path');
-const chai = require('chai');
-const chaiFs = require('chai-fs');
-const chaiJSONSchema = require('chai-json-schema');
-const mock = require('mock-require');
-const mockFs = require('mock-fs');
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const path = require("path");
+const chai = require("chai");
+const chaiFs = require("chai-fs");
+const chaiJSONSchema = require("chai-json-schema");
+const mock = require("mock-require");
+const mockFs = require("mock-fs");
 chai.use(chaiFs);
 chai.use(chaiJSONSchema);
-
 const { assert } = chai;
-
 suite('electron build', () => {
     test('default values', () => {
         mock('@kano/kit-app-shell-core/lib/bundler', {
-            bundle(html, js, appJs, config, opts) {
-                assert.equal(html, path.join(__dirname, '../app/index.html'));
-                assert.equal(js, path.join(__dirname, '../app/index.js'));
-                assert.equal(appJs, path.join('/app', 'index.js'));
-                assert.equal(opts.js.targets.chrome, 66);
-                assert.equal(opts.appJs.targets.chrome, 66);
-                return Promise.resolve('/build');
-            },
-            write() {
-                return Promise.resolve();
+            Bundler: {
+                bundle(html, js, appJs, config, opts) {
+                    assert.equal(html, path.join(__dirname, '../app/index.html'));
+                    assert.equal(js, path.join(__dirname, '../app/index.js'));
+                    assert.equal(appJs, path.join('/app', 'index.js'));
+                    assert.equal(opts.js.targets.chrome, 66);
+                    assert.equal(opts.appJs.targets.chrome, 66);
+                    return Promise.resolve('/build');
+                },
+                write() {
+                    return Promise.resolve();
+                },
             },
         });
         mock('@kano/kit-app-shell-core/lib/process-state', {
-            setStep() {},
+            processState: {
+                setStep() { },
+            },
         });
         mock('glob', (pattern, opts, cb) => {
             if (opts.cwd === path.join(__dirname, '../app')) {
@@ -41,7 +43,7 @@ suite('electron build', () => {
                 _test: 'test-file',
             },
         });
-        return build({
+        return build.default({
             app: '/app',
             out: '/out',
         }).then(() => {
@@ -59,3 +61,4 @@ suite('electron build', () => {
         mockFs.restore();
     });
 });
+//# sourceMappingURL=build.test.js.map
