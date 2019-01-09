@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     group: 'KanoOS:',
     build(sywac) {
         sywac.boolean('--skip-ar', {

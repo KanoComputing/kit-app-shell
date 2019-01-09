@@ -1,0 +1,11 @@
+{
+    "extends": "../../tsconfig.settings.json",
+    "compilerOptions": {
+        "outDir": "lib",
+        "rootDir": "src"
+    },
+    "exclude": ["lib"],
+    "references": [{
+        "path": "../electron",
+    }]
+}
