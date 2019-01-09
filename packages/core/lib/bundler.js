@@ -148,8 +148,8 @@ class Bundler {
             .then(bundle => bundle.generate({ format: 'amd' }))
             .then(({ output }) => Object.keys(output).map(id => {
             return ({
-                fileName: id,
-                code: output[id].toString(),
+                fileName: output[id].fileName,
+                code: output[id].code,
             });
         }));
     }

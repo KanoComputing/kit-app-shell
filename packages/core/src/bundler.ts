@@ -215,9 +215,12 @@ export class Bundler {
         return rollup.rollup(defaultOptions)
             .then(bundle => bundle.generate({ format: 'amd' }))
             .then(({ output }) => Object.keys(output).map(id => {
+                // Rollup reports incorrect typings ¯\_(ツ)_/¯
                 return ({
-                    fileName: id,
-                    code: output[id].toString(),
+                    // @ts-ignore
+                    fileName: output[id].fileName,
+                    // @ts-ignore
+                    code: output[id].code,
                 })
             }));
     }

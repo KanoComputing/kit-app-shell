@@ -1,16 +1,16 @@
-const path = require('path');
-const fs = require('fs');
-const { promisify } = require('util');
-const glob = promisify(require('glob'));
-const mkdirp = promisify(require('mkdirp'));
-const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
-const util = require('@kano/kit-app-shell-core/lib/util');
-const { Bundler } = require('@kano/kit-app-shell-core/lib/bundler');
-
-const writeFile = promisify(fs.writeFile);
-
-// Do not embbed any of this in the app, these are not required to run
-// Ignoring these files will help reducing the overall app size
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const path = require("path");
+const fs = require("fs");
+const util_1 = require("util");
+const mkdirpCb = require("mkdirp");
+const globCb = require("glob");
+const process_state_1 = require("@kano/kit-app-shell-core/lib/process-state");
+const fs_1 = require("@kano/kit-app-shell-core/lib/util/fs");
+const bundler_1 = require("@kano/kit-app-shell-core/lib/bundler");
+const writeFile = util_1.promisify(fs.writeFile);
+const glob = util_1.promisify(globCb);
+const mkdirp = util_1.promisify(mkdirpCb);
 const cleanIgnore = [
     '**/.npmrc',
     '**/*.md',
@@ -49,15 +49,9 @@ const cleanIgnore = [
     '**/*.c',
     '**/*.tlog',
 ];
-
 const babelTargets = {
-    chrome: 66, // Electron 3 = Chromium 66
+    chrome: 66,
 };
-
-/**
- * Copies the electron app from the `app` directory as a template
- * @param {String} out Path to the copy destination
- */
 function copyElectronApp(out) {
     const cwd = path.join(__dirname, '../app');
     return glob('**/*.*', {
@@ -70,65 +64,39 @@ function copyElectronApp(out) {
         dot: true,
         nodir: true,
     }).then((paths) => {
-        // Chain file copying
         const tasks = paths.reduce((p, file) => {
             const src = path.join(cwd, file);
             const dest = path.join(out, file);
-            return p.then(() => util.fs.copy(src, dest));
+            return p.then(() => fs_1.copy(src, dest));
         }, Promise.resolve());
         return tasks;
     });
 }
-
-/**
- * Create a config.json file in the defined target from a given config object
- * This is used to embbed a config with a built app, ensuring it frozen
- * @param {Object} config The config to save in the app
- * @param {String} out Target directory
- */
 function createConfig(config, out) {
     return mkdirp(out)
-        .then(() => writeFile(
-            path.join(out, 'config.json'),
-            JSON.stringify(Object.assign({ BUNDLED: true }, config)),
-        ));
+        .then(() => writeFile(path.join(out, 'config.json'), JSON.stringify(Object.assign({ BUNDLED: true }, config))));
 }
-
-function build(opts = {}) {
-    const {
-        app,
-        config = {},
-        out,
-        bundleOnly,
-    } = opts;
-    processState.setStep(`Creating electron app '${config.APP_NAME}'`);
+function build(opts) {
+    const { app, config = {}, out, bundleOnly, } = opts;
+    process_state_1.processState.setStep(`Creating electron app '${config.APP_NAME}'`);
     const tasks = [
         copyElectronApp(out),
         createConfig(config, out),
-        Bundler.bundle(
-            path.join(__dirname, '../app/index.html'),
-            path.join(__dirname, '../app/index.js'),
-            path.join(app, 'index.js'),
-            config,
-            {
-                js: {
-                    bundleOnly,
-                    targets: babelTargets,
-                },
-                appJs: {
-                    ...opts,
-                    targets: babelTargets,
-                },
+        bundler_1.Bundler.bundle(path.join(__dirname, '../app/index.html'), path.join(__dirname, '../app/index.js'), path.join(app, 'index.js'), config, {
+            js: {
+                bundleOnly,
+                targets: babelTargets,
             },
-        )
-            .then(bundle => Bundler.write(bundle, out)),
+            appJs: Object.assign({}, opts, { targets: babelTargets }),
+            html: {},
+        })
+            .then(bundle => bundler_1.Bundler.write(bundle, out)),
     ];
     return Promise.all(tasks)
         .then((results) => {
-            processState.setStep(`Created electron app '${config.APP_NAME}'`);
-            // Return bundle outputDir
-            return results[2];
-        });
+        process_state_1.processState.setStep(`Created electron app '${config.APP_NAME}'`);
+        return results[2];
+    });
 }
-
-module.exports = build;
+exports.default = build;
+//# sourceMappingURL=build.js.map

@@ -9,6 +9,10 @@
     }, {
         "path": "packages/android"
     }, {
+        "path": "packages/android-legacy"
+    }, {
         "path": "packages/test"
+    }, {
+        "path": "packages/electron"
     }]
 }

@@ -11,4 +11,6 @@ packages/cli/lib
 packages/core/lib
 packages/cordova/lib
 packages/android/lib
+packages/android-legacy/lib
 packages/test/lib
+packages/electron/lib
