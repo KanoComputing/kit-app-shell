@@ -5,7 +5,8 @@ import * as mkdirpCb from 'mkdirp';
 import * as globCb from 'glob';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import { copy } from '@kano/kit-app-shell-core/lib/util/fs';
-import { Bundler, BundleAppOptions } from '@kano/kit-app-shell-core/lib/bundler';
+import { Bundler } from '@kano/kit-app-shell-core/lib/bundler';
+import { ElectronBuildOptions } from './options';
 
 const writeFile = promisify(fs.writeFile);
 const glob = promisify(globCb);
@@ -96,16 +97,10 @@ function createConfig(config, out) {
         ));
 }
 
-type ElectronBuildOptions = BundleAppOptions & {
-    app : string;
-    config : any;
-    out : string;
-};
-
 export default function build(opts : ElectronBuildOptions) {
     const {
         app,
-        config = {},
+        config,
         out,
         bundleOnly,
     } = opts;

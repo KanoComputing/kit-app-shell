@@ -1,22 +1,14 @@
 import { util } from '@kano/kit-app-shell-core/lib/util';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
-import { Bundler, BundleAppOptions } from '@kano/kit-app-shell-core/lib/bundler';
+import { Bundler } from '@kano/kit-app-shell-core/lib/bundler';
 import * as path from 'path';
 import { cordova } from 'cordova-lib';
 import { promisify } from 'util';
 import * as rimrafCb from 'rimraf';
+import { CordovaBuildOptions } from './options';
 const rimraf = promisify(rimrafCb);
 
 const { getProject } = require('./project');
-
-export type CordovaBuildOptions = BundleAppOptions & {
-    clean? : Array<string>;
-    app: string;
-    config: {};
-    platforms: Array<string>;
-    run: boolean;
-    buildOpts: {};
-}
 
 export default (opts : CordovaBuildOptions) => {
     // Catch cordova logs and displays them

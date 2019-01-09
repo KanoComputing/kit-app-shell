@@ -8,6 +8,7 @@ import * as packager from 'electron-packager';
 import { buildWin32Setup } from './innosetup';
 import * as mkdirpCb from 'mkdirp';
 import * as rimrafCb from 'rimraf';
+import { WindowsBuildOptions } from './options';
 
 const mkdirp = promisify(mkdirpCb);
 const rimraf = promisify(rimrafCb);
@@ -61,10 +62,10 @@ function createInstaller(opts) {
     return builder;
 }
 
-export default function windowsBuild(opts) {
+export default function windowsBuild(opts : WindowsBuildOptions) {
     const {
         app,
-        config = {},
+        config,
         out,
         skipInstaller = false,
         tmpdir = os.tmpdir(),
