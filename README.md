@@ -19,58 +19,68 @@ This repository uses lerna and yarn workspaces to manage dependencies, developme
 
 To start, run `lerna bootstrap` then you can work on one of the following:
 
+## Packages
+
+![Dependencies](https://user-images.githubusercontent.com/169328/50916494-35cc9b80-1433-11e9-98b3-bbe5e7431709.png)
+
 ## [@kano/kit-app-shell-core](./packages/core)
 
 Kash core. Contains the platforms shared features. Used to bundle, run or test apps.
 Also contains utilities like logging and config loading
 
-## [@kano/kit-app-shell-cli](./packages/cli)
+## Tools
 
-Kash CLI. Run, build, test from your command line
+### [@kano/kit-app-shell-cli](./packages/cli)
 
-## [@kano/kit-app-shell-web](./packages/web)
-
-Kash web platform. Runs your app in a browser. Builds a hostable website.
-
-## [@kano/kit-app-shell-electron](./packages/electron)
-
-Kash desktop platform. Runs your app using electron. To build for desktop, use `windows` or `macos`.
-
-## [@kano/kit-app-shell-windows](./packages/windows)
-
-Extends the electron platform. Used to build a windows application and create an installer
-
-## [@kano/kit-app-shell-windows-store](./packages/windows-store)
-
-Extends the windows platform and builds an `appx` package instead of a windows installer
-
-## [@kano/kit-app-shell-macos](./packages/macos)
-
-Extends the electron platform. Used to build a macOS application and create a `.app` package
-
-## [@kano/kit-app-shell-kano](./packages/kano)
-
-Extends the electron platform. Used to build a kanoOS application and create a `.deb` package
-
-## [@kano/kit-app-shell-cordova](./packages/cordova)
-
-Uses the cordova project to create mobile apps
-
-## [@kano/kit-app-shell-android](./packages/android)
-
-Extends the cordova platform to create a .apk
-
-## [@kano/kit-app-shell-android-legacy](./packages/android-legacy)
-
-Extends the android platform to create a .apk using crosswalk as a webview
-
-## [@kano/kit-app-shell-ios](./packages/ios)
-
-Extends the cordova platform to create an iOS app
+Kash CLI. Run, build, test from your command line.
 
 ## [@kano/kit-app-shell-test](./packages/test)
 
-Utilities to run tests on remote device providers
+Utilities to run tests on remote device providers.
+
+## Platform Libraries
+
+### [@kano/kit-app-shell-electron](./packages/electron)
+
+Kash desktop platform. Runs your app using electron. To build for desktop, use `windows` or `macos`.
+
+### [@kano/kit-app-shell-cordova](./packages/cordova)
+
+Uses the cordova project to create mobile apps.
+
+## Target Platforms
+
+### [@kano/kit-app-shell-windows](./packages/windows)
+
+Extends the electron platform. Used to build a windows application and create an installer.
+
+### [@kano/kit-app-shell-windows-store](./packages/windows-store)
+
+Extends the windows platform and builds an `appx` package instead of a windows installer.
+
+### [@kano/kit-app-shell-macos](./packages/macos)
+
+Extends the electron platform. Used to build a macOS application and create a `.app` package.
+
+### [@kano/kit-app-shell-kano](./packages/kano)
+
+Extends the electron platform. Used to build a Kano OS application and create a `.deb` package.
+
+### [@kano/kit-app-shell-android](./packages/android)
+
+Extends the cordova platform to create a .apk.
+
+### [@kano/kit-app-shell-android-legacy](./packages/android-legacy)
+
+Extends the android platform to create a .apk using crosswalk as a webview.
+
+### [@kano/kit-app-shell-ios](./packages/ios)
+
+Extends the cordova platform to create an iOS app.
+
+### [@kano/kit-app-shell-web](./packages/web)
+
+Kash web platform. Runs your app in a browser. Builds a hostable website.
 
 ## Coding style
 
