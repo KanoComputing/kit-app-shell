@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     group: 'Web: ',
     run(sywac) {
         sywac.number('--port, -p', {

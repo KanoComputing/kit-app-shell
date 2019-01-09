@@ -1,8 +1,14 @@
-const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
-const serve = require('./serve');
-const chalk = require('chalk');
+import { processState } from '@kano/kit-app-shell-core/lib/process-state';
+import  { serve } from './serve';
+import chalk from 'chalk';
 
-module.exports = function run({ app, config = {} } = {}, { port = 8000 } = {}) {
+type WebRunOptions = {
+    app : string;
+    config : any;
+    port : number;
+};
+
+export default function run({ app, config = {}, port = 8000 } : WebRunOptions) {
     const server = serve(app, config).listen(port);
 
     const address = server.address();

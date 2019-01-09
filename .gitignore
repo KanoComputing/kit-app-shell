@@ -17,3 +17,4 @@ packages/electron/lib
 packages/ios/lib
 packages/kano/lib
 packages/macos/lib
+packages/web/lib
