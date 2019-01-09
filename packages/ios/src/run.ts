@@ -1,7 +1,7 @@
-const run = require('@kano/kit-app-shell-cordova/lib/run');
-const platform = require('./platform');
+import run from '@kano/kit-app-shell-cordova/lib/run';
+import * as platform from './platform';
 
-module.exports = opts => run({
+export default opts => run({
     ...opts,
     platforms: platform.platforms,
     plugins: platform.plugins,

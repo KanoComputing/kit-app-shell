@@ -14,3 +14,4 @@ packages/android/lib
 packages/android-legacy/lib
 packages/test/lib
 packages/electron/lib
+packages/ios/lib

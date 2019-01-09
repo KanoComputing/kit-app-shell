@@ -1,13 +1,15 @@
-const build = require('@kano/kit-app-shell-cordova/lib/build');
-const { collectPreference } = require('@kano/kit-app-shell-cordova/lib/preferences');
-const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
-const { promisify } = require('util');
-const glob = promisify(require('glob'));
-const path = require('path');
-const fs = require('fs');
-const platform = require('./platform');
-const mkdirp = promisify(require('mkdirp'));
+import build from '@kano/kit-app-shell-cordova/lib/build';
+import { collectPreference } from '@kano/kit-app-shell-cordova/lib/preferences';
+import { processState } from '@kano/kit-app-shell-core/lib/process-state';
+import { promisify } from 'util';
+import * as path from 'path';
+import * as fs from 'fs';
+import * as platform from './platform';
+import * as globCb from 'glob';
+import * as mkdirpCb from 'mkdirp';
 
+const glob = promisify(globCb);
+const mkdirp = promisify(mkdirpCb);
 const rename = promisify(fs.rename);
 
 const DEFAULT_PREFERENCES = {
@@ -23,7 +25,7 @@ function collectPreferences(opts) {
     opts.preferences = Object.assign({}, DEFAULT_PREFERENCES, opts.preferences);
 }
 
-module.exports = (opts) => {
+export default (opts) => {
     collectPreferences(opts);
     return build({
         ...opts,
