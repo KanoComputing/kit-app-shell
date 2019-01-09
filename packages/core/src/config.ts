@@ -4,6 +4,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as deepMerge from 'deepmerge';
+import { KashConfig } from './options';
 
 const DEFAULTS = {
     APP_NAME: 'Unnamed App',
@@ -13,7 +14,7 @@ const DEFAULTS = {
 /**
  * Behaves like require, but can provide a fallback
  */
-function softRequire(moduleId, fallback = {}) {
+function softRequire(moduleId : string, fallback = {}) {
     try {
         const content = fs.readFileSync(moduleId, 'utf-8');
         return JSON.parse(content);
@@ -24,7 +25,7 @@ function softRequire(moduleId, fallback = {}) {
 
 export class ConfigLoader {
     // TODO: any
-    static load(appDir, env = 'development') : any {
+    static load(appDir, env = 'development') : KashConfig {
         const configDir = path.join(appDir, 'config');
         const defaultConfig = softRequire(path.join(configDir, 'default.json'));
         const envConfig = softRequire(path.join(configDir, `${env}.json`));

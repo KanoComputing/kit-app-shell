@@ -1,4 +1,13 @@
-export function createScript(src) {
+export interface INodeTree {
+    nodeName : string,
+    tagName : string,
+    attrs : Array<{ [key : string] : string|number }>,
+    namespaceURI : string,
+    childNodes : Array<{ nodeName : string, value : string|number|INodeTree }>,
+    parentNode: INodeTree|null,
+}
+
+export function createScript(src : string) : INodeTree {
     return {
         nodeName: 'script',
         tagName: 'script',
@@ -8,9 +17,10 @@ export function createScript(src) {
         }],
         namespaceURI: 'http://www.w3.org/1999/xhtml',
         childNodes: [],
+        parentNode: null,
     };
 }
-export function createScriptWithContent(content) {
+export function createScriptWithContent(content : string) : INodeTree {
     return {
         nodeName: 'script',
         tagName: 'script',
