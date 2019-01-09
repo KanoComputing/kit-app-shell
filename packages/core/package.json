@@ -4,7 +4,6 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "tsc": "tsc",
     "test": "mocha",
     "test-ci": "JUNIT_REPORT_PATH=./test-results.xml yarn run --silent test --reporter mocha-jenkins-reporter",
     "coverage": "nyc --reporter=html mocha"

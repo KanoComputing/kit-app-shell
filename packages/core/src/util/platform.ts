@@ -1,6 +1,7 @@
 export type PlatformPart = {
     enquire? : (prompt : typeof import('enquirer').prompt, {}) => Promise<{}>;
     generate? : ({}) => {}|Promise<{}>;
+    group? : string;
     (opts : any) : Promise<any>|any;
 }
 

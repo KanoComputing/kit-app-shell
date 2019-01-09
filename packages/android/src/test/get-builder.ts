@@ -1,8 +1,8 @@
-const appium = require('appium');
-const adbkit = require('adbkit');
-const url = require('url');
-const { processState } = require('@kano/kit-app-shell-core/lib/process-state');
-const getBuilder = require('@kano/kit-app-shell-cordova/lib/test/get-builder');
+import * as appium from 'appium';
+import * as adbkit from 'adbkit';
+import * as url from 'url';
+import { processState } from '@kano/kit-app-shell-core/lib/process-state';
+import getBuilder from '@kano/kit-app-shell-cordova/lib/test/get-builder';
 
 /**
  * Local device provider for android apps. Uses a local appium server and adb to find devices
@@ -58,7 +58,7 @@ function localSetup(app, wd, mocha, opts) {
 /**
  * Create a builder to create a driver for each test
  */
-module.exports = (wd, mocha, opts) => {
+export default (wd, mocha, opts) => {
     // Replace refresh method to prevent android from opening a browser
     wd.addAsyncMethod(
         'refresh',
@@ -79,9 +79,11 @@ module.exports = (wd, mocha, opts) => {
     }
     // Remote device providers are configured in the cordova platform to be shared between iOS
     // and Android
-    const builder = getBuilder(wd, mocha, opts);
-    if (!builder) {
-        throw new Error(`Could not run tests: '${opts.provider}' is not a valid device provider`);
-    }
-    return builder;
+    return getBuilder(wd, mocha, opts)
+        .then((builder) => {
+            if (!builder) {
+                throw new Error(`Could not run tests: '${opts.provider}' is not a valid device provider`);
+            }
+            return builder;
+        });
 };

@@ -36,7 +36,6 @@
     "nyc": "^13.1.0"
   },
   "scripts": {
-    "tsc": "tsc",
     "test": "cross-env TS_NODE_FILES=true mocha",
     "test-ci": "JUNIT_REPORT_PATH=./test-results.xml yarn run --silent test --reporter mocha-jenkins-reporter",
     "coverage": "nyc --reporter=html mocha"
