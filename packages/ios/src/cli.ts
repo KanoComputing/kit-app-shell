@@ -1,6 +1,6 @@
-const cli = require('@kano/kit-app-shell-cordova/lib/cli');
+import cli from '@kano/kit-app-shell-cordova/lib/cli';
 
-module.exports = Object.assign({}, cli, {
+export default Object.assign({}, cli, {
     group: 'iOS:',
     test(sywac) {
         sywac.boolean('--browserstack', {

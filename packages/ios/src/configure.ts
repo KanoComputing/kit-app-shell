@@ -6,7 +6,7 @@ function createQuestion(p, cfg) {
     });
 }
 
-module.exports = {
+export default {
     enquire(prompt, cfg) {
         return prompt([
             createQuestion({

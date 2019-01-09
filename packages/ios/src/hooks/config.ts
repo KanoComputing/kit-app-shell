@@ -1,16 +1,15 @@
-const Config = require('@kano/kit-app-shell-cordova/lib/cordova-config');
-const path = require('path');
-const fs = require('fs');
-const chalk = require('chalk');
+import { CordovaConfig } from '@kano/kit-app-shell-cordova/lib/cordova-config';
+import * as path from 'path';
+import * as fs from 'fs';
+import chalk from 'chalk';
 
-
-module.exports = (context) => {
+export = (context) => {
     const { projectRoot, shell } = context.opts;
     // No shell means it's running more than once
     if (!shell) {
         return null;
     }
-    const cfg = new Config(path.join(projectRoot, 'config.xml'));
+    const cfg = new CordovaConfig(path.join(projectRoot, 'config.xml'));
     cfg.selectPlatform('ios');
 
     if (shell.config.APP_DESCRIPTION) {
