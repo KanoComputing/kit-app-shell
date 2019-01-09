@@ -1,9 +1,12 @@
-const Bundler = require('@kano/kit-app-shell-core/lib/bundler');
-const path = require('path');
-const { promisify } = require('util');
-const rimraf = promisify(require('rimraf'));
+import { Bundler } from '@kano/kit-app-shell-core/lib/bundler';
+import * as path from 'path';
+import { promisify } from 'util';
+import * as rimrafCb from 'rimraf';
+const rimraf = promisify(rimrafCb);
 
-function build(opts) {
+type WebBuildOptions = any;
+
+export default function build(opts : WebBuildOptions) {
     const {
         app,
         config = {},
@@ -36,10 +39,8 @@ function build(opts) {
                     targets,
                     babelExclude,
                 },
+                html: {},
             },
         ))
         .then(bundle => Bundler.write(bundle, out));
 }
-
-
-module.exports = build;

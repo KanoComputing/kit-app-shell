@@ -20,5 +20,7 @@
         "path": "packages/kano"
     }, {
         "path": "packages/macos"
+    }, {
+        "path": "packages/web"
     }]
 }

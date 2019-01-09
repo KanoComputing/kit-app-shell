@@ -1,12 +1,11 @@
-const path = require('path');
-const connect = require('connect');
-const serveStatic = require('serve-static');
-const history = require('connect-history-api-fallback');
-const cors = require('cors');
+import * as path from 'path';
+import * as connect from 'connect';
+import * as serveStatic from 'serve-static';
+import * as history from 'connect-history-api-fallback';
+import * as cors from 'cors';
+import * as namedResolutionMiddleware from '@kano/es6-server/named-resolution-middleware';
 
-const namedResolutionMiddleware = require('@kano/es6-server/named-resolution-middleware');
-
-module.exports = (root, config = {}) => connect()
+export const serve = (root, config : any = {}) => connect()
     .use((req, res, next) => {
         if (req.method === 'GET') {
             if (req.url === '/_config') {
