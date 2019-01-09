@@ -6,9 +6,9 @@
 // Taken from https://github.com/Microsoft/vscode/blob/8ddcdbfa954f7561e8e23d229853aedc70e32a4c/build/gulpfile.vscode.win32.js
 // And adapted with some of the node-innosetup npm module
 
-const path = require('path');
-const assert = require('assert');
-const cp = require('child_process');
+import * as path from 'path';
+import * as assert from 'assert';
+import * as cp from 'child_process';
 
 let innoSetupPath = path.join(path.dirname(path.dirname(require.resolve('innosetup-compiler'))), 'bin', 'ISCC.exe');
 
@@ -58,8 +58,6 @@ function packageInnoSetup(iss, options, cb) {
         .on('exit', () => cb(null));
 }
 
-function buildWin32Setup(opts, cb) {
+export function buildWin32Setup(opts, cb) {
     packageInnoSetup(opts.iss, opts, cb);
 }
-
-module.exports = buildWin32Setup;

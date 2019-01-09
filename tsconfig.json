@@ -22,5 +22,9 @@
         "path": "packages/macos"
     }, {
         "path": "packages/web"
+    }, {
+        "path": "packages/windows"
+    }, {
+        "path": "packages/windows-store"
     }]
 }

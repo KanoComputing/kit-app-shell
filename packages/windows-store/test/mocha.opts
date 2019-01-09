@@ -1,2 +1,3 @@
+-r ts-node/register
 --ui tdd
-lib/**/*.test.js
+src/**/*.test.ts

@@ -1,6 +1,6 @@
 /* globals suite, test, teardown */
-const { assert } = require('chai');
-const mock = require('mock-require');
+import { assert } from 'chai';
+import * as mock from 'mock-require';
 
 suite('configure', () => {
     test('create certificate succesfully', () => {
@@ -33,11 +33,11 @@ suite('configure', () => {
 
         const configure = mock.reRequire('./configure');
 
-        return configure.enquire(promptMock, {})
+        return configure.default.enquire(promptMock, {})
             .then((answers) => {
                 assert.containsAllKeys(answers, ['certificates', 'windowsKit']);
                 assert.equal(answers.windowsKit, '/');
-                assert.containsAllKeys(answers.certificates, 'CN=TEST');
+                assert.containsAllKeys(answers.certificates, ['CN=TEST']);
                 assert.equal(answers.certificates['CN=TEST'], '/cert.pfx');
             });
     });
@@ -74,7 +74,7 @@ suite('configure', () => {
 
         const configure = mock.reRequire('./configure');
 
-        return configure.enquire(promptMock, {
+        return configure.default.enquire(promptMock, {
             certificates: {
                 'CN=TEST': '/test.pfx',
             },
@@ -82,7 +82,7 @@ suite('configure', () => {
             .then((answers) => {
                 assert.containsAllKeys(answers, ['certificates', 'windowsKit']);
                 assert.equal(answers.windowsKit, '/');
-                assert.containsAllKeys(answers.certificates, 'CN=TEST');
+                assert.containsAllKeys(answers.certificates, ['CN=TEST']);
                 assert.equal(answers.certificates['CN=TEST'], '/cert.pfx');
             });
     });
