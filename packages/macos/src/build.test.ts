@@ -1,9 +1,9 @@
 /* globals suite, test, teardown */
-const path = require('path');
-const chai = require('chai');
-const chaiFs = require('chai-fs');
-const mock = require('mock-require');
-const mockFs = require('mock-fs');
+import * as path from 'path';
+import * as chai from 'chai';
+import chaiFs = require('chai-fs');
+import * as mock from 'mock-require';
+import * as mockFs from 'mock-fs';
 
 chai.use(chaiFs);
 
@@ -18,26 +18,30 @@ suite('macOS build', () => {
             assert.equal(opts.name, 'App');
             return Promise.resolve('/out');
         });
-        mock('@kano/kit-app-shell-electron/lib/build', (opts) => {
-            assert.equal(opts.app, '/app');
-            return Promise.resolve('/build');
+        mock('@kano/kit-app-shell-electron/lib/build', {
+            default: (opts) => {
+                assert.equal(opts.app, '/app');
+                return Promise.resolve('/build');
+            },
         });
         // Will resolve if a warning is sent using processState
         const didReceiveWarning = new Promise((resolve) => {
             mock('@kano/kit-app-shell-core/lib/process-state', {
-                setStep() {},
-                setWarning(m) {
-                    assert.equal(m, '\'APP_NAME\' missing in config, will use \'App\' as name');
-                    resolve();
-                },
-                setSuccess() {},
-                setInfo() {},
+                processState: {
+                    setStep() {},
+                    setWarning(m) {
+                        assert.equal(m, '\'APP_NAME\' missing in config, will use \'App\' as name');
+                        resolve();
+                    },
+                    setSuccess() {},
+                    setInfo() {},
+                }
             });
         });
         const build = mock.reRequire('./build');
         return Promise.all([
             didReceiveWarning,
-            build({ app: '/app', out: '/out' }),
+            build.default({ app: '/app', out: '/out' }),
         ]);
     });
     test('provided', () => {
@@ -54,22 +58,26 @@ suite('macOS build', () => {
             assert.equal(opts.name, 'Test');
             return Promise.resolve('/out');
         });
-        mock('@kano/kit-app-shell-electron/lib/build', (opts) => {
-            assert.equal(opts.app, '/app');
-            assert.equal(opts.config, config);
-            assert.equal(opts.bundleOnly, true);
-            return Promise.resolve('/build');
+        mock('@kano/kit-app-shell-electron/lib/build', {
+            default: (opts) => {
+                assert.equal(opts.app, '/app');
+                assert.equal(opts.config, config);
+                assert.equal(opts.bundleOnly, true);
+                return Promise.resolve('/build');
+            },
         });
         mock('@kano/kit-app-shell-core/lib/process-state', {
-            setStep() {},
-            setWarning() {
-                throw new Error('Should not have triggered a warning');
+            processState: {
+                setStep() {},
+                setWarning() {
+                    throw new Error('Should not have triggered a warning');
+                },
+                setSuccess() {},
+                setInfo() {},
             },
-            setSuccess() {},
-            setInfo() {},
         });
         const build = mock.reRequire('./build');
-        return build({
+        return build.default({
             app: '/app',
             out: '/out',
             config,
