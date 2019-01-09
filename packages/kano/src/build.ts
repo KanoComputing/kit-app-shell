@@ -12,7 +12,7 @@ import * as rimraf from 'rimraf';
 import * as packager from 'electron-packager';
 import * as debian from 'debian-packaging';
 import * as commandExists from 'command-exists';
-import { BundleAppOptions } from '@kano/kit-app-shell-core/lib/bundler';
+import { KanoBuildOptions } from './options';
 
 const templateDir = path.join(__dirname, '../deb');
 
@@ -119,18 +119,10 @@ function checkEnv(skipAr = false) : Promise<void> {
         .then(() => null);
 }
 
-type KanoBuildOptions = BundleAppOptions & {
-    ['skip-ar']? : boolean;
-    app : string;
-    config: any;
-    out : string;
-    tmpdir : string;
-}
-
 export default function kanoBuild(opts : KanoBuildOptions) {
     const {
         app,
-        config = {},
+        config,
         out,
         bundleOnly,
     } = opts;

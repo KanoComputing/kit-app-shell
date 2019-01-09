@@ -19,7 +19,7 @@ suite('resolve-platform', () => {
         });
         test('load correctly', () => {
             const mod = {};
-            mock('@kano/kit-app-shell-test-platform/lib/_', mod);
+            mock('@kano/kit-app-shell-test-platform/lib/_', { default: mod });
             return loadPlatformKey('test-platform', '_')
                 .then((loadedModule) => {
                     assert.equal(loadedModule, mod);

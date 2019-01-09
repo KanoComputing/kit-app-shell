@@ -1,5 +1,4 @@
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
-import { BundleAppOptions } from '@kano/kit-app-shell-core/lib/bundler';
 import build from '@kano/kit-app-shell-electron/lib/build';
 import * as path from 'path';
 import * as os from 'os';
@@ -7,23 +6,17 @@ import * as packager from 'electron-packager';
 import { promisify } from 'util';
 import * as mkdirpCb from 'mkdirp';
 import * as rimrafCb from 'rimraf'
+import { MacosBuildOptions } from './options';
 
 const mkdirp = promisify(mkdirpCb);
 const rimraf = promisify(rimrafCb);
 
 const defaultIconPath = path.join(__dirname, '../icons/1024.png.icns');
 
-type MacosBuildOptions = BundleAppOptions & {
-    app : string;
-    config: any;
-    out : string;
-    tmpdir : string;
-}
-
 export default function macosBuild(opts : MacosBuildOptions) {
     const {
         app,
-        config = {},
+        config,
         out,
         bundleOnly,
         tmpdir = os.tmpdir(),

@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as rollup from 'rollup';
 import * as path from 'path';
 import * as nodeResolve from 'rollup-plugin-node-resolve';
-import { replace, ReplaceOptions } from './plugins/replace';
+import { replace } from './plugins/replace';
 import * as polyfill from 'rollup-plugin-polyfill';
 import * as inject from 'rollup-plugin-inject';
 import * as virtual from 'rollup-plugin-virtual';
@@ -15,6 +15,7 @@ import { ProgressTracker } from './progress';
 import { promisify } from 'util';
 import * as globCb from 'glob';
 import * as escapeRegExp from 'escape-regexp';
+import { BundleOptions, BundledFile, Bundle, BundleSourceOptions, CopyTask } from './options';
 
 const glob = promisify(globCb);
 
@@ -29,45 +30,6 @@ function writeStatic(root, file, outputDir) {
     const filePath = path.join(root, file);
     const outFile = path.join(outputDir, file);
     return util.fs.copy(filePath, outFile);
-}
-
-export interface BundleOptions {
-    html : {};
-    js : BundleSourceOptions;
-    appJs : BundleAppOptions;
-}
-
-export type BundleAppOptions = BundleSourceOptions & {
-    resources? : Array<string>;
-};
-
-interface BundledFile {
-    fileName: string;
-    code: string;
-}
-
-interface Bundle {
-    html : BundledFile;
-    js : Array<BundledFile>;
-    appJs : Array<BundledFile>;
-    appStatic: {};
-}
-
-interface CopyTask {
-    root: string;
-    files: Array<string>;
-}
-
-export interface BundleSourceOptions {
-    polyfills? : Array<string>;
-    moduleContext? : {
-        [key : string] : string;
-    };
-    replaces? : Array<ReplaceOptions>;
-    targets? : {};
-    babelExclude? : Array<string>;
-    bundleOnly? : boolean;
-    appSrcName? : string;
 }
 
 export class Bundler {
