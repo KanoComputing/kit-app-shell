@@ -11,3 +11,4 @@ packages/cli/lib
 packages/core/lib
 packages/cordova/lib
 packages/android/lib
+packages/test/lib

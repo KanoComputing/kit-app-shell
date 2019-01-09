@@ -1,17 +1,15 @@
-const { promisify } = require('util');
-const fs = require('fs');
-const request = require('request');
-const chalk = require('chalk');
-
-const post = promisify(request.post);
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const util_1 = require("util");
+const fs_1 = require("fs");
+const request_1 = require("request");
+const chalk_1 = require("chalk");
+const post = util_1.promisify(request_1.post);
 const BITBAR_HUB = 'https://appium.bitbar.com/wd/hub';
 const BITBAR_UPLOAD = 'https://appium.bitbar.com/upload';
-
-function upload(app, { key } = {}) {
-    const stream = fs.createReadStream(app);
+function upload(app, { key }) {
+    const stream = fs_1.createReadStream(app);
     const auth = `Basic ${Buffer.from(`${key}:`).toString('base64')}`;
-    // Post to the bitbar API
     return post({
         headers: {
             Accept: 'application/json',
@@ -28,17 +26,12 @@ function upload(app, { key } = {}) {
         },
     }).then(response => JSON.parse(response.body));
 }
-
 function saucelabsSetup(app, wd, mocha, opts) {
-    // Retrieve saucelabs options
     const { bitbar } = opts;
-    // Authentication options are required, throw an error
     if (!bitbar) {
-        // Be explicit enough so people know what to do next
-        throw new Error(`Could not run test: Missing 'bitbar' configuration. Run ${chalk.cyan('kash configure test')} to fix this`);
+        throw new Error(`Could not run test: Missing 'bitbar' configuration. Run ${chalk_1.default.cyan('kash configure test')} to fix this`);
     }
     const { key } = bitbar;
-    // Send the apk to bitbar
     return upload(app, {
         key,
     }).then(({ value }) => {
@@ -51,9 +44,7 @@ function saucelabsSetup(app, wd, mocha, opts) {
                 testdroid_target: 'android',
                 testdroid_device: '',
                 testdroid_apiKey: key,
-                // Create custom build name using the options from the config
                 build: `${opts.config.APP_NAME} v${opts.config.UI_VERSION} Android`,
-                // Set the test name to be the mocha test name
                 name: test.fullTitle(),
                 testdroid_testrun: test.fullTitle(),
                 testdroid_app: file,
@@ -66,5 +57,5 @@ function saucelabsSetup(app, wd, mocha, opts) {
         return builder;
     });
 }
-
-module.exports = saucelabsSetup;
+exports.default = saucelabsSetup;
+//# sourceMappingURL=bitbar.js.map

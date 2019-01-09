@@ -5,8 +5,11 @@ import * as Api from 'sywac/api';
 // Use the file directly. Might break when moving stuff but tests will tell us
 // This saves a lot of time as the big modules for building are not loaded is not needed
 import * as platformUtils from '@kano/kit-app-shell-core/lib/util/platform';
+import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 
 import chalk from 'chalk';
+
+type ProcessState = typeof processState;
 
 /**
  * Parses inputs, runs the commands and report to the user
@@ -16,7 +19,7 @@ class CLI {
     startedAt : number;
     duration : number;
     reporter : import('./reporters/reporter').IReporter;
-    processState : typeof import('@kano/kit-app-shell-core/lib/process-state').processState;
+    processState : ProcessState = processState;
     constructor(processArgv) {
         this.processArgv = processArgv;
     }
@@ -97,21 +100,16 @@ class CLI {
         if (argv.quiet) {
             return;
         }
-        // Late require speeds up small things like help and version
-        return import('@kano/kit-app-shell-core/lib/process-state')
-            .then(({ processState }) => {
-                this.processState = processState;
-                let p : Promise<any>;
-                // Avoid wasting people's time by loading only the necessary code
-                if (process.stdout.isTTY) {
-                    // Use spinner UI for humans
-                    p = import('./reporters/ora');
-                } else {
-                    // Use normal logging for machines (e.g. CI)
-                    p = import('./reporters/console');
-                }
-                return p;
-            })
+        let p : Promise<any>;
+        // Avoid wasting people's time by loading only the necessary code
+        if (process.stdout.isTTY) {
+            // Use spinner UI for humans
+            p = import('./reporters/ora');
+        } else {
+            // Use normal logging for machines (e.g. CI)
+            p = import('./reporters/console');
+        }
+        p
             .then((ReporterModule : { default: any }) => {
                 this.reporter = (new ReporterModule.default()) as import('./reporters/reporter').IReporter;
                 this.processState.on('step', ({ message = '' }) => this.reporter.onStep(message));
@@ -140,7 +138,10 @@ class CLI {
 
         sywac.command('open config', {
             desc: 'Open the location of your configuration',
-            run: () => require('../lib/open-config')(),
+            run: () => {
+                return import('./open-config')
+                    .then(openConfig => openConfig.default());
+            },
         });
 
         sywac.help();
@@ -154,168 +155,169 @@ class CLI {
     }
     secondPass(platformId) {
         const sywac = new Api();
-        let platformCli;
-        // catch synchronous error and reject as a result
-        try {
-            platformCli = platformUtils.loadPlatformKey(platformId, 'cli');
-        } catch (e) {
-            const context = sywac.initContext(false);
-            context.unexpectedError(e);
-            const result = context.toResult();
-            console.log(result.output);
-            return this.end(result.code);
-        }
-
-        const platform = {
-            cli: platformCli,
-        };
-
-        sywac.command('build <platform>', {
-            desc: 'build the application',
-            setup: (s) => {
-                CLI.parseCommon(s);
-                s.array('resources')
-                    .string('--out, -o', {
-                        desc: 'Output directory',
-                        coerce: path.resolve,
-                        required: true,
-                    })
-                    .number('--build-number, -n', {
-                        aliases: ['n', 'build-number', 'buildNumber'],
-                        defaultValue: 0,
-                    })
-                    .boolean('--bundle-only', {
-                        aliases: ['bundle-only', 'bundleOnly'],
-                        defaultValue: false,
+        return platformUtils.loadPlatformKey(platformId, 'cli')
+            .then((platformCli) => {
+                const platform = {
+                    cli: platformCli,
+                };
+        
+                sywac.command('build <platform>', {
+                    desc: 'build the application',
+                    setup: (s) => {
+                        CLI.parseCommon(s);
+                        s.array('resources')
+                            .string('--out, -o', {
+                                desc: 'Output directory',
+                                coerce: path.resolve,
+                                required: true,
+                            })
+                            .number('--build-number, -n', {
+                                aliases: ['n', 'build-number', 'buildNumber'],
+                                defaultValue: 0,
+                            })
+                            .boolean('--bundle-only', {
+                                aliases: ['bundle-only', 'bundleOnly'],
+                                defaultValue: false,
+                            });
+                        const sywacPatch = CLI.patchSywacOptions(s, {
+                            group: platform.cli.group || 'Platform: ',
+                        });
+                        platformUtils.registerOptions(s, platform, 'build');
+                        sywacPatch.dispose();
+                    },
+                    run: (argv) => {
+                        this.mountReporter(argv);
+                        return import('./command')
+                            .then((runCommand) => {
+                                const task = runCommand.default('build', platformId, argv);
+                                this.setTask(task);
+                                return task;
+                            });
+                    },
+                });
+        
+                sywac.command('run <platform>', {
+                    desc: 'run the application',
+                    setup: (s) => {
+                        CLI.parseCommon(s);
+                        const sywacPatch = CLI.patchSywacOptions(s, {
+                            group: platform.cli.group || 'Platform: ',
+                        });
+                        platformUtils.registerOptions(s, platform, 'run');
+                        sywacPatch.dispose();
+                    },
+                    run: (argv) => {
+                        this.mountReporter(argv);
+                        return import('./command')
+                            .then((runCommand) => {
+                                const task = runCommand.default('run', platformId, argv);
+                                this.setTask(task);
+                                return task;
+                            });
+                    },
+                });
+        
+                sywac.command('test <platform>', {
+                    desc: 'test the application',
+                    setup: (s) => {
+                        CLI.parseCommon(s);
+                        s.string('--prebuilt-app', {
+                            aliases: ['prebuilt-app', 'prebuiltApp'],
+                            desc: 'Path to the built app to test',
+                            required: true,
+                            coerce: path.resolve,
+                        });
+                        const sywacPatch = CLI.patchSywacOptions(s, {
+                            group: platform.cli.group || 'Platform: ',
+                        });
+                        platformUtils.registerOptions(s, platform, 'test');
+                        sywacPatch.dispose();
+                    },
+                    run: (argv) => {
+                        this.mountReporter(argv);
+                        return import('./test')
+                            .then((runTest) => {
+                                const task = runTest.default(argv, platformId, 'test');
+                                this.setTask(task);
+                                return task;
+                            });
+                    },
+                });
+        
+                sywac.command('sign <platform>', {
+                    desc: 'sign an application package',
+                    setup: (s) => {
+                        CLI.parseCommon(s);
+                        const sywacPatch = CLI.patchSywacOptions(s, {
+                            group: platform.cli.group || 'Platform: ',
+                        });
+                        platformUtils.registerOptions(s, platform, 'sign');
+                        sywacPatch.dispose();
+                    },
+                    run: (argv) => {
+                        this.mountReporter(argv);
+                        return import('./command')
+                            .then((runCommand) => {
+                                const task = runCommand.default('sign', platformId, argv);
+                                this.setTask(task);
+                                return task;
+                            });
+                    },
+                });
+        
+                sywac.command('configure <platform>', {
+                    desc: 'configure kash',
+                    setup: (s) => {
+                        const sywacPatch = CLI.patchSywacOptions(s, {
+                            group: platform.cli.group || 'Platform: ',
+                        });
+                        platformUtils.registerOptions(s, platform, 'configure');
+                        sywacPatch.dispose();
+                    },
+                    run: (argv) => {
+                        this.mountReporter(argv);
+                        return import('./configure')
+                            .then((configure) => {
+                                const task = configure.default(argv, platformId);
+                                this.setTask(task);
+                                return task;
+                            });
+                    },
+                });
+        
+                sywac.boolean('--quiet, -q', {
+                    desc: 'Silence all outputs',
+                    defaultValue: false,
+                });
+        
+                sywac.boolean('--verbose', {
+                    desc: 'Displays verbose logs',
+                    defaultValue: false,
+                });
+        
+                sywac.help();
+                sywac.showHelpByDefault();
+        
+                sywac.version();
+        
+                sywac.configure({ name: 'kash' });
+        
+                // Register the global commands for the platform
+                const sywacPatch = CLI.patchSywacOptions(sywac, {
+                    group: platform.cli.group || 'Platform: ',
+                });
+                platformUtils.registerCommands(sywac, platform);
+                sywacPatch.dispose();
+        
+                CLI.applyStyles(sywac);
+        
+                return sywac.parse(this.processArgv)
+                    .then((result) => {
+                        if (result.output.length) {
+                            console.log(result.output);
+                        }
+                        this.end(result.code);
                     });
-                const sywacPatch = CLI.patchSywacOptions(s, {
-                    group: platform.cli.group || 'Platform: ',
-                });
-                platformUtils.registerOptions(s, platform, 'build');
-                sywacPatch.dispose();
-            },
-            run: (argv) => {
-                this.mountReporter(argv);
-                const { runCommand } = require('../lib/command');
-                const task = runCommand('build', platformId, argv);
-                this.setTask(task);
-                return task;
-            },
-        });
-
-        sywac.command('run <platform>', {
-            desc: 'run the application',
-            setup: (s) => {
-                CLI.parseCommon(s);
-                const sywacPatch = CLI.patchSywacOptions(s, {
-                    group: platform.cli.group || 'Platform: ',
-                });
-                platformUtils.registerOptions(s, platform, 'run');
-                sywacPatch.dispose();
-            },
-            run: (argv) => {
-                this.mountReporter(argv);
-                const { runCommand } = require('../lib/command');
-                const task = runCommand('run', platformId, argv);
-                this.setTask(task);
-                return task;
-            },
-        });
-
-        sywac.command('test <platform>', {
-            desc: 'test the application',
-            setup: (s) => {
-                CLI.parseCommon(s);
-                s.string('--prebuilt-app', {
-                    aliases: ['prebuilt-app', 'prebuiltApp'],
-                    desc: 'Path to the built app to test',
-                    required: true,
-                    coerce: path.resolve,
-                });
-                const sywacPatch = CLI.patchSywacOptions(s, {
-                    group: platform.cli.group || 'Platform: ',
-                });
-                platformUtils.registerOptions(s, platform, 'test');
-                sywacPatch.dispose();
-            },
-            run: (argv) => {
-                this.mountReporter(argv);
-                const runTest = require('../lib/test');
-                const task = runTest(argv, platformId, 'test');
-                this.setTask(task);
-                return task;
-            },
-        });
-
-        sywac.command('sign <platform>', {
-            desc: 'sign an application package',
-            setup: (s) => {
-                CLI.parseCommon(s);
-                const sywacPatch = CLI.patchSywacOptions(s, {
-                    group: platform.cli.group || 'Platform: ',
-                });
-                platformUtils.registerOptions(s, platform, 'sign');
-                sywacPatch.dispose();
-            },
-            run: (argv) => {
-                this.mountReporter(argv);
-                const { runCommand } = require('../lib/command');
-                const task = runCommand('sign', platformId, argv);
-                this.setTask(task);
-                return task;
-            },
-        });
-
-        sywac.command('configure <platform>', {
-            desc: 'configure kash',
-            setup: (s) => {
-                const sywacPatch = CLI.patchSywacOptions(s, {
-                    group: platform.cli.group || 'Platform: ',
-                });
-                platformUtils.registerOptions(s, platform, 'configure');
-                sywacPatch.dispose();
-            },
-            run: (argv) => {
-                this.mountReporter(argv);
-                const configure = require('../lib/configure');
-                const task = configure(argv, platformId);
-                this.setTask(task);
-                return task;
-            },
-        });
-
-        sywac.boolean('--quiet, -q', {
-            desc: 'Silence all outputs',
-            defaultValue: false,
-        });
-
-        sywac.boolean('--verbose', {
-            desc: 'Displays verbose logs',
-            defaultValue: false,
-        });
-
-        sywac.help();
-        sywac.showHelpByDefault();
-
-        sywac.version();
-
-        sywac.configure({ name: 'kash' });
-
-        // Register the global commands for the platform
-        const sywacPatch = CLI.patchSywacOptions(sywac, {
-            group: platform.cli.group || 'Platform: ',
-        });
-        platformUtils.registerCommands(sywac, platform);
-        sywacPatch.dispose();
-
-        CLI.applyStyles(sywac);
-
-        return sywac.parse(this.processArgv)
-            .then((result) => {
-                if (result.output.length) {
-                    console.log(result.output);
-                }
-                this.end(result.code);
             });
     }
 }

@@ -1,19 +1,17 @@
-const fs = require('fs');
-const path = require('path');
-const chalk = require('chalk');
-
-const request = require('request');
-
-const { promisify } = require('util');
-
-const post = promisify(request.post);
-const put = promisify(request.put);
-
-function upload(app, { user, key } = {}) {
-    const stat = fs.statSync(app);
-    const stream = fs.createReadStream(app);
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = require("fs");
+const path_1 = require("path");
+const chalk_1 = require("chalk");
+const util_1 = require("util");
+const request_1 = require("request");
+const post = util_1.promisify(request_1.post);
+const put = util_1.promisify(request_1.put);
+function upload(app, { user, key }) {
+    const stat = fs_1.statSync(app);
+    const stream = fs_1.createReadStream(app);
     const auth = `Basic ${Buffer.from([user, key].join(':')).toString('base64')}`;
-    const filename = path.basename(app);
+    const filename = path_1.basename(app);
     return post({
         headers: {
             'Content-Type': 'application/json',
@@ -35,34 +33,28 @@ function upload(app, { user, key } = {}) {
         body: stream,
     })
         .then(() => post({
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: auth,
-                Accept: 'application/json',
-            },
-            url: 'https://api.kobiton.com/v1/apps',
-            body: JSON.stringify({
-                appPath,
-                filename,
-            }),
-        }).then(r => JSON.parse(r.body))));
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: auth,
+            Accept: 'application/json',
+        },
+        url: 'https://api.kobiton.com/v1/apps',
+        body: JSON.stringify({
+            appPath,
+            filename,
+        }),
+    }).then(r => JSON.parse(r.body))));
 }
-
 function getConfig(opts, key) {
     const value = opts[key];
-
     if (typeof value === 'undefined') {
-        throw new Error(`Could not run test: Missing '${key}' in your rc file. Run ${chalk.cyan('kash configure test')} to fix this.`);
+        throw new Error(`Could not run test: Missing '${key}' in your rc file. Run ${chalk_1.default.cyan('kash configure test')} to fix this.`);
     }
-
     return value;
 }
-
 function kobitonSetup(app, wd, mocha, opts) {
-    // Retrieve saucelabs options
     const kobiton = getConfig(opts, 'kobiton');
     const { user, key } = kobiton;
-    // Send the apk to kobiton's servers
     return upload(app, {
         user,
         key,
@@ -90,5 +82,5 @@ function kobitonSetup(app, wd, mocha, opts) {
         return builder;
     });
 }
-
-module.exports = kobitonSetup;
+exports.default = kobitonSetup;
+//# sourceMappingURL=kobiton.js.map

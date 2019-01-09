@@ -6,9 +6,6 @@
     "kit-app-shell": "lib/cli.js",
     "kash": "lib/cli.js"
   },
-  "scripts": {
-    "tsc": "tsc"
-  },
   "directories": {
     "lib": "lib"
   },
