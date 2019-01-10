@@ -7,6 +7,6 @@ const openExplorer = promisify(openExplorerCb);
 /**
  * Simply open the rc file
  */
-export default function openConfig() {
+export default function openConfig() : Promise<void> {
     return openExplorer(RcLoader.RC_PATH);
 };

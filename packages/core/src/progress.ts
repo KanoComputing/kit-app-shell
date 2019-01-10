@@ -12,7 +12,7 @@ export class ProgressTracker extends EventEmitter {
         const self = this;
         return {
             name: 'progress',
-            load(id : string) {
+            load(id : string) : void {
                 self.loaded += 1;
                 self.emit('progress', {
                     loaded: self.loaded,

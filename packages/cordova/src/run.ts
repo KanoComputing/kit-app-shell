@@ -10,6 +10,8 @@ import * as cors from 'cors';
 import { cordova } from 'cordova-lib';
 import * as ip from 'ip';
 import * as livereload from 'livereload';
+import { AddressInfo } from 'net';
+import { CordovaRunOptions } from './options';
 
 const namedResolutionMiddleware = require('@kano/es6-server/named-resolution-middleware');
 
@@ -21,7 +23,7 @@ const { KASH_NET_INTERFACE_NAME } = process.env;
  * Serves the app, resolve named modules, create an endpoint to GET the config
  * @param {String} app Path to the app to run
  */
-function serve(app) {
+function serve(app : string) : connect.Server {
     return connect()
         .use(cors())
         .use((req, res, next) => {
@@ -40,14 +42,21 @@ function serve(app) {
         .use(serveStatic(app));
 }
 
+interface Tunnel {
+    tunnel : {
+        url : string;
+    };
+    stop();
+}
+
 /**
  * Create a server and tunnels it using ngrok
  * Also creates a livereload server and watches the files in the app directory
  * @param {String} app Path to the app to tunnel
  */
-function setupTunnel(app) {
+function setupTunnel(app : string) : Promise<Tunnel> {
     const server = serve(app).listen(0);
-    const { port } = server.address();
+    const { port } = server.address() as AddressInfo;
     // TODO: Move this to core. It can be re-used to live-reload any platform or project
     const lrServer = livereload.createServer();
     return ngrok.connect(port)
@@ -65,7 +74,7 @@ function setupTunnel(app) {
         });
 }
 
-const run = opts => Promise.all([
+const run = (opts : CordovaRunOptions) : Promise<any> => Promise.all([
     setupTunnel(opts.app),
     getProject({
         ...opts,

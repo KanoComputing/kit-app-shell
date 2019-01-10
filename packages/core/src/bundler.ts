@@ -15,25 +15,25 @@ import { ProgressTracker } from './progress';
 import { promisify } from 'util';
 import * as globCb from 'glob';
 import * as escapeRegExp from 'escape-regexp';
-import { BundleOptions, BundledFile, Bundle, BundleSourceOptions, CopyTask } from './options';
+import { BundleOptions, BundledFile, Bundle, BundleSourceOptions, CopyTask, KashConfig } from './options';
 
 const glob = promisify(globCb);
 
 const writeFile = promisify(fs.writeFile);
 
-function write(file, outputDir) {
+function write(file : BundledFile, outputDir : string) : Promise<void> {
     const filePath = path.join(outputDir, file.fileName);
     return writeFile(filePath, file.code);
 }
 
-function writeStatic(root, file, outputDir) {
+function writeStatic(root : string, file : string, outputDir : string) : Promise<void> {
     const filePath = path.join(root, file);
     const outFile = path.join(outputDir, file);
     return util.fs.copy(filePath, outFile);
 }
 
 export class Bundler {
-    static write(bundle, outputDir) {
+    static write(bundle : Bundle, outputDir : string) : Promise<string> {
         const tasks = [];
         const appOutputDir = path.join(outputDir, 'www');
         mkdirp.sync(outputDir);
@@ -56,7 +56,7 @@ export class Bundler {
                 return outputDir;
             });
     }
-    static bundle(html, js, appSrc, config, opts : BundleOptions = { html: {}, js: {}, appJs: { resources: [] } }) {
+    static bundle(html : string, js : string, appSrc : string, config : KashConfig, opts : BundleOptions = { html: {}, js: {}, appJs: { resources: [] } }) : Promise<Bundle> {
         processState.setStep(`Bundling app at ${appSrc}`);
         const appSrcName = path.basename(appSrc);
         const htmlOutput = Bundler.bundleHtml(html, opts.html || {});
@@ -93,7 +93,7 @@ export class Bundler {
         // Replace html comment with build tag
         return stage1.replace(reg, (m, g0) => replacements[g0] || '');
     }
-    static bundleSources(input, config, opts : BundleSourceOptions) : Promise<Array<BundledFile>> {
+    static bundleSources(input : string, config : KashConfig, opts : BundleSourceOptions) : Promise<Array<BundledFile>> {
         const {
             polyfills = [],
             moduleContext = {},
@@ -115,7 +115,7 @@ export class Bundler {
             { delimiters: ['', ''] },
             replaceOpts,
         )));
-        const defaultOptions = {
+        const defaultOptions : rollup.RollupDirOptions = {
             input: [input],
             experimentalCodeSplitting: true,
             plugins: [

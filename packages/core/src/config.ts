@@ -14,7 +14,7 @@ const DEFAULTS = {
 /**
  * Behaves like require, but can provide a fallback
  */
-function softRequire(moduleId : string, fallback = {}) {
+function softRequire(moduleId : string, fallback = {}) : any {
     try {
         const content = fs.readFileSync(moduleId, 'utf-8');
         return JSON.parse(content);
@@ -24,14 +24,12 @@ function softRequire(moduleId : string, fallback = {}) {
 }
 
 export class ConfigLoader {
-    // TODO: any
-    static load(appDir, env = 'development') : KashConfig {
+    static load(appDir : string, env : string = 'development') : KashConfig {
         const configDir = path.join(appDir, 'config');
         const defaultConfig = softRequire(path.join(configDir, 'default.json'));
         const envConfig = softRequire(path.join(configDir, `${env}.json`));
 
-        // TODO: as any
-        const config = deepMerge(defaultConfig, envConfig) as any;
+        const config = deepMerge<KashConfig>(defaultConfig, envConfig);
 
         config.ENV = env;
         config.UI_ROOT = '/www/';
@@ -41,6 +39,6 @@ export class ConfigLoader {
         // Property used to be called UI_VERSION, alias it for backward compatibility
         config.UI_VERSION = config.VERSION;
 
-        return deepMerge(DEFAULTS, config);
+        return deepMerge<KashConfig>(DEFAULTS, config);
     }
 }

@@ -6,8 +6,9 @@ import * as Api from 'sywac/api';
 // This saves a lot of time as the big modules for building are not loaded is not needed
 import * as platformUtils from '@kano/kit-app-shell-core/lib/util/platform';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
-
+import { IDisposable } from '@kano/kit-app-shell-core/lib/options';
 import chalk from 'chalk';
+import { Sywac, Argv } from './options';
 
 type ProcessState = typeof processState;
 
@@ -23,7 +24,7 @@ class CLI {
     constructor(processArgv) {
         this.processArgv = processArgv;
     }
-    start() {
+    start() : Promise<void> {
         this.startedAt = Date.now();
         // Parse the output once to deal with command discovery and help
         return this.firstPass()
@@ -36,7 +37,7 @@ class CLI {
                 return this.end(result.code);
             });
     }
-    end(code) {
+    end(code : number) : void {
         this.duration = Date.now() - this.startedAt;
         const totalTime = this.duration / 1000;
         const totalMinutes = Math.floor(totalTime / 60);
@@ -51,7 +52,7 @@ class CLI {
      * Catches errors from the current task and notify the process state
      * @param {Promise} task current long running task
      */
-    setTask(task) {
+    setTask(task : Promise<any>) {
         if (!this.processState) {
             return;
         }
@@ -61,7 +62,7 @@ class CLI {
             // TODO: Map out error codes and use them here. Embed the code in the error object
             .then(() => this.end(1));
     }
-    static parseCommon(sywac) {
+    static parseCommon(sywac : Sywac) : Sywac {
         return sywac
             .positional('[app=./]', {
                 params: [{
@@ -75,15 +76,15 @@ class CLI {
                 defaultValue: 'development',
             });
     }
-    static applyStyles(sywac) {
-        sywac.style({
+    static applyStyles(sywac : Sywac) : Sywac {
+        return sywac.style({
             group: s => chalk.cyan.bold(s),
             desc: s => chalk.white(s),
             hints: s => chalk.dim(s),
             flagsError: s => chalk.red(s),
         });
     }
-    static patchSywacOptions(sywac, forcedOptions) {
+    static patchSywacOptions(sywac : Sywac, forcedOptions : any) : IDisposable {
         const originalOptions = sywac._addOptionType.bind(sywac);
         sywac._addOptionType = (flags, opts, type) => originalOptions(
             flags,
@@ -96,9 +97,9 @@ class CLI {
             },
         };
     }
-    mountReporter(argv) {
+    mountReporter(argv : Argv) : Promise<void> {
         if (argv.quiet) {
-            return;
+            return Promise.resolve();
         }
         let p : Promise<any>;
         // Avoid wasting people's time by loading only the necessary code
@@ -119,7 +120,7 @@ class CLI {
                 this.processState.on('info', ({ message = '' }) => this.reporter.onInfo(message));
             });
     }
-    firstPass() {
+    firstPass() : Promise<any> {
         // Create local sywac
         const sywac = new Api();
 
@@ -153,7 +154,7 @@ class CLI {
 
         return sywac.parse(this.processArgv);
     }
-    secondPass(platformId) {
+    secondPass(platformId : string) : Promise<any> {
         const sywac = new Api();
         return platformUtils.loadPlatformKey(platformId, 'cli')
             .then((platformCli) => {

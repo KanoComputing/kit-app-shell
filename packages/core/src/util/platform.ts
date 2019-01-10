@@ -13,7 +13,7 @@ export type GetBuilder = (wd : typeof import('wd'), mocha : import('mocha'), opt
 // that will never run for a session,
 // e.g. Do not load heavy testing frameworks when we only need to run the app
 // The default location is lib/<key>
-export function loadPlatformKey(name, key) : Promise<PlatformPart> {
+export function loadPlatformKey(name : string, key : string) : Promise<PlatformPart> {
     if (name === 'core' || name === 'cli') {
         return Promise.reject(new Error(`Could not load platform: '${name}' is reserved`));
     }

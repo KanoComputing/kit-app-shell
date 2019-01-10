@@ -35,23 +35,23 @@ suite('ConfigLoader', () => {
         });
         test('load development by default', () => {
             const mocker = mockConfig(fakeAppDir, {
-                default: { _defaultId: 'default' },
-                development: { _envId: 'dev' },
+                default: { APP_NAME: 'default' },
+                development: { APP_ID: 'dev' },
             }, '1.0.0');
             const result = ConfigLoader.load(fakeAppDir);
             assert.equal(result.ENV, 'development');
-            assert.equal(result._defaultId, mocker.files.default._defaultId);
-            assert.equal(result._envId, mocker.files.development._envId);
+            assert.equal(result.APP_NAME, mocker.files.default.APP_NAME);
+            assert.equal(result.APP_ID, mocker.files.development.APP_ID);
         });
         test('load specified environment', () => {
             const mocker = mockConfig(fakeAppDir, {
-                default: { _defaultId: 'default' },
-                staging: { _envId: 'staging' },
+                default: { APP_NAME: 'default' },
+                staging: { APP_ID: 'staging' },
             }, '1.0.0');
             const result = ConfigLoader.load(fakeAppDir, 'staging');
             assert.equal(result.ENV, 'staging');
-            assert.equal(result._defaultId, mocker.files.default._defaultId);
-            assert.equal(result._envId, mocker.files.staging._envId);
+            assert.equal(result.APP_NAME, mocker.files.default.APP_NAME);
+            assert.equal(result.APP_ID, mocker.files.staging.APP_ID);
         });
     });
     teardown(() => {
