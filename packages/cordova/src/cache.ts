@@ -15,16 +15,16 @@ const writeFile = promisify(fs.writeFile);
  * Will always re-use a project to save time
  */
 export class ProjectCacheManager {
-    _id : string;
-    _dbPath : string;
-    _cache : {};
+    private id : string;
+    private dbPath : string;
+    private cache : {};
     /**
      * The cacheId is a root key to group cached projects together
      */
     constructor(cacheId : string) {
-        this._id = cacheId;
+        this.id = cacheId;
         // The cache DB path is in the users' home directory in a hidden folder
-        this._dbPath = path.join(os.homedir(), '.kit-app-shell-cordova/cache', this._id);
+        this.dbPath = path.join(os.homedir(), '.kit-app-shell-cordova/cache', this.id);
     }
     /**
      * Loads the cache in memory from the disk
@@ -32,16 +32,16 @@ export class ProjectCacheManager {
      */
     load() {
         // Cache already loaded, return the data
-        if (this._cache) {
-            return Promise.resolve(this._cache);
+        if (this.cache) {
+            return Promise.resolve(this.cache);
         }
         // Read the cache DB file and populate the in-memory object
-        return readFile(this._dbPath, 'utf-8')
+        return readFile(this.dbPath, 'utf-8')
             .then(contents => JSON.parse(contents))
             // Any error up there, create a new cache
             .catch(() => ({}))
             .then((cache) => {
-                this._cache = cache;
+                this.cache = cache;
                 return cache;
             });
     }
@@ -50,10 +50,10 @@ export class ProjectCacheManager {
      * If called before any load, the cache on the disk will be wiped
      */
     save() {
-        const contents = JSON.stringify(this._cache);
+        const contents = JSON.stringify(this.cache);
         // Ensure the directory exists, then write
-        return mkdirp(path.dirname(this._dbPath))
-            .then(() => writeFile(this._dbPath, contents));
+        return mkdirp(path.dirname(this.dbPath))
+            .then(() => writeFile(this.dbPath, contents));
     }
     /**
      * Returns a hash of a provided config object
@@ -82,7 +82,7 @@ export class ProjectCacheManager {
         // before writing
         return this.load()
             .then(() => {
-                this._cache[hash] = projectPath;
+                this.cache[hash] = projectPath;
                 return this.save();
             });
     }
@@ -93,7 +93,7 @@ export class ProjectCacheManager {
         const hash = ProjectCacheManager.configToHash(config);
         return this.load()
             .then(() => {
-                delete this._cache[hash];
+                delete this.cache[hash];
                 return this.save();
             });
     }

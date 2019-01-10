@@ -1,3 +1,5 @@
+import { IConfigure } from '@kano/kit-app-shell-core/lib/types';
+
 function createQuestion(p, cfg) {
     // Load the initial value from the current config if exists
     // TODO: Maybe create a util function that would be provided by the CLI to do this
@@ -6,7 +8,7 @@ function createQuestion(p, cfg) {
     });
 }
 
-export default {
+const iosConfigure : IConfigure = {
     enquire(prompt, cfg) {
         return prompt([
             createQuestion({
@@ -32,3 +34,5 @@ export default {
         ]);
     },
 };
+
+export default iosConfigure;

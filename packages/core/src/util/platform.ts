@@ -5,8 +5,6 @@ export type PlatformPart = {
     (opts : any) : Promise<any>|any;
 }
 
-export type GetBuilder = (wd : typeof import('wd'), mocha : import('mocha'), opts: any) => Promise<any>|any;
-
 // Loads a platform sub-module
 // This allows us to load just the CLI config and only the required command
 // This speeds up the overall CLI by skipping eventual dependencies

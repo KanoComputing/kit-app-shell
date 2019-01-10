@@ -1,6 +1,7 @@
-const lib = require('./libimobiledevice');
-const appium = require('appium');
-const getBuilder = require('@kano/kit-app-shell-cordova/lib/test/get-builder');
+import * as lib from './libimobiledevice';
+import * as appium from 'appium';
+import getBuilder from '@kano/kit-app-shell-cordova/lib/test/get-builder';
+import { IBuilderFactory } from '@kano/kit-app-shell-core/lib/types';
 
 /**
  * Create a local provider for iOS devices. Uses an appium server and libimobiledevice
@@ -49,7 +50,7 @@ function localSetup(app, wd, mocha, opts) {
 /**
  * Create a builder to create a driver for each test
  */
-module.exports = (wd, mocha, opts) => {
+const getIosBuilder : IBuilderFactory = (wd, mocha, opts) => {
     // Use local provider
     if (opts.provider === 'local') {
         return localSetup(opts.prebuiltApp, wd, mocha, opts);
@@ -62,3 +63,6 @@ module.exports = (wd, mocha, opts) => {
     }
     return builder;
 };
+
+
+export default getIosBuilder;

@@ -1,16 +1,17 @@
 import { util } from '@kano/kit-app-shell-core/lib/util';
+import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import { Bundler } from '@kano/kit-app-shell-core/lib/bundler';
 import * as path from 'path';
 import { cordova } from 'cordova-lib';
 import { promisify } from 'util';
 import * as rimrafCb from 'rimraf';
-import { CordovaBuildOptions } from './options';
+import { CordovaBuildOptions } from './types';
 const rimraf = promisify(rimrafCb);
 
 const { getProject } = require('./project');
 
-export default (opts : CordovaBuildOptions) => {
+const build : IBuild = (opts : CordovaBuildOptions) => {
     // Catch cordova logs and displays them
     // TODO: Catch all logs (error, warn, ...)
     // TODO: Find a console UI to display these logs and any subprocess logs
@@ -84,3 +85,5 @@ export default (opts : CordovaBuildOptions) => {
                 .then(() => projectPath);
         });
 };
+
+export default build;

@@ -15,7 +15,7 @@ import { ProgressTracker } from './progress';
 import { promisify } from 'util';
 import * as globCb from 'glob';
 import * as escapeRegExp from 'escape-regexp';
-import { BundleOptions, BundledFile, Bundle, BundleSourceOptions, CopyTask, KashConfig } from './options';
+import { BundleOptions, BundledFile, Bundle, BundleSourceOptions, CopyTask, KashConfig } from './types';
 
 const glob = promisify(globCb);
 

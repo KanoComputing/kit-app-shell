@@ -3,11 +3,12 @@ import * as adbkit from 'adbkit';
 import * as url from 'url';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import getBuilder from '@kano/kit-app-shell-cordova/lib/test/get-builder';
+import { Builder, IBuilderFactory } from '@kano/kit-app-shell-core/lib/types';
 
 /**
  * Local device provider for android apps. Uses a local appium server and adb to find devices
  */
-function localSetup(app, wd, mocha, opts) {
+function localSetup(app : string, wd, mocha, opts) : Promise<Builder> {
     processState.setStep('Starting appium server');
     // Start appium server
     return appium.main({ loglevel: 'error' })
@@ -31,7 +32,7 @@ function localSetup(app, wd, mocha, opts) {
                     return client.uninstall(device.id, opts.config.APP_ID).then(() => device);
                 })
                 .then((device) => {
-                    const builder = () => {
+                    const builder : Builder = () => {
                         // Create driver with required capabilities
                         const driver = wd.promiseChainRemote('0.0.0.0', port);
                         return driver.init({
@@ -54,11 +55,10 @@ function localSetup(app, wd, mocha, opts) {
                 });
         });
 }
-
 /**
  * Create a builder to create a driver for each test
  */
-export default (wd, mocha, opts) => {
+const getAndroidBuilder : IBuilderFactory = (wd, mocha, opts) : Promise<Builder> => {
     // Replace refresh method to prevent android from opening a browser
     wd.addAsyncMethod(
         'refresh',
@@ -87,3 +87,5 @@ export default (wd, mocha, opts) => {
             return builder;
         });
 };
+
+export default getAndroidBuilder;

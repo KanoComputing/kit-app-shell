@@ -8,7 +8,8 @@ import * as packager from 'electron-packager';
 import { buildWin32Setup } from './innosetup';
 import * as mkdirpCb from 'mkdirp';
 import * as rimrafCb from 'rimraf';
-import { WindowsBuildOptions } from './options';
+import { WindowsBuildOptions } from './types';
+import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 
 const mkdirp = promisify(mkdirpCb);
 const rimraf = promisify(rimrafCb);
@@ -62,7 +63,7 @@ function createInstaller(opts) {
     return builder;
 }
 
-export default function windowsBuild(opts : WindowsBuildOptions) {
+const windowsBuild : IBuild =  function (opts : WindowsBuildOptions) {
     const {
         app,
         config,
@@ -133,3 +134,5 @@ export default function windowsBuild(opts : WindowsBuildOptions) {
                 });
         });
 }
+
+export default windowsBuild;

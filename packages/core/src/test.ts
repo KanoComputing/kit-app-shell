@@ -3,10 +3,9 @@ import * as wd from 'wd';
 import * as Mocha from 'mocha';
 import { promisify } from 'util';
 import * as globCb from 'glob';
+import { Builder, TestOptions } from './types';
 
 const glob = promisify(globCb);
-
-type Builder = (test : Mocha.Test) => Promise<wd.WebDriver>;
 
 class KashTestFramework {
     public wd : typeof wd;
@@ -52,7 +51,7 @@ class KashTestFramework {
     }
 }
 
-export const test = (platform, opts) => {
+export const test = (platform, opts : TestOptions) => {
     const framework = new KashTestFramework();
     // Create new mocha UI inhecting the test framework
     Mocha.interfaces['selenium-bdd'] = (suite) => {

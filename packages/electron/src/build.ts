@@ -6,7 +6,8 @@ import * as globCb from 'glob';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import { copy } from '@kano/kit-app-shell-core/lib/util/fs';
 import { Bundler } from '@kano/kit-app-shell-core/lib/bundler';
-import { ElectronBuildOptions } from './options';
+import { ElectronBuildOptions } from './types';
+import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 
 const writeFile = promisify(fs.writeFile);
 const glob = promisify(globCb);
@@ -97,7 +98,7 @@ function createConfig(config, out) {
         ));
 }
 
-export default function build(opts : ElectronBuildOptions) {
+const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
     const {
         app,
         config,
@@ -134,3 +135,5 @@ export default function build(opts : ElectronBuildOptions) {
             return results[2];
         });
 }
+
+export default electronBuild;

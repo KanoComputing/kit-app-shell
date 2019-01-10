@@ -7,6 +7,7 @@ import * as fs from 'fs';
 import * as platform from './platform';
 import * as globCb from 'glob';
 import * as mkdirpCb from 'mkdirp';
+import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 
 const glob = promisify(globCb);
 const mkdirp = promisify(mkdirpCb);
@@ -25,7 +26,7 @@ function collectPreferences(opts) {
     opts.preferences = Object.assign({}, DEFAULT_PREFERENCES, opts.preferences);
 }
 
-export default (opts) => {
+const iosBuild : IBuild = (opts) => {
     collectPreferences(opts);
     return build({
         ...opts,
@@ -58,3 +59,5 @@ export default (opts) => {
                 });
         });
 };
+
+export default iosBuild;

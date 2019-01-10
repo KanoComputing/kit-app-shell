@@ -1,10 +1,12 @@
 import build from '@kano/kit-app-shell-cordova/lib/build';
 import * as platform from './platform';
+import { IBuild } from '@kano/kit-app-shell-core/lib/types';
+import { AndroidLegacyBuildPreferences, AndroidLegacyBuildOptions } from './types';
 
-module.exports = (opts) => {
+const androidLegacyBuild : IBuild = (opts : AndroidLegacyBuildOptions) => {
     // Force a false on this preference
     // TODO: More advanced configuration of preferences
-    opts.preferences = opts.preferences || {};
+    opts.preferences = opts.preferences || {} as AndroidLegacyBuildPreferences;
     opts.preferences.xwalkMultipleApk = false;
     return build({
         ...opts,
@@ -17,3 +19,5 @@ module.exports = (opts) => {
         },
     });
 };
+
+export default androidLegacyBuild;

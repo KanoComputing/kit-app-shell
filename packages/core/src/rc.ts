@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as deepMerge from 'deepmerge';
 import { promisify } from 'util';
-import { BuildOptions, Options } from './options';
+import { BuildOptions, Options } from './types';
 
 const writeFile = promisify(fs.writeFile);
 

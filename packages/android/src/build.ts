@@ -7,6 +7,8 @@ import * as globCb from 'glob';
 import * as mkdirpCb from 'mkdirp'
 import * as path from 'path';
 import * as fs from 'fs';
+import { CordovaBuildOptions, CordovaPreferences } from '@kano/kit-app-shell-cordova/lib/options';
+import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 
 const mkdirp = promisify(mkdirpCb);
 const glob = promisify(globCb);
@@ -17,15 +19,15 @@ const DEFAULT_PREFERENCES = {
     'android-targetSdkVersion': 28,
 };
 
-function collectPreferences(opts) {
-    opts.preferences = opts.preferences || {};
+function collectPreferences(opts : { preferences : CordovaPreferences }) : void {
+    opts.preferences = opts.preferences || {} as CordovaPreferences;
     collectPreference(opts, 'android-minSdkVersion', 'minSdkVersion');
     collectPreference(opts, 'android-maxSdkVersion', 'maxSdkVersion');
     collectPreference(opts, 'android-targetSdkVersion', 'targetSdkVersion');
     opts.preferences = Object.assign({}, DEFAULT_PREFERENCES, opts.preferences);
 }
 
-export default (opts) => {
+const androidBuild : IBuild = (opts : CordovaBuildOptions) => {
     collectPreferences(opts);
     return build({
         ...opts,
@@ -48,7 +50,7 @@ export default (opts) => {
                         throw new Error('Could not find generated .apk file');
                     }
                     // Move the generated apk to the out directory
-                    const target = path.join(opts.out, path.basename(result));
+                    const target : string = path.join(opts.out, path.basename(result));
                     // Ensure the directory exists
                     return mkdirp(opts.out)
                         .then(() => rename(path.join(dest, result), target))
@@ -57,3 +59,5 @@ export default (opts) => {
                 });
         });
 };
+
+export default androidBuild;

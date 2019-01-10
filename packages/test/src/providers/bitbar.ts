@@ -2,15 +2,12 @@ import { promisify } from 'util';
 import { createReadStream } from 'fs';
 import { post as postCb } from 'request';
 import chalk from 'chalk';
+import { BitBarOptions, IProvider } from '../types';
 
 const post = promisify(postCb);
 
 const BITBAR_HUB = 'https://appium.bitbar.com/wd/hub';
 const BITBAR_UPLOAD = 'https://appium.bitbar.com/upload';
-
-interface BitBarOptions {
-    key : string;
-}
 
 function upload(app, { key } : BitBarOptions) {
     const stream = createReadStream(app);
@@ -33,7 +30,7 @@ function upload(app, { key } : BitBarOptions) {
     }).then(response => JSON.parse(response.body));
 }
 
-export default function saucelabsSetup(app, wd, mocha, opts) {
+const bitbarProvider : IProvider = function (app, wd, mocha, opts) {
     // Retrieve saucelabs options
     const { bitbar } = opts;
     // Authentication options are required, throw an error
@@ -70,3 +67,5 @@ export default function saucelabsSetup(app, wd, mocha, opts) {
         return builder;
     });
 }
+
+export default bitbarProvider;

@@ -1,7 +1,8 @@
-/* eslint no-console: 'off' */
+import { IBuilderFactory } from '@kano/kit-app-shell-core/lib/types';
+import { IProvider } from './types';
 console.warn('@kano/kit-app-shell-test is experimental');
 
-function loadProvider(provider : string) : Promise<any> {
+function loadProvider(provider : string) : Promise<{ default: IProvider }> {
     switch (provider) {
     case 'saucelabs': {
         return import('./providers/saucelabs');
@@ -27,7 +28,7 @@ function loadProvider(provider : string) : Promise<any> {
  * This allows this module and its dependencies to not be installed until users need
  * to run more advanced tests
  */
-export default (wd, mocha, opts) => {
+const getBuilder : IBuilderFactory = (wd, mocha, opts) => {
     return loadProvider(opts.provider)
         .then((provider) => {
             if (!provider) {
@@ -36,3 +37,5 @@ export default (wd, mocha, opts) => {
             return provider.default(opts.prebuiltApp, wd, mocha, opts);
         });
 };
+
+export default getBuilder;

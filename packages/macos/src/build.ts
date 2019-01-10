@@ -7,13 +7,14 @@ import { promisify } from 'util';
 import * as mkdirpCb from 'mkdirp';
 import * as rimrafCb from 'rimraf'
 import { MacosBuildOptions } from './options';
+import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 
 const mkdirp = promisify(mkdirpCb);
 const rimraf = promisify(rimrafCb);
 
 const defaultIconPath = path.join(__dirname, '../icons/1024.png.icns');
 
-export default function macosBuild(opts : MacosBuildOptions) {
+const macosBuild : IBuild =  function (opts : MacosBuildOptions) {
     const {
         app,
         config,
@@ -65,3 +66,5 @@ export default function macosBuild(opts : MacosBuildOptions) {
             return out;
         });
 }
+
+export default macosBuild;

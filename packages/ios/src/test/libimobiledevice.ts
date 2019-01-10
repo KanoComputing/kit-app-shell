@@ -1,6 +1,6 @@
-const { spawn } = require('child_process');
+import { spawn } from 'child_process';
 
-function id() {
+export function id() : Promise<Array<string>> {
     return new Promise((resolve, reject) => {
         const p = spawn('idevice_id', ['-l']);
 
@@ -15,14 +15,10 @@ function id() {
             error += chunk.toString();
         });
         p.on('close', (code) => {
-            if (parseInt(code, 10) !== 0) {
+            if (code !== 0) {
                 return reject(new Error(`Could not run idevice_id: ${error}`));
             }
             return resolve(output.split('\n').filter(i => i && i !== ''));
         });
     });
 }
-
-module.exports = {
-    id,
-};

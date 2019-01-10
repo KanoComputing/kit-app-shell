@@ -2,16 +2,12 @@ import { promisify } from 'util';
 import { post as postCb } from 'request';
 import { createReadStream } from 'fs';
 import chalk from 'chalk';
+import { BrowserstackOptions, IProvider } from '../types';
 
 const post = promisify(postCb);
 
 const BS_UPLOAD_URL = 'https://api-cloud.browserstack.com/app-automate/upload';
 const HUB_URL = 'http://hub-cloud.browserstack.com/wd/hub';
-
-interface BrowserstackOptions {
-    user : string;
-    key : string;
-};
 
 /**
  * Uploads an app to browserstack
@@ -37,7 +33,7 @@ function upload(app, { user, key } : BrowserstackOptions) {
     }).then(response => JSON.parse(response.body));
 }
 
-export default function browserstackSetup(app, wd, mocha, opts) {
+const browserstackProvider : IProvider = function (app, wd, mocha, opts) {
     // Retrieve browserstack options
     const { browserstack } = opts;
     // Authentication options are required, throw an error
@@ -73,3 +69,5 @@ export default function browserstackSetup(app, wd, mocha, opts) {
         return builder;
     });
 }
+
+export default browserstackProvider;

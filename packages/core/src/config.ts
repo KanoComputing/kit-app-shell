@@ -4,7 +4,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as deepMerge from 'deepmerge';
-import { KashConfig } from './options';
+import { KashConfig } from './types';
 
 const DEFAULTS = {
     APP_NAME: 'Unnamed App',

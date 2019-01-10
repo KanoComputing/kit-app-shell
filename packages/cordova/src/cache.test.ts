@@ -32,7 +32,7 @@ suite('ProjectCacheManager', () => {
 
         const cache = new ProjectCacheManager('test-id');
 
-        assert.equal(cache._dbPath, path.join('/test-homedir', '.kit-app-shell-cordova/cache', 'test-id'));
+        assert.equal(cache.dbPath, path.join('/test-homedir', '.kit-app-shell-cordova/cache', 'test-id'));
     });
     test('load', () => {
         const { ProjectCacheManager } = mock.reRequire('./cache');
@@ -43,7 +43,7 @@ suite('ProjectCacheManager', () => {
         return cache.load()
             .then((data) => {
                 assert.equal(data.id, 'test-1');
-                assert.equal(cache._cache.id, 'test-1');
+                assert.equal(cache.cache.id, 'test-1');
             });
     });
     test('save', () => {
@@ -52,11 +52,11 @@ suite('ProjectCacheManager', () => {
 
         const cache = new ProjectCacheManager('test-save');
 
-        cache._cache = { id: 'test-save' };
+        cache.cache = { id: 'test-save' };
 
         return cache.save()
             .then(() => {
-                assert.fileContent('/test-homedir/.kit-app-shell-cordova/cache/test-save', JSON.stringify(cache._cache));
+                assert.fileContent('/test-homedir/.kit-app-shell-cordova/cache/test-save', JSON.stringify(cache.cache));
             });
     });
     teardown(() => {

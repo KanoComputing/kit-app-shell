@@ -13,6 +13,7 @@ import * as packager from 'electron-packager';
 import * as debian from 'debian-packaging';
 import * as commandExists from 'command-exists';
 import { KanoBuildOptions } from './options';
+import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 
 const templateDir = path.join(__dirname, '../deb');
 
@@ -119,7 +120,7 @@ function checkEnv(skipAr = false) : Promise<void> {
         .then(() => null);
 }
 
-export default function kanoBuild(opts : KanoBuildOptions) {
+const kanoBuild : IBuild = function (opts : KanoBuildOptions) {
     const {
         app,
         config,
@@ -194,3 +195,5 @@ export default function kanoBuild(opts : KanoBuildOptions) {
                 .then(() => processState.setSuccess('Created .deb file'));
         });
 }
+
+export default kanoBuild;

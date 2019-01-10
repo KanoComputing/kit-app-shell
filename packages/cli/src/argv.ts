@@ -2,7 +2,7 @@ import { ConfigLoader } from '@kano/kit-app-shell-core/lib/config';
 import { RcLoader } from '@kano/kit-app-shell-core/lib/rc';
 import * as deepMerge from 'deepmerge';
 import { Argv } from './options';
-import { Options, KashConfig } from '@kano/kit-app-shell-core/lib/options';
+import { Options } from '@kano/kit-app-shell-core/lib/types';
 
 function deleteCommandKeys(obj : object) : void {
     [
@@ -43,7 +43,7 @@ function deleteCommandKeys(obj : object) : void {
  * @param {String} platformId Which platform the command should run with
  * @param {String} command The command parsed from the CLI
  */
-export function agregateArgv(argv : Argv, platformId : string, command : string) {
+export function agregateArgv(argv : Argv, platformId : string, command : string) : Promise<Options> {
     // Load config files
     return RcLoader.load(argv.app)
         .then((rcOpts) => {
@@ -70,7 +70,7 @@ export function agregateArgv(argv : Argv, platformId : string, command : string)
         });
 }
 
-export function addConfig(opts : any) : KashConfig {
+export function addConfig(opts : any) : Options {
     const config = ConfigLoader.load(opts.app, opts.env);
     config.BUILD_NUMBER = parseInt(process.env.BUILD_NUMBER, 10) || opts.buildNumber;
     opts.config = config;

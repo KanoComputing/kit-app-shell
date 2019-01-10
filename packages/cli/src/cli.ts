@@ -6,7 +6,7 @@ import * as Api from 'sywac/api';
 // This saves a lot of time as the big modules for building are not loaded is not needed
 import * as platformUtils from '@kano/kit-app-shell-core/lib/util/platform';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
-import { IDisposable } from '@kano/kit-app-shell-core/lib/options';
+import { IDisposable } from '@kano/kit-app-shell-core/lib/types';
 import chalk from 'chalk';
 import { Sywac, Argv } from './options';
 

@@ -2,6 +2,7 @@ import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import  { serve } from './serve';
 import chalk from 'chalk';
 import { AddressInfo } from 'net';
+import { IRun } from '@kano/kit-app-shell-core/lib/types';
 
 type WebRunOptions = {
     app : string;
@@ -9,7 +10,7 @@ type WebRunOptions = {
     port : number;
 };
 
-export default function run({ app, config = {}, port = 8000 } : WebRunOptions) {
+const webRun : IRun = function ({ app, config = {}, port = 8000 } : WebRunOptions) {
     const server = serve(app, config).listen(port);
 
     const address = server.address() as AddressInfo;
@@ -19,3 +20,5 @@ export default function run({ app, config = {}, port = 8000 } : WebRunOptions) {
     // Never resolves, to let the CLI hang while the server runs
     return new Promise(() => {});
 };
+
+export default webRun;

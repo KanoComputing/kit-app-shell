@@ -3,13 +3,9 @@ import { basename } from 'path';
 import chalk from 'chalk';
 import { promisify } from 'util';
 import { post as postCb } from 'request';
+import { IProvider, SaucelabsOptions } from '../types';
 
 const post = promisify(postCb);
-
-interface SaucelabsOptions {
-    user: string;
-    key : string;
-}
 
 function uploadForEmulator(app, { user, key } : SaucelabsOptions) {
     const filename = basename(app);
@@ -27,7 +23,7 @@ function uploadForEmulator(app, { user, key } : SaucelabsOptions) {
     }).then(response => JSON.parse(response.body));
 }
 
-function saucelabsSetup(app, wd, mocha, opts) {
+const saucelabsProvider : IProvider = function saucelabsSetup(app, wd, mocha, opts) {
     // Retrieve saucelabs options
     const { saucelabs } = opts;
     // Authentication options are required, throw an error
@@ -63,4 +59,4 @@ function saucelabsSetup(app, wd, mocha, opts) {
     });
 }
 
-module.exports = saucelabsSetup;
+export default saucelabsProvider;

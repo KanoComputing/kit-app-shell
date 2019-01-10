@@ -1,0 +1,110 @@
+import { BuildOptions, RunOptions } from '@kano/kit-app-shell-core/lib/types';
+
+// From cordova documentation. See https://cordova.apache.org/docs/en/latest/guide/appdev/hooks/
+export type Hooks = {
+    before_platform_add? : Array<string>;
+    after_platform_add? : Array<string>;
+    before_platform_rm? : Array<string>;
+    after_platform_rm? : Array<string>;
+    before_platform_ls? : Array<string>;
+    after_platform_ls? : Array<string>;
+    before_prepare? : Array<string>;
+    after_prepare? : Array<string>;
+    before_compile? : Array<string>;
+    after_compile? : Array<string>;
+    before_deploy? : Array<string>;
+    before_build? : Array<string>;
+    after_build? : Array<string>;
+    before_emulate? : Array<string>;
+    after_emulate? : Array<string>;
+    before_run? : Array<string>;
+    after_run? : Array<string>;
+    before_serve? : Array<string>;
+    after_serve? : Array<string>;
+    before_clean? : Array<string>;
+    after_clean? : Array<string>;
+    pre_package? : Array<string>;
+    before_plugin_add? : Array<string>;
+    after_plugin_add? : Array<string>;
+    before_plugin_rm? : Array<string>;
+    after_plugin_rm? : Array<string>;
+    before_plugin_ls? : Array<string>;
+    after_plugin_ls? : Array<string>;
+    before_plugin_search? : Array<string>;
+    after_plugin_search? : Array<string>;
+    before_plugin_install? : Array<string>;
+    after_plugin_install? : Array<string>;
+    before_plugin_uninstall? : Array<string>;
+};
+
+export type CordovaPreferences = {
+    AllowInlineMediaPlayback? : boolean;
+    AndroidLaunchMode? : string;
+    ['android-maxSdkVersion']? : number;
+    ['android-minSdkVersion']? : number;
+    ['android-targetSdkVersion']? : number;
+    AppendUserAgent? : string;
+    BackgroundColor? : string;
+    BackupWebStorage? : string;
+    CordovaWebViewEngine? : string;
+    CordovaDefaultWebViewEngine? : string;
+    DefaultVolumeStream? : string;
+    DisallowOverscroll? : boolean;
+    EnableViewportScale? : boolean;
+    EnableWebGL? : boolean;
+    ErrorUrl? : string;
+    ForegroundText? : string;
+    FullScreen? : boolean;
+    GapBetweenPages? : number;
+    HideMousePointer? : number;
+    InAppBrowserStorageEnabled ? : boolean;
+    KeepRunning? : boolean;
+    KeyboardDisplayRequiresUserAction? : boolean;
+    LoadUrlTimeoutValue? : number;
+    LoadingDialog? : string;
+    LogLevel? : string;
+    MediaPlaybackAllowsAirPlay? : boolean;
+    MediaPlaybackRequiresUserAction? : boolean;
+    ['Min/Max Version']? : RegExp;
+    Orientation? : string;
+    OSXLocalStoragePath? : string;
+    OverrideUserAgent? : string;
+    PageLength? : number;
+    PaginationBreakingMode? : string;
+    PaginationMode? : string;
+    SetFullscreen? : boolean;
+    ShowTitle? : boolean;
+    SplashScreenBackgroundColor : string;
+    Suppresses3DTouchGesture? : boolean;
+    SuppressesIncrementalRendering? : boolean;
+    SuppressesLongPressGesture? : boolean;
+    TopActivityIndicator? : string;
+    ['uap-target-min-version']? : string;
+    UIWebViewDecelerationSpeed? : string;
+    WindowSize? : string;
+    WindowsDefaultUriPrefix? : string;
+    WindowsStoreDisplayName? : string;
+    WindowsStoreIdentityName? : string;
+    WindowsStorePublisherName? : string;
+    WindowsToastCapable? : boolean;
+    ['deployment-target']? : string;
+    ['target-device']? : string;
+    ['windows-phone-target-version']? : string;
+    ['windows-target-version']? : string;
+};
+
+export type CordovaBuildOptions = CordovaOptions & BuildOptions & {
+    clean? : Array<string>;
+    run: boolean;
+    buildOpts: {};
+};
+
+export interface CordovaOptions {
+    plugins : Array<string>;
+    platforms : Array<string>;
+    hooks : Hooks;
+    cacheId : string;
+    preferences : CordovaPreferences;
+};
+
+export type CordovaRunOptions = CordovaOptions & RunOptions;

@@ -11,7 +11,8 @@ import { cordova } from 'cordova-lib';
 import * as ip from 'ip';
 import * as livereload from 'livereload';
 import { AddressInfo } from 'net';
-import { CordovaRunOptions } from './options';
+import { CordovaRunOptions } from './types';
+import { IRun } from '@kano/kit-app-shell-core/lib/types';
 
 const namedResolutionMiddleware = require('@kano/es6-server/named-resolution-middleware');
 
@@ -74,7 +75,7 @@ function setupTunnel(app : string) : Promise<Tunnel> {
         });
 }
 
-const run = (opts : CordovaRunOptions) : Promise<any> => Promise.all([
+const cordovaRun : IRun = (opts : CordovaRunOptions) => Promise.all([
     setupTunnel(opts.app),
     getProject({
         ...opts,
@@ -125,4 +126,4 @@ const run = (opts : CordovaRunOptions) : Promise<any> => Promise.all([
             });
     });
 
-export default run;
+export default cordovaRun;

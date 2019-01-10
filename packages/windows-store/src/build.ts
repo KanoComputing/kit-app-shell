@@ -9,6 +9,8 @@ import * as mkdirpCb from 'mkdirp';
 import * as rimrafCb from 'rimraf';
 import { generateIcons, filenameFromIconKey, deleteDefaultIcons } from './icons';
 import { AppXManifest } from './manifest';
+import { IBuild } from '@kano/kit-app-shell-core/lib/types';
+import { WindowsStoreBuildOptions } from './types';
 
 const mkdirp = promisify(mkdirpCb);
 const rimraf = promisify(rimrafCb);
@@ -45,10 +47,10 @@ function updateAppx(root : string, app : string, src? : string) : Promise<void> 
         });
 }
 
-export default (opts) : Promise<string> => {
+const windowsStoreBuild : IBuild = (opts : WindowsStoreBuildOptions) => {
     const {
         app,
-        config = {},
+        config,
         out,
         certificates,
         windowsKit,
@@ -96,7 +98,7 @@ export default (opts) : Promise<string> => {
                 packageVersion: `${config.UI_VERSION}.0`,
                 packageName: WINDOWS_STORE.PACKAGE_NAME,
                 packageDisplayName: WINDOWS_STORE.PACKAGE_DISPLAY_NAME,
-                packageDescription: config.DESCRIPTION,
+                packageDescription: config.APP_DESCRIPTION,
                 packageExecutable: `app\\${config.APP_NAME}.exe`,
                 publisher: WINDOWS_STORE.PUBLISHER,
                 publisherDisplayName: WINDOWS_STORE.PUBLISHER_DISPLAY_NAME,
@@ -114,3 +116,5 @@ export default (opts) : Promise<string> => {
             return outDir;
         });
 };
+
+export default windowsStoreBuild;

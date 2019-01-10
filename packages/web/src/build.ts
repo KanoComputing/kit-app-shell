@@ -2,11 +2,12 @@ import { Bundler } from '@kano/kit-app-shell-core/lib/bundler';
 import * as path from 'path';
 import { promisify } from 'util';
 import * as rimrafCb from 'rimraf';
+import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 const rimraf = promisify(rimrafCb);
 
 type WebBuildOptions = any;
 
-export default function build(opts : WebBuildOptions) {
+const webBuild : IBuild = function build(opts : WebBuildOptions) {
     const {
         app,
         config = {},
@@ -44,3 +45,5 @@ export default function build(opts : WebBuildOptions) {
         ))
         .then(bundle => Bundler.write(bundle, out));
 }
+
+export default webBuild;

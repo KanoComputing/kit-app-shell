@@ -1,11 +1,7 @@
 import cli from '@kano/kit-app-shell-cordova/lib/cli';
+import { ICli } from '@kano/kit-app-shell-core/lib/types';
 
-export default Object.assign({}, cli, {
+const iosCli : ICli = {
+    ...cli,
     group: 'iOS:',
-    test(sywac) {
-        sywac.boolean('--browserstack', {
-            defaultValue: false,
-            desc: 'Run the tests on browserstack',
-        });
-    },
-});
+};

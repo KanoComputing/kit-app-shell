@@ -1,4 +1,6 @@
-export default {
+import { ICli } from '@kano/kit-app-shell-core/lib/types';
+
+const kanoCli : ICli = {
     group: 'KanoOS:',
     build(sywac) {
         sywac.boolean('--skip-ar', {
@@ -7,3 +9,5 @@ export default {
         });
     },
 };
+
+export default kanoCli;

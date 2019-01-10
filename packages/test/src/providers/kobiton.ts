@@ -4,14 +4,10 @@ import chalk from 'chalk';
 import { promisify } from 'util';
 
 import { post as postCb, put as putCb } from 'request';
+import { KobitonOptions, IProvider } from '../types';
 
 const post = promisify(postCb);
 const put = promisify(putCb);
-
-interface KobitonOptions {
-    user : string;
-    key : string;
-}
 
 function upload(app, { user, key } : KobitonOptions) {
     const stat = statSync(app);
@@ -62,7 +58,7 @@ function getConfig(opts, key) {
     return value;
 }
 
-export default function kobitonSetup(app, wd, mocha, opts) {
+const kobitonProvider : IProvider = function kobitonSetup(app, wd, mocha, opts) {
     // Retrieve saucelabs options
     const kobiton = getConfig(opts, 'kobiton');
     const { user, key } = kobiton;
@@ -94,3 +90,5 @@ export default function kobitonSetup(app, wd, mocha, opts) {
         return builder;
     });
 }
+
+export default kobitonProvider;

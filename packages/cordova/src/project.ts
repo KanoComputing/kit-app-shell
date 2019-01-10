@@ -10,6 +10,7 @@ import { CordovaConfig } from './cordova-config';
 import { chdir } from './chdir';
 import * as mkdripCb from 'mkdirp';
 import * as rimrafCb from 'rimraf';
+import { CordovaRunOptions } from './types';
 
 const mkdirp = promisify(mkdripCb);
 const rimraf = promisify(rimrafCb);
@@ -40,12 +41,13 @@ function cleanProject(root) {
     return rimraf(wwwPath)
         .then(() => mkdirp(wwwPath));
 }
+
 /**
  * Creates a cordova project with the platforms, plugins and hooks provided
  * @param {Object} opts All the options provided to the command
  * @param {String} hash Hash key of the config
  */
-function createProject(opts, hash) {
+function createProject(opts : CordovaRunOptions, hash : string) {
     const {
         app,
         config,
@@ -125,7 +127,7 @@ function createProject(opts, hash) {
  * Retrieves a previously created project using the config's hash as a key
  * Will create and cache a project if none was found
  */
-export function getProject(opts) {
+export function getProject(opts : CordovaRunOptions & { skipCache : boolean }) {
     const cache = new ProjectCacheManager(opts.cacheId);
 
     processState.setStep(STEP_PREFIX);
