@@ -4,19 +4,19 @@ import { IReporter } from './reporter';
 export default class ConsoleReporter implements IReporter {
     start() {}
     stop() {}
-    onStep(message : string) {
+    onStep(message : string) : void {
         console.log(message);
     }
-    onSuccess(message : string) {
+    onSuccess(message : string) : void {
         console.log(message);
     }
-    onFailure(message : Error) {
+    onFailure(message : Error) : void {
         console.error(message);
     }
-    onWarning(message : string) {
+    onWarning(message : string) : void {
         console.log(message);
     }
-    onInfo(message : string) {
+    onInfo(message : string) : void {
         console.log(message);
     }
 }

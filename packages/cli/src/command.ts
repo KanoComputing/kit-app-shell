@@ -1,8 +1,9 @@
 import { util } from '@kano/kit-app-shell-core/lib/util';
 import { log } from '@kano/kit-app-shell-core/lib/log';
 import { agregateArgv, addConfig } from './argv';
+import { Argv } from './options';
 
-export default function runCommand(command, platformId, argv) {
+export default function runCommand(command : string, platformId : string, argv : Argv) : Promise<void> {
     return util.platform.loadPlatformKey(platformId, command)
         .then((platformCommand) => {
             // Collect all the options

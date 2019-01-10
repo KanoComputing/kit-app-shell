@@ -19,7 +19,10 @@ export interface Bundle {
     html : BundledFile;
     js : Array<BundledFile>;
     appJs : Array<BundledFile>;
-    appStatic: {};
+    appStatic : {
+        root : string;
+        files : Array<string>;
+    };
 }
 
 export interface CopyTask {
@@ -42,11 +45,29 @@ export interface BundleSourceOptions {
 export interface KashConfig {
     APP_NAME : string;
     APP_ID : string;
+    VERSION : string;
+    UI_VERSION : string;
+    ENV : string;
+    UI_ROOT : string;
+    APP_SRC : string;
+    BUILD_NUMBER : string;
 }
 
-export type BuildOptions = BundleSourceOptions & {
+export type Options = {
     app : string;
     config : KashConfig;
     out : string;
     tmpdir? : string;
+}
+
+export type BuildOptions = Options & BundleSourceOptions;
+
+export type RunOptions = {
+    app : string;
+    config : KashConfig;
+    tmpdir? : string;
+};
+
+export interface IDisposable {
+    dispose();
 }

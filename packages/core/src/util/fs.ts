@@ -17,7 +17,7 @@ interface CopyOptions {
  * Allows to pass an optional transform stream
  * TODO: Use fs.copyFile is exists and no transform is required for speed improvements
  */
-function _copy(src : string, dest : string, options : CopyOptions = {}) {
+function _copy(src : string, dest : string, options : CopyOptions = {}) : Promise<void> {
     const { transform = null, writeOptions = null } = options;
     return new Promise((resolve, reject) => {
         const read = fs.createReadStream(src);
@@ -42,13 +42,13 @@ function _copy(src : string, dest : string, options : CopyOptions = {}) {
 /**
  * Safely copies a file, creating the target directory if needed
  */
-export function copy(src : string, dest : string, opts? : CopyOptions) {
+export function copy(src : string, dest : string, opts? : CopyOptions) : Promise<void> {
     const out = path.dirname(dest);
     return mkdirp(out)
         .then(() => _copy(src, dest, opts));
 }
 
-export function fromTemplate(tmpPath : string, dest : string, options : {}, writeOptions? : {}) {
+export function fromTemplate(tmpPath : string, dest : string, options : {}, writeOptions? : {}) : Promise<void> {
     const transform = replace(/\$\{(.*?)\}/g, (match, g1) => options[g1] || '');
     return copy(tmpPath, dest, {
         transform,
