@@ -26,13 +26,6 @@ pipeline {
                 }
             }
         }
-        stage('checkstyle') {
-            steps {
-                script {
-                    sh "yarn checkstyle-ci"
-                }
-            }
-        }
         stage('test') {
             steps {
                 script {
@@ -44,7 +37,6 @@ pipeline {
     post {
         always {
             junit allowEmptyResults: true, testResults: 'packages/**/test-results.xml'
-            step([$class: 'CheckStylePublisher', pattern: 'eslint.xml'])
         }
         regression {
             notify_culprits currentBuild.result
