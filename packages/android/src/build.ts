@@ -7,7 +7,7 @@ import * as globCb from 'glob';
 import * as mkdirpCb from 'mkdirp'
 import * as path from 'path';
 import * as fs from 'fs';
-import { CordovaBuildOptions, CordovaPreferences } from '@kano/kit-app-shell-cordova/lib/options';
+import { CordovaBuildOptions, CordovaPreferences } from '@kano/kit-app-shell-cordova/lib/types';
 import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 
 const mkdirp = promisify(mkdirpCb);
