@@ -1,7 +1,0 @@
-node_modules
-www
-out
-coverage
-test
-packages/electron/app
-packages/ios/lib/plugin
