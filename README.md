@@ -36,7 +36,7 @@ Also contains utilities like logging and config loading
 
 Kash CLI. Run, build, test from your command line.
 
-## [@kano/kit-app-shell-test](./packages/test)
+### [@kano/kit-app-shell-test](./packages/test)
 
 Utilities to run tests on remote device providers.
 
