@@ -10351,7 +10351,7 @@ shared-preferences-builder@^0.0.4:
     lodash "^4.17.4"
     xmlbuilder "^9.0.1"
 
-sharp@^0.21.0:
+sharp@^0.21.0, sharp@^0.21.1:
   version "0.21.1"
   resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.21.1.tgz#21e3f3a4271039b0e95ac3c58baea475ee6fb661"
   integrity sha512-XPRi/nosSHk2GG6Zl+uquJ8vZ+00TpNjzrSKah4DGBHYXRxw7nixBBBewJtw3jetUJi0Oaw/n6AO3/myDVVqFg==
