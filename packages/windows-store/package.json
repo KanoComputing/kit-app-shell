@@ -8,8 +8,10 @@
     "@kano/kit-app-shell-windows": "^0.0.3-alpha.4",
     "chalk": "^2.4.1",
     "electron-windows-store": "^2.1.0",
+    "elementtree": "^0.1.7",
     "mkdirp": "^0.5.1",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "sharp": "^0.21.1"
   },
   "publishConfig": {
     "access": "public"

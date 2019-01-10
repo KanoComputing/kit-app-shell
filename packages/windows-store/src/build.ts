@@ -7,13 +7,45 @@ import chalk from 'chalk';
 import * as convertToWindowsStore from 'electron-windows-store';
 import * as mkdirpCb from 'mkdirp';
 import * as rimrafCb from 'rimraf';
+import { generateIcons, filenameFromIconKey, deleteDefaultIcons } from './icons';
+import { AppXManifest } from './manifest';
 
 const mkdirp = promisify(mkdirpCb);
 const rimraf = promisify(rimrafCb);
 
 const TMP_DIRNAME = 'kash-windows-store-build';
 
-export default (opts) => {
+/**
+ * Updates the appx manifest and generates the appx icons
+ * @param root Path to the root of the pre-appx directory
+ * @param src Source image for the icons generation
+ */
+function updateAppx(root : string, app : string, src? : string) : Promise<void> {
+    // Skip icon generation if no src is provided
+    if (!src) {
+        return Promise.resolve();
+    }
+    return deleteDefaultIcons(root)
+        .then(() => generateIcons(root, src))
+        .then(() => {
+            // Retrieve the appxmanifest file
+            const manifestPath = path.join(root, 'AppXManifest.xml');
+            const manifest = new AppXManifest(manifestPath);
+            return manifest.open()
+                .then(() => {
+                    // Update all known icons adn tiles
+                    manifest.setLogo(app, 'Square150x150Logo', path.join('assets', filenameFromIconKey('Square150x150Logo')));
+                    manifest.setLogo(app, 'Square44x44Logo', path.join('assets', filenameFromIconKey('Square44x44Logo')));
+                    manifest.setDefaultTile(app, 'Wide310x150Logo', path.join('assets', filenameFromIconKey('Wide310x150Logo')));
+                    manifest.setDefaultTile(app, 'Square310x310Logo', path.join('assets', filenameFromIconKey('Square310x310Logo')));
+                    manifest.setDefaultTile(app, 'Square71x71Logo', path.join('assets', filenameFromIconKey('Square71x71Logo')));
+                    manifest.setMainLogo(path.join('assets', filenameFromIconKey('Square50x50Logo')));
+                    return manifest.write();
+                });
+        });
+}
+
+export default (opts) : Promise<string> => {
     const {
         app,
         config = {},
@@ -30,7 +62,7 @@ export default (opts) => {
         throw new Error('Could not create appx: Missing \'PUBLISHER\' in \'WINDOWS_STORE\' config');
     }
     if (!windowsKit || !certificates || !certificates[WINDOWS_STORE.PUBLISHER]) {
-        throw new Error(`Could not create appx: Missing certificates in rc.\n    Run ${chalk.cyan('kash config windows-store')} and input certificate ${chalk.blue(WINDOWS_STORE.PUBLISHER)} when requested to fix this.`);
+        throw new Error(`Could not create appx: Missing certificates in rc.\n    Run ${chalk.cyan('kash configure windows-store')} and input certificate ${chalk.blue(WINDOWS_STORE.PUBLISHER)} when requested to fix this.`);
     }
     const devCert = certificates[WINDOWS_STORE.PUBLISHER];
     // Force disable updater
@@ -51,6 +83,10 @@ export default (opts) => {
                 skipInstaller: true,
             }))
         .then((buildDir) => {
+            const icon : string|null = config.ICONS && config.ICONS.WINDOWS_STORE ? path.join(app, config.ICONS.WINDOWS_STORE) : null;
+            if (icon === null) {
+                processState.setWarning('Missing \'ICONS.WINDOWS_STORE\' in config, will use default icon');
+            }
             processState.setStep('Creating appx');
             // Create the .appx from the bundled app
             return convertToWindowsStore({
@@ -67,6 +103,10 @@ export default (opts) => {
                 windowsKit,
                 devCert,
                 deploy: false,
+                finalSay() {
+                    const preAppx = path.join(out, 'pre-appx');
+                    return updateAppx(preAppx, WINDOWS_STORE.PACKAGE_NAME, icon);
+                }
             }).then(() => out);
         })
         .then((outDir) => {
