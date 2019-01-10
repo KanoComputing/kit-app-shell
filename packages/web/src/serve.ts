@@ -19,5 +19,5 @@ export const serve = (root, config : any = {}) => connect()
     .use(cors())
     .use(history())
     .use('/www', namedResolutionMiddleware({ root }))
-    .use(serveStatic(path.join(__dirname, '../www')), { fallthrough: true })
+    .use(serveStatic(path.join(__dirname, '../www')))
     .use('/www', serveStatic(root));
