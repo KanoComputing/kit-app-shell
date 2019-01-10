@@ -29,7 +29,7 @@ suite('build', () => {
 
         const build = mock.reRequire('./build');
 
-        return build.default({});
+        return build.default({ config: {} });
     });
 
     teardown(() => {

@@ -48,6 +48,7 @@ suite('electron build', () => {
         return build.default({
             app: '/app',
             out: '/out',
+            config: {},
         }).then(() => {
             assert.jsonSchemaFile('/out/config.json', {
                 $schema: 'http://json-schema.org/draft-06/schema#',

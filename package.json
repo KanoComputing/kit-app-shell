@@ -10,7 +10,8 @@
     "test": "lerna run test",
     "test-ci": "lerna run test-ci",
     "checkstyle": "eslint ./",
-    "checkstyle-ci": "yarn checkstyle -f checkstyle -o eslint.xml"
+    "checkstyle-ci": "yarn checkstyle -f checkstyle -o eslint.xml",
+    "prepublishOnly": "tsc -b"
   },
   "devDependencies": {
     "@kano/eslint-config": "^1.0.0",

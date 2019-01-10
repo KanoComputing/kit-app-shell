@@ -41,7 +41,7 @@ suite('macOS build', () => {
         const build = mock.reRequire('./build');
         return Promise.all([
             didReceiveWarning,
-            build.default({ app: '/app', out: '/out' }),
+            build.default({ app: '/app', out: '/out', config: {} }),
         ]);
     });
     test('provided', () => {

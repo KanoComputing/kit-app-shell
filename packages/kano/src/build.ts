@@ -181,7 +181,7 @@ export default function kanoBuild(opts : KanoBuildOptions) {
                 createControl(targetDir, config),
                 copyExtra(app, targetDir, config),
             ];
-            return Promise.all(tasks).then(() => targetDir);
+            return Promise.all(tasks as Array<Promise<void>>).then(() => targetDir);
         })
         .then((dir) => {
             processState.setSuccess('Debian package ready');

@@ -17,7 +17,9 @@ This repository contains the CLI, core module and platform implementation for th
 
 This repository uses lerna and yarn workspaces to manage dependencies, development and tests of its packages.
 
-To start, run `lerna bootstrap` then you can work on one of the following:
+Pull the dependencies with `lerna bootstrap`.
+
+Use `yarn tsc -b --watch` to run the typescript compiler on the whole codebase. This will watch changes and run incremental builds, then you can work on one of the following:
 
 ## Packages
 

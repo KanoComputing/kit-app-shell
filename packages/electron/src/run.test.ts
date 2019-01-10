@@ -17,7 +17,7 @@ suite('electron run', () => {
             spawn(cmd, args, opts) {
                 assert.equal(args[0], '.');
                 assert.equal(args[2], '/app');
-                assert.equal(opts.stdio, 'inherit');
+                assert.equal(opts._showOutput, true);
                 assert.equal(opts.cwd, path.join(__dirname, '../app'));
                 return {
                     stdout: new Readable({ read() {} }),
@@ -30,24 +30,16 @@ suite('electron run', () => {
                 };
             },
         });
-        const expectServerToClose = new Promise((resolve) => {
-            mock('livereload', {
-                createServer() {
-                    return {
-                        watch() {},
-                        close() {
-                            resolve();
-                        },
-                    };
-                },
-            });
+        mock('livereload', {
+            createServer() {
+                return {
+                    watch() {},
+                    close() {},
+                };
+            },
         });
         const run = mock.reRequire('./run');
-        return run.default({ app: '/app' }, {})
-            .then(() => {
-                closeCb();
-                return expectServerToClose;
-            });
+        run.default({ app: '/app' }, {});
     });
     test('electron throws an error', () => {
         mock('child_process', {
