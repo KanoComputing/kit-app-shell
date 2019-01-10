@@ -22,6 +22,7 @@ pipeline {
                 script {
                     sshagent(['read-only-github']) {
                         sh "yarn"
+                        sh "yarn tsc -b"
                     }
                 }
             }
