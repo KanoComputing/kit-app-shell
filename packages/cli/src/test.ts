@@ -1,7 +1,7 @@
 import { loadPlatformKey } from '@kano/kit-app-shell-core/lib/util/platform';
 import { test } from '@kano/kit-app-shell-core/lib/test';
 import { agregateArgv, addConfig } from './argv';
-import { Argv } from './options';
+import { Argv } from './types';
 import { IBuilderFactory } from '@kano/kit-app-shell-core/lib/types';
 
 export default function runTest(argv : Argv, platformId : string, command : string) : Promise<any> {

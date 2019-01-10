@@ -12,7 +12,7 @@ import * as rimraf from 'rimraf';
 import * as packager from 'electron-packager';
 import * as debian from 'debian-packaging';
 import * as commandExists from 'command-exists';
-import { KanoBuildOptions } from './options';
+import { KanoBuildOptions } from './types';
 import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 
 const templateDir = path.join(__dirname, '../deb');

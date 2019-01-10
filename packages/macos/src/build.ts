@@ -6,7 +6,7 @@ import * as packager from 'electron-packager';
 import { promisify } from 'util';
 import * as mkdirpCb from 'mkdirp';
 import * as rimrafCb from 'rimraf'
-import { MacosBuildOptions } from './options';
+import { MacosBuildOptions } from './types';
 import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 
 const mkdirp = promisify(mkdirpCb);

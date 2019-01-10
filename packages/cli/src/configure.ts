@@ -5,7 +5,7 @@ import { util } from '@kano/kit-app-shell-core/lib/util';
 import { RcLoader } from '@kano/kit-app-shell-core/lib/rc';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import chalk from 'chalk';
-import { Argv } from './options';
+import { Argv } from './types';
 
 export default function configure(argv : Argv, platformId : string) : Promise<void> {
     processState.setInfo(`Configuring options for platform ${chalk.green(platformId)}`);

@@ -1,7 +1,7 @@
 import { ConfigLoader } from '@kano/kit-app-shell-core/lib/config';
 import { RcLoader } from '@kano/kit-app-shell-core/lib/rc';
 import * as deepMerge from 'deepmerge';
-import { Argv } from './options';
+import { Argv } from './types';
 import { Options } from '@kano/kit-app-shell-core/lib/types';
 
 function deleteCommandKeys(obj : object) : void {

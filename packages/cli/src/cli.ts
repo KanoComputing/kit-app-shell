@@ -8,7 +8,7 @@ import * as platformUtils from '@kano/kit-app-shell-core/lib/util/platform';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import { IDisposable } from '@kano/kit-app-shell-core/lib/types';
 import chalk from 'chalk';
-import { Sywac, Argv } from './options';
+import { Sywac, Argv } from './types';
 
 type ProcessState = typeof processState;
 
