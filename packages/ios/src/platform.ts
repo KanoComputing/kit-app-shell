@@ -9,7 +9,7 @@ const plugins = [
     getModulePath('cordova-plugin-blob-constructor-polyfill'),
     getModulePath('cordova-plugin-ios-ble-permissions'),
     getModulePath('cordova-plugin-protocol'),
-    path.join(__dirname, 'plugin'),
+    path.join(__dirname, '../plugin'),
 ];
 
 const hooks = {
