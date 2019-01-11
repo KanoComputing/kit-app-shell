@@ -14,7 +14,7 @@ yarn add @kano/kit-app-shell-macos
 yarn add @kano/kit-app-shell-ios
 
 # Build an *.ipa for iOS using Cordova
-kash build ios ./your-app-dir
+kash build ios ./your-app-dir --out ./build-dir
 
 # Run your app using electron on macOS
 kash run macos ./your-app-dir
@@ -26,9 +26,67 @@ Depending on the platforms you're planning to use, you might need to set up a di
 
 _TODO: Figure this out._
 
-## Creating a New App
+## Quickstart Guide
 
-_TODO_
+This guide will explain how to set up a minimal app using kash and run it on all the supported platforms. We'll start with an empty directory:
+
+```sh
+mkdir kash-example
+cd kash-example
+```
+
+Then we install the `kash` CLI and the _web_ platform to start.
+
+```sh
+yarn add @kano/kit-app-shell-cli
+yarn add @kano/kit-app-shell-web
+```
+
+We need to create a default config file and set the `APP_ID` and `APP_NAME` options. These will be used by Cordova/Electron under the hood when building the files. `kash` will be looking for the configuration in the `config/` directory.
+
+```sh
+mkdir config
+```
+
+It always loads `config/default.json`. You can also provide further environment-specific configuration (e.g., `staging.json`, `production.json`). To learn more about configuration, see the [TODO comprehensive guide](#TODO). We'll only create `default.json` with the following content:
+
+```json
+{
+    "APP_ID": "com.example.app",
+    "APP_NAME": "Example App"
+}
+```
+
+Finally, we need to define the main class. The shell will use it to bootstrap the UI. We'll create `index.js` in the root of our project with the following code:
+
+```js
+class ExampleApp {
+    constructor(bus, config) {
+        this.root = document.createElement('div');
+        this.root.innerText = `${config.APP_NAME} - ${config.ENV}`;
+    }
+}
+
+Shell.define(ExampleApp);
+```
+
+The only thing we need to do is to set up the root element in the constructor. Note the available parameters. You can use `bus` to communicate with devices and `config` to access the app configuration.
+
+Now we can test the setup. We'll use the version of kash installed in the project tree.
+
+```sh
+./node_modules/.bin/kash run web .
+```
+
+The _web_ platform will start a local server:
+
+![server](https://user-images.githubusercontent.com/169328/51049160-f1710500-15c4-11e9-9e05-b2b6110fe7ec.png)
+
+Going to `http://localhost:4000` will load our new app:
+
+![browser](https://user-images.githubusercontent.com/169328/51049159-f03fd800-15c4-11e9-9e6c-10952bf399a1.png)
+
+_TODO_ more platforms.
 
 ## Development
 
