@@ -3,3 +3,4 @@ app/node_modules
 test
 out
 coverage
+src
