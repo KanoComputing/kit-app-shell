@@ -32,12 +32,15 @@ if (!window.KitAppShellConfig) {
     p = loadConfig();
 }
 
+const DEFAULT_BACKGROUND_COLOR = '#ffffff';
+
 p
     .then((config) => {
         Object.assign(config, {
             OS_PLATFORM: 'web',
             OS_VERSION: navigator.userAgent,
         });
+        document.body.style.backgroundColor = config.BACKGROUND_COLOR || DEFAULT_BACKGROUND_COLOR;
         window.Shell = {
             defined: false,
             define(UIClass) {

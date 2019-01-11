@@ -17,6 +17,8 @@ const DEFAULTS = {
     APP_NAME: 'Kano Desktop Application',
 };
 
+const DEFAULT_BACKGROUND_COLOR = '#ffffff';
+
 class App {
     static getIcon(config) {
         if (process.platform !== 'darwin' || !config.ICONS || !config.ICONS.WINDOWS) {
@@ -78,6 +80,7 @@ class App {
                 icon,
                 show: false,
                 autoHideMenuBar: true,
+                backgroundColor: config.BACKGROUND_COLOR || DEFAULT_BACKGROUND_COLOR,
             }
         });
 

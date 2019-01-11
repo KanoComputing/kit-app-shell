@@ -14,5 +14,6 @@
         "PACKAGE_DISPLAY_NAME": "Sample App",
         "PUBLISHER": "CN=Publisher",
         "PUBLISHER_DISPLAY_NAME": "Publisher"
-    }
+    },
+    "BACKGROUND_COLOR": "#FFCBAD"
 }

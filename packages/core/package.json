@@ -30,7 +30,6 @@
     "@babel/preset-env": "^7.2.3",
     "acorn": "^6.0.4",
     "acorn-walk": "^6.1.1",
-    "chai-fs": "^2.0.0",
     "deepmerge": "^3.0.0",
     "escape-regexp": "^0.0.1",
     "glob": "^7.1.3",

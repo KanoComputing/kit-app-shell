@@ -1,7 +1,13 @@
 import { ReplaceOptions } from './plugins/replace';
 
+export interface BundleHtmlOptions {
+    replacements? : {
+        [propName : string] : string;
+    };
+};
+
 export interface BundleOptions {
-    html : {};
+    html : BundleHtmlOptions;
     js : BundleSourceOptions;
     appJs : BundleAppOptions;
 };
@@ -52,6 +58,7 @@ export interface KashConfig {
     UI_ROOT? : string;
     APP_SRC? : string;
     BUILD_NUMBER? : string;
+    BACKGROUND_COLOR? : string;
 };
 
 export type Options = {

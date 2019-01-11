@@ -2,15 +2,17 @@ import { Bundler } from '@kano/kit-app-shell-core/lib/bundler';
 import * as path from 'path';
 import { promisify } from 'util';
 import * as rimrafCb from 'rimraf';
-import { IBuild } from '@kano/kit-app-shell-core/lib/types';
+import { IBuild, BuildOptions, KashConfig } from '@kano/kit-app-shell-core/lib/types';
 const rimraf = promisify(rimrafCb);
 
-type WebBuildOptions = any;
+type WebBuildOptions = BuildOptions;
+
+const DEFAULT_BACKGROUND_COLOR = '#ffffff';
 
 const webBuild : IBuild = function build(opts : WebBuildOptions) {
     const {
         app,
-        config = {},
+        config = {} as KashConfig,
         out,
         bundleOnly,
         resources = [],
@@ -40,7 +42,15 @@ const webBuild : IBuild = function build(opts : WebBuildOptions) {
                     targets,
                     babelExclude,
                 },
-                html: {},
+                html: {
+                    replacements: {
+                        head: `<style>
+                            html, body {
+                                background-color: ${config.BACKGROUND_COLOR || DEFAULT_BACKGROUND_COLOR};
+                            }
+                        </style>`,
+                    },
+                },
             },
         ))
         .then(bundle => Bundler.write(bundle, out));

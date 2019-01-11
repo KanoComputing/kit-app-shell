@@ -19,7 +19,7 @@ suite('Bundler', () => {
     test('bundleHtml', () => {
         const transformed = Bundler.bundleHtml(
             path.join(__dirname, '../test/resources/bundler/index.html'),
-            { test: '<div>Test</div>' },
+            { replacements: { test: '<div>Test</div>' } },
         );
         assert.equal(transformed, '<html lang="en"><div>Test</div><head><script src="/require.js"></script></head><body></body></html>');
     });

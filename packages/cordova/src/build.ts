@@ -11,7 +11,13 @@ const rimraf = promisify(rimrafCb);
 
 const { getProject } = require('./project');
 
+const DEFAULT_BACKGROUND_COLOR = '#ffffff';
+
 const build : IBuild = (opts : CordovaBuildOptions) => {
+    // Enhance the Cordova preferences with the background color config
+    opts.preferences.BackgroundColor = opts.preferences.BackgroundColor
+        || opts.config.BACKGROUND_COLOR
+        || DEFAULT_BACKGROUND_COLOR;
     // Catch cordova logs and displays them
     // TODO: Catch all logs (error, warn, ...)
     // TODO: Find a console UI to display these logs and any subprocess logs
@@ -62,7 +68,9 @@ const build : IBuild = (opts : CordovaBuildOptions) => {
                                     }],
                                 },
                                 html: {
-                                    injectScript: `<script src="/${wcFilename}"></script>`,
+                                    replacements: {
+                                        injectScript: `<script src="/${wcFilename}"></script>`,
+                                    },
                                 },
                             },
                         ))

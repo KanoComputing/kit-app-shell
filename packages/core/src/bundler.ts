@@ -15,7 +15,7 @@ import { ProgressTracker } from './progress';
 import { promisify } from 'util';
 import * as globCb from 'glob';
 import * as escapeRegExp from 'escape-regexp';
-import { BundleOptions, BundledFile, Bundle, BundleSourceOptions, CopyTask, KashConfig } from './types';
+import { BundleOptions, BundledFile, Bundle, BundleSourceOptions, CopyTask, KashConfig, BundleHtmlOptions } from './types';
 
 const glob = promisify(globCb);
 
@@ -56,10 +56,10 @@ export class Bundler {
                 return outputDir;
             });
     }
-    static bundle(html : string, js : string, appSrc : string, config : KashConfig, opts : BundleOptions = { html: {}, js: {}, appJs: { resources: [] } }) : Promise<Bundle> {
+    static bundle(html : string, js : string, appSrc : string, config : KashConfig, opts : BundleOptions = { html: { }, js: {}, appJs: { resources: [] } }) : Promise<Bundle> {
         processState.setStep(`Bundling app at ${appSrc}`);
         const appSrcName = path.basename(appSrc);
-        const htmlOutput = Bundler.bundleHtml(html, opts.html || {});
+        const htmlOutput = Bundler.bundleHtml(html, opts.html || {} as BundleHtmlOptions);
         const stage1 = replaceIndex(html, js, htmlOutput);
         const htmlBundle : BundledFile = {
             fileName: path.basename(html),
@@ -86,10 +86,11 @@ export class Bundler {
             return pkg;
         });
     }
-    static bundleHtml(input : string, replacements = {}) : string {
+    static bundleHtml(input : string, opts : BundleHtmlOptions) : string {
         const contents = fs.readFileSync(input, 'utf-8');
         const stage1 = addRequirejs(contents);
         const reg = /<!--\s?build:(.*?)\s?-->([\s\S]*)<!--\s?endbuild\s?-->/g;
+        const replacements = opts.replacements || {};
         // Replace html comment with build tag
         return stage1.replace(reg, (m, g0) => replacements[g0] || '');
     }
