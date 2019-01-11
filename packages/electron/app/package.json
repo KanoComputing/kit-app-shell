@@ -4,8 +4,7 @@
   "main": "main.js",
   "license": "MIT",
   "resolutions": {
-    "electron": "3.0.10",
-    "xpc-connection": "sandeepmistry/node-xpc-connection#26/head"
+    "electron": "3.0.10"
   },
   "dependencies": {
     "@kano/common": "^1.0.2",
