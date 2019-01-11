@@ -25,6 +25,7 @@ const windowsStoreCli : ICli = {
     },
     build(sywac) {
         sywac.option('-d, --dev-cert [devCert]', {
+            aliases: ['d', 'dev-cert', 'devCert'],
             type: 'string',
             desc: 'Path to a developer certificate to sign the .appx package',
         });
