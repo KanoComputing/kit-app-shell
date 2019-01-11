@@ -1,15 +1,34 @@
-# Kit App Shell Monorepo
+# kash — Kit App SHell
 
-## Usage
+_kash_ is a web app platform built on top of [Electron](https://electronjs.org/) and [Cordova](https://cordova.apache.org/) that allows us to develop, test and deploy applications that interact with Kano hardware kits across several desktop and mobile platforms as well as the web from a single codebase.
 
-```
+The shell will run any HTML/CSS/JS frontend. On all platforms extept _web_, it allows the app to communicate with Kano bluetooth/serial devices using the [@kano/devices-sdk](https://github.com/KanoComputing/kano-devices-sdk).
+
+The `kash` CLI tool provides an unified interface to build, run, test and sign your app across all [supported platforms](#Platforms). A minimal usage example:
+
+```sh
 yarn add @kano/kit-app-shell-cli
-yarn add @kano/kit-app-shell-macos
 
-kash run macos ./ # Current directory being an app directory 
+# Install the platforms you want to use
+yarn add @kano/kit-app-shell-macos
+yarn add @kano/kit-app-shell-ios
+
+# Build an *.ipa for iOS using Cordova
+kash build ios ./your-app-dir
+
+# Run your app using electron on macOS
+kash run macos ./your-app-dir
 ```
 
-For the full CLI documentation see [@kano/kit-app-shell-cli](./packages/cli)
+## Setup
+
+Depending on the platforms you're planning to use, you might need to set up a different set of external tools (xcode, Android Studio, etc).
+
+_TODO: Figure this out._
+
+## Creating a New App
+
+_TODO_
 
 ## Development
 
@@ -124,4 +143,5 @@ TODOs for 0.0.3-alpha.4:
  - ...
 
 ## TODO:
- - Create a Dockerfile with the setup to create on any platform. Host the image on dockerhub 
+ - Create a Dockerfile with the setup to create on any platform. Host the image on dockerhub
+ - Add a `bootstrap/setup/doctor` subcommand that each platform will help users set up their environment for building apps for various platforms (e.g. XCode setup, Android Studio, Windows build tools)
