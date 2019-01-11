@@ -80,11 +80,11 @@ Now we can test the setup. We'll use the version of kash installed in the projec
 
 The _web_ platform will start a local server:
 
-![server](https://user-images.githubusercontent.com/169328/51049160-f1710500-15c4-11e9-9e05-b2b6110fe7ec.png)
+<img src="https://user-images.githubusercontent.com/169328/51049160-f1710500-15c4-11e9-9e05-b2b6110fe7ec.png" width="80%">
 
 Going to `http://localhost:4000` will load our new app:
 
-![browser](https://user-images.githubusercontent.com/169328/51049159-f03fd800-15c4-11e9-9e6c-10952bf399a1.png)
+<img src="https://user-images.githubusercontent.com/169328/51049159-f03fd800-15c4-11e9-9e6c-10952bf399a1.png" width="60%">
 
 _TODO_ more platforms.
 
