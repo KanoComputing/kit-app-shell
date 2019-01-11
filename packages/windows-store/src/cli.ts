@@ -29,6 +29,11 @@ const windowsStoreCli : ICli = {
             type: 'string',
             desc: 'Path to a developer certificate to sign the .appx package',
         });
+        sywac.option('-k, --windows-kit [windowsKit]', {
+            aliases: ['k', 'windows-kit', 'windowsKit'],
+            type: 'string',
+            desc: 'Path to the Windows 10 SDK binaries',
+        });
     }
 };
 

@@ -53,7 +53,6 @@ const windowsStoreBuild : IBuild = (opts : WindowsStoreBuildOptions) => {
         config,
         out,
         certificates,
-        windowsKit,
         tmpdir = os.tmpdir(),
     } = opts;
     const { WINDOWS_STORE } = config;
@@ -65,7 +64,7 @@ const windowsStoreBuild : IBuild = (opts : WindowsStoreBuildOptions) => {
         if (!WINDOWS_STORE.PUBLISHER) {
             throw new Error('Could not create appx: Missing \'PUBLISHER\' in \'WINDOWS_STORE\' config');
         }
-        if (!windowsKit || !certificates || !certificates[WINDOWS_STORE.PUBLISHER]) {
+        if (!certificates || !certificates[WINDOWS_STORE.PUBLISHER]) {
             throw new Error(`Could not create appx: Missing certificates in rc.\n    Run ${chalk.cyan('kash configure windows-store')} and input certificate ${chalk.blue(WINDOWS_STORE.PUBLISHER)} when requested to fix this.`);
         }
         devCert = certificates[WINDOWS_STORE.PUBLISHER];
@@ -105,7 +104,7 @@ const windowsStoreBuild : IBuild = (opts : WindowsStoreBuildOptions) => {
                 packageExecutable: `app\\${config.APP_NAME}.exe`,
                 publisher: WINDOWS_STORE.PUBLISHER,
                 publisherDisplayName: WINDOWS_STORE.PUBLISHER_DISPLAY_NAME,
-                windowsKit,
+                windowsKit: opts.windowsKit,
                 devCert,
                 deploy: false,
                 finalSay() {
