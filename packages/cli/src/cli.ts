@@ -56,11 +56,13 @@ class CLI {
         if (!this.processState) {
             return;
         }
-        task.catch(e => this.processState.setFailure(e))
+        task.catch((e) => {
+            this.processState.setFailure(e);
             // Caught errors here are displayed using the reporter and we end the process
             // This will skip sywac's logging and avoid duplicated error messages
             // TODO: Map out error codes and use them here. Embed the code in the error object
-            .then(() => this.end(1));
+            return this.end(1);
+        });
     }
     static parseCommon(sywac : Sywac) : Sywac {
         return sywac
