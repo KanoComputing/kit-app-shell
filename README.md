@@ -50,7 +50,7 @@ Kash desktop platform. Runs your app using electron. To build for desktop, use `
 
 Uses the cordova project to create mobile apps.
 
-## Target Platforms
+## Platforms
 
 ### [@kano/kit-app-shell-windows](./packages/windows)
 
