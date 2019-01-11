@@ -57,16 +57,19 @@ const windowsStoreBuild : IBuild = (opts : WindowsStoreBuildOptions) => {
         tmpdir = os.tmpdir(),
     } = opts;
     const { WINDOWS_STORE } = config;
-    if (!WINDOWS_STORE) {
-        throw new Error('Could not create appx: Missing \'WINDOWS_STORE\' in config');
+    let devCert = opts.devCert;
+    if (!devCert) {
+        if (!WINDOWS_STORE) {
+            throw new Error('Could not create appx: Missing \'WINDOWS_STORE\' in config');
+        }
+        if (!WINDOWS_STORE.PUBLISHER) {
+            throw new Error('Could not create appx: Missing \'PUBLISHER\' in \'WINDOWS_STORE\' config');
+        }
+        if (!windowsKit || !certificates || !certificates[WINDOWS_STORE.PUBLISHER]) {
+            throw new Error(`Could not create appx: Missing certificates in rc.\n    Run ${chalk.cyan('kash configure windows-store')} and input certificate ${chalk.blue(WINDOWS_STORE.PUBLISHER)} when requested to fix this.`);
+        }
+        devCert = certificates[WINDOWS_STORE.PUBLISHER];
     }
-    if (!WINDOWS_STORE.PUBLISHER) {
-        throw new Error('Could not create appx: Missing \'PUBLISHER\' in \'WINDOWS_STORE\' config');
-    }
-    if (!windowsKit || !certificates || !certificates[WINDOWS_STORE.PUBLISHER]) {
-        throw new Error(`Could not create appx: Missing certificates in rc.\n    Run ${chalk.cyan('kash configure windows-store')} and input certificate ${chalk.blue(WINDOWS_STORE.PUBLISHER)} when requested to fix this.`);
-    }
-    const devCert = certificates[WINDOWS_STORE.PUBLISHER];
     // Force disable updater
     Object.assign(config, { UPDATER_DISABLED: true });
     // This is read by electron-windows-store to make logs silent

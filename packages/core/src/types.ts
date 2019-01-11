@@ -45,13 +45,13 @@ export interface BundleSourceOptions {
 export interface KashConfig {
     APP_NAME : string;
     APP_ID : string;
-    APP_DESCRIPTION : string;
-    VERSION : string;
-    UI_VERSION : string;
-    ENV : string;
-    UI_ROOT : string;
-    APP_SRC : string;
-    BUILD_NUMBER : string;
+    APP_DESCRIPTION? : string;
+    VERSION? : string;
+    UI_VERSION? : string;
+    ENV? : string;
+    UI_ROOT? : string;
+    APP_SRC? : string;
+    BUILD_NUMBER? : string;
 };
 
 export type Options = {

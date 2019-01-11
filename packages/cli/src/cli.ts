@@ -137,6 +137,12 @@ class CLI {
             });
         });
 
+        // Allow custom commands from the platform itself
+        sywac.positional(`<command> <platform> --help`, {
+            desc: 'A platform command',
+            run: argv => this.secondPass(argv.platform),
+        });
+
         sywac.command('open config', {
             desc: 'Open the location of your configuration',
             run: () => {

@@ -1,11 +1,9 @@
-import * as sign from 'electron-windows-store/lib/sign';
 import * as utils from 'electron-windows-store/lib/utils';
 import * as path from 'path';
 import { promisify } from 'util';
-import * as mkdirpCb from 'mkdirp';
 import * as rimrafCb from 'rimraf';
+import { makeCert } from './cert';
 
-const mkdirp = promisify(mkdirpCb);
 const rimraf = promisify(rimrafCb);
 
 const appData = process.env.APPDATA || (process.platform === 'darwin' ? path.join(process.env.HOME, 'Library/Preferences') : '/var/local');
@@ -13,19 +11,10 @@ const appData = process.env.APPDATA || (process.platform === 'darwin' ? path.joi
 const appDataDir = 'kash-windows-store';
 const certificatesDir = 'certificates';
 
-function makeCert(publisher, windowsKit) {
-    const program = {
-        publisher,
-        windowsKit,
-    };
-    const certFilePath = path.join(appData, appDataDir, certificatesDir);
-    return mkdirp(certFilePath)
-        .then(() => sign.makeCert({ publisherName: publisher, certFilePath, program }));
-}
-
 function enquireCert(prompt, config) {
     const windowsKit = config.windowsKit || utils.getDefaultWindowsKitLocation();
     let publisher;
+    const certFilePath = path.join(appData, appDataDir, certificatesDir);
     return prompt({
         type: 'input',
         name: 'publisher',
@@ -53,14 +42,14 @@ function enquireCert(prompt, config) {
                 // User confirmed, delete previous cert then create a new one
                 if (a.confirmed) {
                     return rimraf(previousCert)
-                        .then(() => makeCert(publisher, windowsKit));
+                        .then(() => makeCert(publisher, certFilePath, windowsKit));
                 }
                 // User dismissed, return empty data
                 return {};
             });
         }
         // No previous cert found, continue
-        return makeCert(publisher, windowsKit);
+        return makeCert(publisher, certFilePath, windowsKit);
     }).then(devCert => ({
         certificates: {
             [publisher]: devCert,
