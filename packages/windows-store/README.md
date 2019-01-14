@@ -35,4 +35,6 @@ You will find here all the info to fill in the fields in your project's config f
 
 
 ## TODO
- - Generate icons: 300x300, 150x150, 71x71, banners etc
+ - Generate All icons, some are missing
+ - Add get-publisher key that retrieves the publisher ID for a given app
+ 
