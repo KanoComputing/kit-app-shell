@@ -1,6 +1,6 @@
 {
   "name": "@kano/kit-app-shell-electron",
-  "version": "0.0.3-alpha.11",
+  "version": "0.0.3-alpha.12",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -10,7 +10,7 @@
     "coverage": "nyc --reporter=html mocha"
   },
   "dependencies": {
-    "@kano/kit-app-shell-core": "^0.0.3-alpha.11",
+    "@kano/kit-app-shell-core": "^0.0.3-alpha.12",
     "electron": "^3.1.0",
     "electron-chromedriver": "^3.0.0",
     "glob": "^7.1.3",
