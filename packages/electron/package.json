@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "postinstall": "cd app && yarn && npm rebuild noble-uwp --arch=x64 --target_arch=x64 --target=3.1.0 --runtime=electron",
+    "postinstall": "cd app && yarn && npm rebuild noble-uwp --arch=x64 --target_arch=x64 --target=3.1.0 --runtime=electron --dist-url=https://atom.io/download/electron",
     "test": "mocha",
     "test-ci": "JUNIT_REPORT_PATH=./test-results.xml yarn run --silent test --reporter mocha-jenkins-reporter",
     "coverage": "nyc --reporter=html mocha"
