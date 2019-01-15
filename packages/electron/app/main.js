@@ -19,8 +19,14 @@ global.preload = preload;
 const defaultApp = path.join(__dirname, 'www');
 const defaultConfig = path.join(__dirname, 'config.json');
 
-const desktopApp = new App(ui || defaultApp, config || defaultConfig, args);
+// This file will always be at the root of the app directory
+const root = path.resolve(__dirname);
+
+const desktopApp = new App(ui || defaultApp, config || defaultConfig, root, args);
 
 process.on('uncaughtException', (e) => {
     console.error(e);
 });
+
+console.log('SNAPSHOT YEAH?');
+

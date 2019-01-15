@@ -36,6 +36,7 @@ export class Bundler {
     static write(bundle : Bundle, outputDir : string) : Promise<string> {
         const tasks = [];
         const appOutputDir = path.join(outputDir, 'www');
+        // TODO: use promise style promisify
         mkdirp.sync(outputDir);
         mkdirp.sync(appOutputDir);
         tasks.push(write(bundle.html, outputDir));

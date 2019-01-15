@@ -18,7 +18,7 @@ export default class OraReporter implements IReporter {
         this.getSpinner().succeed(message);
     }
     onFailure(message : Error) : void {
-        this.getSpinner().fail(message.stack);
+        this.getSpinner().fail(message.stack || message.toString());
     }
     onWarning(message : string) : void {
         this.getSpinner().warn(message);

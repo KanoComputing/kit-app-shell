@@ -3,6 +3,7 @@ import { copy } from '@kano/kit-app-shell-core/lib/util/fs';
 import build from '@kano/kit-app-shell-electron/lib/build';
 import * as path from 'path';
 import * as os from 'os';
+import * as fs from 'fs';
 import { promisify } from 'util';
 import * as packager from 'electron-packager';
 import { buildWin32Setup } from './innosetup';
@@ -13,6 +14,7 @@ import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 
 const mkdirp = promisify(mkdirpCb);
 const rimraf = promisify(rimrafCb);
+const rename = promisify(fs.rename);
 
 const INSTALLER_FILE = path.join(__dirname, '../installer.iss');
 
@@ -84,11 +86,6 @@ const windowsBuild : IBuild =  function (opts : WindowsBuildOptions) {
             config,
             out: BUILD_DIR,
         }))
-        // Add the vccorlib dll to the generated electron app
-        .then(() => copy(
-            path.join(__dirname, '../vccorlib140.dll'),
-            path.join(BUILD_DIR, 'vccorlib140.dll'),
-        ))
         .then(() => {
             processState.setInfo('Creating windows application');
             const targetDir = skipInstaller ? out : PKG_DIR;
@@ -97,10 +94,7 @@ const windowsBuild : IBuild =  function (opts : WindowsBuildOptions) {
                 packageManager: 'yarn',
                 overwrite: true,
                 out: targetDir,
-                prune: true,
-                // TODO: use asar package.
-                // This does not work at the moment as it causes an issue with the PIXI loader
-                // XHR maybe?
+                prune: false,
                 asar: false,
                 name: config.APP_NAME,
                 platform: 'win32',
@@ -112,9 +106,25 @@ const windowsBuild : IBuild =  function (opts : WindowsBuildOptions) {
                 },
                 icon,
                 quiet: false,
+                version: '3.1.0',
             };
             return packager(packagerOptions)
                 .then(() => targetDir);
+        })
+        .then((pkgDir) => {
+            const appDir = path.resolve(pkgDir, `${config.APP_NAME}-win32-x64`);
+            const resourcesDir = path.join(appDir, 'resources/app');
+            const SNAPSHOT_BLOB = 'snapshot_blob.bin';
+            const V8_CONTEXT_SNAPSHOT = 'v8_context_snapshot.bin';
+            // Move the snapshot files to the root of the generated app
+            return rename(path.join(resourcesDir, SNAPSHOT_BLOB), path.join(appDir, SNAPSHOT_BLOB))
+                .then(() => rename(path.join(resourcesDir, V8_CONTEXT_SNAPSHOT), path.join(appDir,  V8_CONTEXT_SNAPSHOT)))
+                // Add the vccorlib dll to the generated electron app
+                .then(() => copy(
+                    path.join(__dirname, '../vccorlib140.dll'),
+                    path.join(appDir, 'vccorlib140.dll'),
+                ))
+                .then(() => pkgDir);
         })
         .then((pkgDir) => {
             processState.setSuccess('Created windows application');
