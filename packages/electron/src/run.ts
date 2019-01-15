@@ -6,9 +6,9 @@ import * as  livereload from 'livereload';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
-import { IRun, RunOptions } from '@kano/kit-app-shell-core/lib/types';
+import { IRun, IRunOptions } from '@kano/kit-app-shell-core/lib/types';
 
-const electronRun : IRun = function ({ app, config, tmpdir = os.tmpdir() } : RunOptions) {
+const electronRun : IRun = ({ app, config, tmpdir = os.tmpdir() } : IRunOptions) => {
     processState.setStep('Launching electron app');
     const server = livereload.createServer();
     // Write a temp file with the aggregated config
@@ -40,11 +40,11 @@ const electronRun : IRun = function ({ app, config, tmpdir = os.tmpdir() } : Run
 
             processState.setSuccess('Electron app launched');
         })
-        .then(() => new Promise(() => {}))
+        .then(() => new Promise(() => null))
         .catch((e) => {
             server.close();
             throw e;
         });
-}
+};
 
 export default electronRun;

@@ -1,10 +1,10 @@
 import { ElectronBuildOptions } from '@kano/kit-app-shell-electron/lib/types';
-import { KashConfig } from '@kano/kit-app-shell-core/lib/types';
+import { IKashConfig } from '@kano/kit-app-shell-core/lib/types';
 
 export type MacosBuildOptions = ElectronBuildOptions & {
-    config : KashConfig & {
+    config : IKashConfig & {
         ICONS : {
-            MACOS : string
+            MACOS : string,
         };
     };
 };

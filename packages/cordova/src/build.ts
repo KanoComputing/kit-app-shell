@@ -6,14 +6,13 @@ import * as path from 'path';
 import { cordova } from 'cordova-lib';
 import { promisify } from 'util';
 import * as rimrafCb from 'rimraf';
-import { CordovaBuildOptions } from './types';
+import { ICordovaBuildOptions } from './types';
+import { getProject } from './project';
 const rimraf = promisify(rimrafCb);
-
-const { getProject } = require('./project');
 
 const DEFAULT_BACKGROUND_COLOR = '#ffffff';
 
-const build : IBuild = (opts : CordovaBuildOptions) => {
+const build : IBuild = (opts : ICordovaBuildOptions) => {
     // Enhance the Cordova preferences with the background color config
     opts.preferences.BackgroundColor = opts.preferences.BackgroundColor
         || opts.config.BACKGROUND_COLOR
@@ -37,7 +36,7 @@ const build : IBuild = (opts : CordovaBuildOptions) => {
         ...opts,
         skipCache: opts['no-cache'],
     })
-        .then(projectPath => Promise.all((opts.clean || []).map(p => rimraf(p)))
+        .then((projectPath) => Promise.all((opts.clean || []).map((p) => rimraf(p)))
             .then(() => {
                 const wwwPath = path.join(projectPath, 'www');
                 // TODO move this to core and make it an optional plugin
@@ -74,7 +73,7 @@ const build : IBuild = (opts : CordovaBuildOptions) => {
                                 },
                             },
                         ))
-                    .then(bundle => Bundler.write(bundle, wwwPath))
+                    .then((bundle) => Bundler.write(bundle, wwwPath))
                     .then(() => projectPath);
             }))
         .then((projectPath) => {
@@ -84,7 +83,7 @@ const build : IBuild = (opts : CordovaBuildOptions) => {
             // This is hacky and could in the future become unreliable.
             // TODO: Maybe we should pass the platforms as ids and resolve their local packages if
             // already installed
-            const platformIds = opts.platforms.map(platform => path.basename(platform).replace('cordova-', ''));
+            const platformIds = opts.platforms.map((platform) => path.basename(platform).replace('cordova-', ''));
             // if the run flag is passed, run the built app on device
             const command = opts.run ? 'run' : 'build';
             const options = Object.assign(opts.buildOpts || {}, { platforms: platformIds });

@@ -9,4 +9,4 @@ const openExplorer = promisify(openExplorerCb);
  */
 export default function openConfig() : Promise<void> {
     return openExplorer(RcLoader.RC_PATH);
-};
+}

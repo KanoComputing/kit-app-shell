@@ -64,5 +64,4 @@ const getIosBuilder : IBuilderFactory = (wd, mocha, opts) => {
     return builder;
 };
 
-
 export default getIosBuilder;

@@ -54,7 +54,7 @@ export = (context) => {
         cfg.setWidgetAttribute('xmlns:android', 'http://schemas.android.com/apk/res/android');
         const attrs = Object.keys(supportsScreens);
         // Generate the supports-screens element
-        const contents = `<supports-screens ${attrs.map(a => `android:${a}="${supportsScreens[a]}"`).join(' ')}/>`;
+        const contents = `<supports-screens ${attrs.map((a) => `android:${a}="${supportsScreens[a]}"`).join(' ')}/>`;
         cfg.selectPlatform('android');
         cfg.addEditConfig('AndroidManifest.xml', '/manifest/supports-screens', 'merge', contents);
         cfg.selectRoot();

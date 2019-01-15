@@ -50,7 +50,6 @@ function createInstaller(opts) {
         iss: INSTALLER_FILE,
     };
 
-
     const builder = new Promise((resolve, reject) => {
         buildWin32Setup(compilerOptions, (e) => {
             if (e) {
@@ -63,7 +62,7 @@ function createInstaller(opts) {
     return builder;
 }
 
-const windowsBuild : IBuild =  function (opts : WindowsBuildOptions) {
+const windowsBuild : IBuild = (opts : WindowsBuildOptions) => {
     const {
         app,
         config,
@@ -133,6 +132,6 @@ const windowsBuild : IBuild =  function (opts : WindowsBuildOptions) {
                     return out;
                 });
         });
-}
+};
 
 export default windowsBuild;

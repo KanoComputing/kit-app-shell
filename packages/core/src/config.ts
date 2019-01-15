@@ -4,7 +4,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as deepMerge from 'deepmerge';
-import { KashConfig } from './types';
+import { IKashConfig } from './types';
 
 const DEFAULTS = {
     APP_NAME: 'Unnamed App',
@@ -24,12 +24,12 @@ function softRequire(moduleId : string, fallback = {}) : any {
 }
 
 export class ConfigLoader {
-    static load(appDir : string, env : string = 'development') : KashConfig {
+    static load(appDir : string, env : string = 'development') : IKashConfig {
         const configDir = path.join(appDir, 'config');
         const defaultConfig = softRequire(path.join(configDir, 'default.json'));
         const envConfig = softRequire(path.join(configDir, `${env}.json`));
 
-        const config = deepMerge<KashConfig>(defaultConfig, envConfig);
+        const config = deepMerge<IKashConfig>(defaultConfig, envConfig);
 
         config.ENV = env;
         config.UI_ROOT = '/www/';
@@ -39,6 +39,6 @@ export class ConfigLoader {
         // Property used to be called UI_VERSION, alias it for backward compatibility
         config.UI_VERSION = config.VERSION;
 
-        return deepMerge<KashConfig>(DEFAULTS, config);
+        return deepMerge<IKashConfig>(DEFAULTS, config);
     }
 }

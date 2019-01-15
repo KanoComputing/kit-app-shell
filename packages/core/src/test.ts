@@ -10,13 +10,13 @@ const glob = promisify(globCb);
 class KashTestFramework {
     public wd : typeof wd;
     public driver : wd.WebDriver;
-    _builder : Builder;
+    private builder : Builder;
     constructor() {
         // TODO: Add features to control API through web-bus
         this.wd = wd;
     }
     _setBuilder(builder) {
-        this._builder = builder;
+        this.builder = builder;
     }
     _switchContexts() {
         const asserter = new wd.Asserter((target, cb) => {
@@ -24,17 +24,17 @@ class KashTestFramework {
                 .then((ctxs) => {
                     cb(null, ctxs.length > 1, ctxs);
                 })
-                .catch(e => cb(e));
+                .catch((e) => cb(e));
         });
         return this.driver.waitFor(asserter)
-            .then(ctxs => this.driver.context(ctxs[1]));
+            .then((ctxs) => this.driver.context(ctxs[1]));
     }
-    _beforeEach(test) {
+    _beforeEach(t) {
         if (this.driver) {
             return this.driver.resetApp()
                 .then(() => this._switchContexts());
         }
-        return this._builder(test)
+        return this.builder(t)
             .then((d) => {
                 this.driver = d;
                 return this._switchContexts();
@@ -82,10 +82,10 @@ export const test = (platform, opts : TestOptions) => {
             framework._setBuilder(builder);
             // Grab all spec files using glob
             // TODO: research and mimic mocha's glob behaviour for consistency (e.g. minimist)
-            return Promise.all((opts.spec || []).map(s => glob(s, { cwd: opts.app })))
+            return Promise.all((opts.spec || []).map((s) => glob(s, { cwd: opts.app })))
                 .then((specFiles) => {
                     // Merge all results
-                    const allFiles = specFiles.reduce<Array<string>>((acc : Array<string>, it : string) => acc.concat(it), []);
+                    const allFiles = specFiles.reduce<string[]>((acc : string[], it : string) => acc.concat(it), []);
                     // Add all files to the mocha instance
                     allFiles.forEach((file) => {
                         mocha.addFile(path.join(opts.app, file));

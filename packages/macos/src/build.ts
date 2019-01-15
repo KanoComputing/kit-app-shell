@@ -5,7 +5,7 @@ import * as os from 'os';
 import * as packager from 'electron-packager';
 import { promisify } from 'util';
 import * as mkdirpCb from 'mkdirp';
-import * as rimrafCb from 'rimraf'
+import * as rimrafCb from 'rimraf';
 import { MacosBuildOptions } from './types';
 import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 
@@ -14,7 +14,7 @@ const rimraf = promisify(rimrafCb);
 
 const defaultIconPath = path.join(__dirname, '../icons/1024.png.icns');
 
-const macosBuild : IBuild =  function (opts : MacosBuildOptions) {
+const macosBuild : IBuild = (opts : MacosBuildOptions) => {
     const {
         app,
         config,
@@ -61,10 +61,10 @@ const macosBuild : IBuild =  function (opts : MacosBuildOptions) {
             return packager(packagerOptions);
         })
         .then(() => {
-            warnings.forEach(w => processState.setWarning(w));
+            warnings.forEach((w) => processState.setWarning(w));
             processState.setSuccess('Created macOS app');
             return out;
         });
-}
+};
 
 export default macosBuild;

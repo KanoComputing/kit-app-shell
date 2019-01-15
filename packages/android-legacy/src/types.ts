@@ -1,9 +1,9 @@
-import { CordovaBuildOptions, CordovaPreferences } from '@kano/kit-app-shell-cordova/lib/types';
+import { ICordovaBuildOptions, ICordovaPreferences } from '@kano/kit-app-shell-cordova/lib/types';
 
-export type AndroidLegacyBuildPreferences = CordovaPreferences & {
+export type AndroidLegacyBuildPreferences = ICordovaPreferences & {
     xwalkMultipleApk : boolean;
 };
 
-export type AndroidLegacyBuildOptions = CordovaBuildOptions & {
+export type AndroidLegacyBuildOptions = ICordovaBuildOptions & {
     preferences? : AndroidLegacyBuildPreferences;
 };

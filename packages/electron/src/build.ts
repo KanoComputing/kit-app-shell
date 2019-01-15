@@ -126,7 +126,7 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
                 html: {},
             },
         )
-            .then(bundle => Bundler.write(bundle, out)),
+            .then((bundle) => Bundler.write(bundle, out)),
     ];
     return Promise.all(tasks)
         .then((results) => {
@@ -134,6 +134,6 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
             // Return bundle outputDir
             return results[2];
         });
-}
+};
 
 export default electronBuild;

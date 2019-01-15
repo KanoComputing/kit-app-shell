@@ -1,54 +1,54 @@
-import { ReplaceOptions } from './plugins/replace';
+import { IReplaceOptions } from './plugins/replace';
 
-export interface BundleHtmlOptions {
+export interface IBundleHtmlOptions {
     replacements? : {
         [propName : string] : string;
     };
-};
+}
 
-export interface BundleOptions {
-    html : BundleHtmlOptions;
-    js : BundleSourceOptions;
+export interface IBundleOptions {
+    html : IBundleHtmlOptions;
+    js : IBundleSourceOptions;
     appJs : BundleAppOptions;
+}
+
+export type BundleAppOptions = IBundleSourceOptions & {
+    resources? : string[];
 };
 
-export type BundleAppOptions = BundleSourceOptions & {
-    resources? : Array<string>;
-};
+export interface IBundledFile {
+    fileName : string;
+    code : string;
+}
 
-export interface BundledFile {
-    fileName: string;
-    code: string;
-};
-
-export interface Bundle {
-    html : BundledFile;
-    js : Array<BundledFile>;
-    appJs : Array<BundledFile>;
+export interface IBundle {
+    html : IBundledFile;
+    js : IBundledFile[];
+    appJs : IBundledFile[];
     appStatic : {
         root : string;
-        files : Array<string>;
+        files : string[];
     };
-};
+}
 
-export interface CopyTask {
-    root: string;
-    files: Array<string>;
-};
+export interface ICopyTask {
+    root : string;
+    files : string[];
+}
 
-export interface BundleSourceOptions {
-    polyfills? : Array<string>;
+export interface IBundleSourceOptions {
+    polyfills? : string[];
     moduleContext? : {
         [key : string] : string;
     };
-    replaces? : Array<ReplaceOptions>;
+    replaces? : IReplaceOptions[];
     targets? : {};
-    babelExclude? : Array<string>;
+    babelExclude? : string[];
     bundleOnly? : boolean;
     appSrcName? : string;
-};
+}
 
-export interface KashConfig {
+export interface IKashConfig {
     APP_NAME : string;
     APP_ID : string;
     APP_DESCRIPTION? : string;
@@ -59,58 +59,52 @@ export interface KashConfig {
     APP_SRC? : string;
     BUILD_NUMBER? : string;
     BACKGROUND_COLOR? : string;
-};
+}
 
-export type Options = {
+export interface IOptions {
     app : string;
-    config : KashConfig;
+    config : IKashConfig;
     out : string;
     tmpdir? : string;
     [propName : string] : any;
-};
+}
 
-export type BuildOptions = Options & BundleSourceOptions;
+export interface IBuildOptions extends IOptions, IBundleSourceOptions {}
 
-export type RunOptions = {
+export interface IRunOptions {
     app : string;
-    config : KashConfig;
+    config : IKashConfig;
     tmpdir? : string;
     [propName : string] : any;
-};
+}
 
-export declare type TestOptions = Options & {
-    spec? : Array<string>;
+export declare type TestOptions = IOptions & {
+    spec? : string[];
 };
 
 export interface IDisposable {
     dispose();
-};
+}
 
 export type Builder = (test : Mocha.Test) => Promise<import('wd').WebDriver>;
 
-export type IBuilderFactory = (wd: typeof import('wd'), mocha: import('mocha'), opts: any) => Promise<Builder>;
+export type IBuilderFactory = (wd : typeof import('wd'), mocha : import('mocha'), opts : any) => Promise<Builder>;
 
-export interface IBuild {
-    (opts : BuildOptions) : Promise<string>;
-};
+export type IBuild = (opts : IBuildOptions)  => Promise<string>;
 
-export interface IRun {
-    (opts : RunOptions) : Promise<any>;
-};
+export type IRun = (opts : IRunOptions)  => Promise<any>;
 
-interface Answers {
+interface IAnswers {
     [propName : string] : any;
-};
+}
 
 export interface IConfigure {
     // TODO: enquirer types
-    enquire? (prompt : any, cfg : any) : Answers;
-    generate? (answers : Answers) : any;
-};
+    enquire?(prompt : any, cfg : any) : IAnswers;
+    generate?(answers : IAnswers) : any;
+}
 
-export interface ISywacConfigure {
-    (sywac : typeof import('sywac')) : void;
-};
+export type ISywacConfigure = (sywac : typeof import('sywac'))  => void;
 
 export interface ICli {
     group? : string;
@@ -119,4 +113,4 @@ export interface ICli {
     build? : ISywacConfigure;
     test? : ISywacConfigure;
     sign? : ISywacConfigure;
-};
+}

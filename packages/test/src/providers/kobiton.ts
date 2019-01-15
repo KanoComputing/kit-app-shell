@@ -4,12 +4,12 @@ import chalk from 'chalk';
 import { promisify } from 'util';
 
 import { post as postCb, put as putCb } from 'request';
-import { KobitonOptions, IProvider } from '../types';
+import { IKobitonOptions, IProvider } from '../types';
 
 const post = promisify(postCb);
 const put = promisify(putCb);
 
-function upload(app, { user, key } : KobitonOptions) {
+function upload(app, { user, key } : IKobitonOptions) {
     const stat = statSync(app);
     const stream = createReadStream(app);
     const auth = `Basic ${Buffer.from([user, key].join(':')).toString('base64')}`;
@@ -17,15 +17,15 @@ function upload(app, { user, key } : KobitonOptions) {
     return post({
         headers: {
             'Content-Type': 'application/json',
-            Authorization: auth,
-            Accept: 'application/json',
+            'Authorization': auth,
+            'Accept': 'application/json',
         },
         url: 'https://api.kobiton.com/v1/apps/uploadUrl',
         body: JSON.stringify({
             filename,
             appId: '23313',
         }),
-    }).then(response => JSON.parse(response.body)).then(({ appPath, url }) => put({
+    }).then((response) => JSON.parse(response.body)).then(({ appPath, url }) => put({
         headers: {
             'Content-Length': stat.size,
             'Content-Type': 'application/octet-stream',
@@ -37,15 +37,15 @@ function upload(app, { user, key } : KobitonOptions) {
         .then(() => post({
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: auth,
-                Accept: 'application/json',
+                'Authorization': auth,
+                'Accept': 'application/json',
             },
             url: 'https://api.kobiton.com/v1/apps',
             body: JSON.stringify({
                 appPath,
                 filename,
             }),
-        }).then(r => JSON.parse(r.body))));
+        }).then((r) => JSON.parse(r.body))));
 }
 
 function getConfig(opts, key) {
@@ -74,21 +74,21 @@ const kobitonProvider : IProvider = function kobitonSetup(app, wd, mocha, opts) 
                 auth: `${user}:${key}`,
             });
             const caps = {
-                app: `kobiton-store:${appId}`,
-                sessionName: `${opts.config.APP_NAME} v${opts.config.UI_VERSION} Android`,
-                sessionDescription: test.fullTitle(),
-                deviceOrientation: 'portrait',
-                captureScreenshots: true,
-                browserName: 'chrome',
-                platformName: 'Android',
-                platformVersion: '8.1.0',
-                deviceName: 'Nexus 5X',
+                'app': `kobiton-store:${appId}`,
+                'sessionName': `${opts.config.APP_NAME} v${opts.config.UI_VERSION} Android`,
+                'sessionDescription': test.fullTitle(),
+                'deviceOrientation': 'portrait',
+                'captureScreenshots': true,
+                'browserName': 'chrome',
+                'platformName': 'Android',
+                'platformVersion': '8.1.0',
+                'deviceName': 'Nexus 5X',
                 'appium-version': '1.9.1',
             };
             return browser.init(caps).then(() => browser);
         };
         return builder;
     });
-}
+};
 
 export default kobitonProvider;

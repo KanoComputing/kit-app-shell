@@ -16,7 +16,7 @@ export class ElectronChromedriver {
 
         // TODO: Subprocess managment
         this.process = spawn(command, ['--url-base=wd/hub', `--port=${port}`]);
-        this.process.on('close', () => {});
+        this.process.on('close', () => null);
         this.process.on('error', (error) => {
             throw error;
         });

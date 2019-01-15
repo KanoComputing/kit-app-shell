@@ -3,8 +3,8 @@ import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import build from '@kano/kit-app-shell-electron/lib/build';
 import * as path from 'path';
 import * as os from 'os';
-import * as glob  from 'glob';
-import * as fs  from 'fs';
+import * as glob from 'glob';
+import * as fs from 'fs';
 import snake = require('snake-case');
 import * as kebab from 'dashify';
 import * as mkdirp from 'mkdirp';
@@ -72,16 +72,16 @@ function copyExtra(app, out, config) {
     const icons = glob.sync('*.png', { cwd: appsPath, nodir: true });
     const apps = glob.sync('*.app', { cwd: appsPath, nodir: true });
     // Copy icons to the icons share
-    const tasks = icons.map(icon => copy(
+    const tasks = icons.map((icon) => copy(
         path.join(appsPath, icon),
         path.join(iconsPath, icon),
     ));
     // Copy icons to the desktop share
-    tasks.concat(icons.map(icon => copy(
+    tasks.concat(icons.map((icon) => copy(
         path.join(appsPath, icon),
         path.join(desktopIconsPath, icon),
     )));
-    tasks.concat(apps.map(a => copy(
+    tasks.concat(apps.map((a) => copy(
         path.join(appsPath, a),
         path.join(appsTargetPath, a),
     )));
@@ -120,7 +120,7 @@ function checkEnv(skipAr = false) : Promise<void> {
         .then(() => null);
 }
 
-const kanoBuild : IBuild = function (opts : KanoBuildOptions) {
+const kanoBuild : IBuild = (opts : KanoBuildOptions) => {
     const {
         app,
         config,
@@ -194,6 +194,6 @@ const kanoBuild : IBuild = function (opts : KanoBuildOptions) {
             return createDeb(dir, out, config)
                 .then(() => processState.setSuccess('Created .deb file'));
         });
-}
+};
 
 export default kanoBuild;

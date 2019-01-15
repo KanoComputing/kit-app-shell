@@ -3,11 +3,11 @@ import { basename } from 'path';
 import chalk from 'chalk';
 import { promisify } from 'util';
 import { post as postCb } from 'request';
-import { IProvider, SaucelabsOptions } from '../types';
+import { IProvider, ISaucelabsOptions } from '../types';
 
 const post = promisify(postCb);
 
-function uploadForEmulator(app, { user, key } : SaucelabsOptions) {
+function uploadForEmulator(app, { user, key } : ISaucelabsOptions) {
     const filename = basename(app);
     const stream = createReadStream(app);
     return post({
@@ -20,7 +20,7 @@ function uploadForEmulator(app, { user, key } : SaucelabsOptions) {
             user,
             pass: key,
         },
-    }).then(response => JSON.parse(response.body));
+    }).then((response) => JSON.parse(response.body));
 }
 
 const saucelabsProvider : IProvider = function saucelabsSetup(app, wd, mocha, opts) {
@@ -52,11 +52,11 @@ const saucelabsProvider : IProvider = function saucelabsSetup(app, wd, mocha, op
                 platformName: 'Android',
                 app: `sauce-storage:${filename}`,
             };
-            
+
             return driver.init(caps).then(() => driver);
         };
         return builder;
     });
-}
+};
 
 export default saucelabsProvider;

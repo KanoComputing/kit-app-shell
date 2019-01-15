@@ -1,7 +1,9 @@
 import { resizeImage } from '@kano/kit-app-shell-cordova/lib/util';
 import * as path from 'path';
 import { CordovaConfig } from '@kano/kit-app-shell-cordova/lib/cordova-config';
+// tslint:disable-next-line:no-var-requires
 const icons = require('../../data/icons');
+// tslint:disable-next-line:no-var-requires
 const screens = require('../../data/screens');
 
 function getIconPath(key, projectPath) {
@@ -72,7 +74,7 @@ export = (context) => {
     return Promise.all(tasks)
         .then(() => cfg.write())
         .then(() => {
-            warnings.forEach(w => shell.processState.setWarning(w));
+            warnings.forEach((w) => shell.processState.setWarning(w));
             shell.processState.setSuccess('Icons and splashscreens generated');
         });
 };

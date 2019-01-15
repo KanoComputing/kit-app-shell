@@ -1,8 +1,7 @@
 import { IBuilderFactory } from '@kano/kit-app-shell-core/lib/types';
 import { IProvider } from './types';
-console.warn('@kano/kit-app-shell-test is experimental');
 
-function loadProvider(provider : string) : Promise<{ default: IProvider }> {
+function loadProvider(provider : string) : Promise<{ default : IProvider }> {
     switch (provider) {
     case 'saucelabs': {
         return import('./providers/saucelabs');

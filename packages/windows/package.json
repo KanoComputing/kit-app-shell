@@ -9,7 +9,8 @@
     "electron-packager": "^12.2.0",
     "innosetup-compiler": "^5.5.9",
     "mkdirp": "^0.5.1",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "tslint": "^5.12.1"
   },
   "scripts": {
     "test": "mocha",

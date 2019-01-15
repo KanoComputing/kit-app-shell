@@ -6,13 +6,13 @@ const windowsStoreCli : ICli = {
     commands(sywac) {
         sywac.command('create-key windows-store', {
             desc: 'Create a signing key for a given publisher',
-            setup: (sywac) => {
-                sywac.option('-p, --publisher <publisher>', {
+            setup: (setup) => {
+                setup.option('-p, --publisher <publisher>', {
                     type: 'string',
                     desc: 'Name of the publisher. e.g. CN=Fabrikam',
                     required: true,
                 });
-                sywac.option('-o, --out <out>', {
+                setup.option('-o, --out <out>', {
                     required: true,
                     type: 'string',
                     desc: 'Path to the created cert',
@@ -34,7 +34,7 @@ const windowsStoreCli : ICli = {
             type: 'string',
             desc: 'Path to the Windows 10 SDK binaries',
         });
-    }
+    },
 };
 
 export default windowsStoreCli;
