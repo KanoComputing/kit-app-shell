@@ -1,4 +1,8 @@
 require('./lib/frozenenv');
+const { app } = require('electron');
+process.on('uncaughtException', (e) => {
+    app.quit();
+});
 const parseArgs = require('minimist');
 const path = require('path');
 
@@ -23,10 +27,3 @@ const defaultConfig = path.join(__dirname, 'config.json');
 const root = path.resolve(__dirname);
 
 const desktopApp = new App(ui || defaultApp, config || defaultConfig, root, args);
-
-process.on('uncaughtException', (e) => {
-    console.error(e);
-});
-
-console.log('SNAPSHOT YEAH?');
-
