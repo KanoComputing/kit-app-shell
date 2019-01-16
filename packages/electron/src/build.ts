@@ -177,8 +177,8 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
         .then((results) => {
             processState.setStep('Generating V8 snapshot');
             return generateSnapshot(results[2], results[2], {
-                forcePlatform: opts.bundle.forcePlatform,
-                ignore: opts.bundle.ignore,
+                forcePlatform: bundle.forcePlatform,
+                ignore: bundle.ignore,
             });
         })
         .then((out) => {

@@ -39,9 +39,18 @@ suite('macOS build', () => {
             });
         });
         const build = mock.reRequire('./build');
+
+        mockFs({
+            [path.resolve('/App.app/Contents/Resources/app')]: {
+                'snapshot_blob.bin': '',
+                'v8_context_snapshot.bin': '',
+            },
+            [path.resolve('/App.app/Contents/Frameworks/Electron Framework.framework/Resources')]: mockFs.directory(),
+        });
+
         return Promise.all([
             didReceiveWarning,
-            build.default({ app: '/app', out: '/out', config: {} }),
+            build.default({ app: '/app', out: '/out' }),
         ]);
     });
     test('provided', () => {
@@ -77,6 +86,13 @@ suite('macOS build', () => {
             },
         });
         const build = mock.reRequire('./build');
+        mockFs({
+            [path.resolve('/Test.app/Contents/Resources/app')]: {
+                'snapshot_blob.bin': '',
+                'v8_context_snapshot.bin': '',
+            },
+            [path.resolve('/Test.app/Contents/Frameworks/Electron Framework.framework/Resources')]: mockFs.directory(),
+        });
         return build.default({
             app: '/app',
             out: '/out',

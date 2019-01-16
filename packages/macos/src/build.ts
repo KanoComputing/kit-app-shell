@@ -19,7 +19,7 @@ const defaultIconPath = path.join(__dirname, '../icons/1024.png.icns');
 const macosBuild : IBuild =  function (opts : MacosBuildOptions) {
     const {
         app,
-        config,
+        config = {} as any,
         out,
         bundleOnly,
         tmpdir = os.tmpdir(),
@@ -69,7 +69,7 @@ const macosBuild : IBuild =  function (opts : MacosBuildOptions) {
         })
         .then((pkgDirs) => {
             const [pkgDir] = pkgDirs;
-            const appDir = path.resolve(pkgDir, `${config.APP_NAME}.app`);
+            const appDir = path.resolve(pkgDir, `${name}.app`);
             const resourcesDir = path.join(appDir, 'Contents/Resources/app');
             const targetDir = path.join(appDir, 'Contents/Frameworks/Electron Framework.framework/Resources');
             const SNAPSHOT_BLOB = 'snapshot_blob.bin';
