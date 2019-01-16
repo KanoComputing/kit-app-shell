@@ -30,6 +30,7 @@ pipeline {
         stage('test') {
             steps {
                 script {
+                    sh "yarn lint"
                     sh "yarn test-ci"
                 }
             }

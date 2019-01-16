@@ -48,7 +48,7 @@ const macosBuild : IBuild = (opts : MacosBuildOptions) => {
                 ],
                 forcePlatform: 'darwin',
                 ignore: ['noble-mac', 'bluetooth-hci-socket'],
-            }
+            },
         }))
         .then((buildDir) => {
             processState.setInfo('Creating macOS app');
@@ -76,7 +76,10 @@ const macosBuild : IBuild = (opts : MacosBuildOptions) => {
             const V8_CONTEXT_SNAPSHOT = 'v8_context_snapshot.bin';
             // Move the snapshot files to the root of the generated app
             return rename(path.join(resourcesDir, SNAPSHOT_BLOB), path.join(targetDir, SNAPSHOT_BLOB))
-                .then(() => rename(path.join(resourcesDir, V8_CONTEXT_SNAPSHOT), path.join(targetDir,  V8_CONTEXT_SNAPSHOT)))
+                .then(() => rename(
+                    path.join(resourcesDir, V8_CONTEXT_SNAPSHOT),
+                    path.join(targetDir,  V8_CONTEXT_SNAPSHOT),
+                ))
                 // Delete the electron directory, it was needed during packaaging, but must not be shipped
                 .then(() => rimraf(path.join(resourcesDir, 'node_modules/electron')))
                 .then(() => pkgDir);

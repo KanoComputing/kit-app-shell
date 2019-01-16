@@ -28,9 +28,9 @@ export function snap(opts : ISnapOptions) : Promise<string> {
             return generateSnapshotSource(
                 bundleSource,
                 tmpSnapshotPath,
-            )
+            );
         })
-        .then(source => mksnapshot(source, opts.electronBinaryDir))
+        .then((source) => mksnapshot(source, opts.electronBinaryDir))
         .then(() => generateEntryFile(path.join(opts.out, '_main.js')))
         .then(() => {
             const pckPath = path.join(opts.out, 'package.json');

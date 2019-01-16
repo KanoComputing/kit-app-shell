@@ -1,4 +1,4 @@
-import { Options, Builder } from '@kano/kit-app-shell-core/lib/types';
+import { IOptions, Builder } from '@kano/kit-app-shell-core/lib/types';
 
 export interface ISaucelabsOptions {
     user : string;
@@ -19,7 +19,7 @@ export interface IKobitonOptions {
     key : string;
 }
 
-export type TestOptions = Options & {
+export type TestOptions = IOptions & {
     saucelabs? : ISaucelabsOptions;
     bitbar? : IBitBarOptions;
     browserstack? : IBrowserstackOptions;

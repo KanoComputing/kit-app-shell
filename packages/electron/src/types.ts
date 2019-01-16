@@ -5,5 +5,5 @@ export type ElectronBuildOptions = IBuildOptions & {
         patterns? : string[];
         forcePlatform? : string;
         ignore? : string[];
-    }
+    },
 };

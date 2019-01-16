@@ -5,6 +5,7 @@
   ],
   "private": true,
   "scripts": {
+    "lint": "tslint -p tsconfig.settings.json",
     "tsc": "tsc",
     "watch": "tsc -b --watch",
     "publish": "lerna run tsc && lerna publish",

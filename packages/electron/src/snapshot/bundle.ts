@@ -5,8 +5,8 @@ import * as path from 'path';
 import * as nodeResolve from 'rollup-plugin-node-resolve';
 import * as mkdirpCb from 'mkdirp';
 import * as commonjs from 'rollup-plugin-commonjs';
-import * as json from 'rollup-plugin-json';
-import * as replace from 'rollup-plugin-replace';
+import json from 'rollup-plugin-json';
+import { replace } from '@kano/kit-app-shell-core/lib/plugins/replace';
 import { promisify } from 'util';
 
 const mkdirp = promisify(mkdirpCb);
@@ -23,26 +23,26 @@ const dirname = (root) => ({
 });
 
 interface IBundleOptions {
-    platform?: string;
+    platform? : string;
     ignore? : string[];
 }
 
 const DEFAULT_REPLACEMENTS = {
     // UWP hack
-    [`const uwpRoot = '../uwp/';`]: `const uwpRoot = './node_modules/noble-uwp/uwp/';`,
+    ["const uwpRoot = '../uwp/';"]: "const uwpRoot = './node_modules/noble-uwp/uwp/';",
     // jszip
     'support.nodestream': 'true',
-    [`exports.nodestream = !!require('readable-stream').Readable;`]: 'exports.nodestream = true;',
+    ["exports.nodestream = !!require('readable-stream').Readable;"]: 'exports.nodestream = true;',
     // Readable stream hack
-    'process.env.READABLE_STREAM': `'disable'`,
-    [`('readable-stream')`]: `('stream')`,
+    'process.env.READABLE_STREAM': "'disable'",
+    ["('readable-stream')"]: "('stream')",
     // Unhack browserify
-    [`'mv' + ''`]: `'mv'`,
-    [`'dtrace-provider' + ''`]: `'dtrace-provider'`,
-    [`'source-map-support' + ''`]: `'source-map-support'`,
-}
+    ["'mv' + ''"]: "'mv'",
+    ["'dtrace-provider' + ''"]: "'dtrace-provider'",
+    ["'source-map-support' + ''"]: "'source-map-support'",
+};
 
-export function bundle(input: string, opts: IBundleOptions) {
+export function bundle(input : string, opts : IBundleOptions) {
     const replacements = {
         ...DEFAULT_REPLACEMENTS,
     };
@@ -72,7 +72,8 @@ export function bundle(input: string, opts: IBundleOptions) {
         ],
         onwarn: () => null,
     })
-        .then(bundle => bundle.generate({ format: 'cjs' }))
+        .then((b) => b.generate({ format: 'cjs' }))
+        // @ts-ignore
         .then(({ output }) => {
             const [main] = output;
             const tmpOut = path.join(os.tmpdir(), 'snapshot');

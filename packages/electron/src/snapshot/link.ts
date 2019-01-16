@@ -14,7 +14,11 @@ snapshotResult.customRequire('./_snapshot.js').main();
 `;
 
 function generateDefinition(source : string) {
-    const transformed = ['function (exports, module, __filename, __dirname, require, define) {\nexports.main = () => {\n', source, '\n};\n}'].join('');
+    const transformed = [
+        'function (exports, module, __filename, __dirname, require, define) {\nexports.main = () => {\n',
+        source,
+        '\n};\n}',
+    ].join('');
 
     return transformed;
 }
@@ -32,7 +36,8 @@ export function generateSnapshotSource(src : string, out : string) {
                     const definition = generateDefinition(source);
                     const definitionsAssignment = 'customRequire.definitions = {}';
                     const definitionsAssignmentStartIndex = templateSource.indexOf(definitionsAssignment);
-                    const definitionsAssignmentEndIndex = definitionsAssignmentStartIndex + definitionsAssignment.length;
+                    const definitionsAssignmentEndIndex =
+                        definitionsAssignmentStartIndex + definitionsAssignment.length;
                     const final = templateSource.slice(0, definitionsAssignmentStartIndex) +
                     `var snapshotAuxiliaryData = ${['customRequire.definitions = {\n\'./_snapshot.js\': ', definition, ',\n}'].join('')};` +
                     templateSource.slice(definitionsAssignmentEndIndex);

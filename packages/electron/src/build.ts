@@ -99,7 +99,7 @@ function copyElectronApp(patterns : string[], out : string) : Promise<void> {
         return p
             .then((paths) => {
                 return glob(pattern, opts)
-                    .then(p => paths.concat(p));
+                    .then((retrievedPaths) => paths.concat(retrievedPaths));
             });
     }, Promise.resolve([]))
         .then((paths) => {
@@ -171,7 +171,7 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
                 html: {},
             },
         )
-            .then((bundle) => Bundler.write(bundle, out)),
+            .then((b) => Bundler.write(b, out)),
     ];
     return Promise.all(tasks)
         .then((results) => {
@@ -181,11 +181,11 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
                 ignore: opts.bundle.ignore,
             });
         })
-        .then((out) => {
+        .then((o) => {
             processState.setSuccess('V8 snapshot generated');
             processState.setSuccess(`Created electron app '${config.APP_NAME}'`);
             // Return bundle outputDir
-            return out;
+            return o;
         });
 };
 
