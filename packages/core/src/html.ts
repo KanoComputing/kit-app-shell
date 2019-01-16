@@ -10,9 +10,7 @@ export function replaceIndex(html : string, js : string, code : string) : string
     // Find a potential script node that loads the js
     walk(document, (node) => {
         if (node.tagName === 'script') {
-            let attr;
-            for (let i = 0; i < node.attrs.length; i += 1) {
-                attr = node.attrs[i];
+            for (const attr of node.attrs) {
                 // Found if the relative path matches the src
                 if (attr.name === 'src' && attr.value === relJs) {
                     const { childNodes } = node.parentNode;

@@ -313,11 +313,11 @@ class CLI {
                 sywac.configure({ name: 'kash' });
 
                 // Register the global commands for the platform
-                const sywacPatch = CLI.patchSywacOptions(sywac, {
+                const sywacPatcher = CLI.patchSywacOptions(sywac, {
                     group: platform.cli.group || 'Platform: ',
                 });
                 platformUtils.registerCommands(sywac, platform);
-                sywacPatch.dispose();
+                sywacPatcher.dispose();
 
                 CLI.applyStyles(sywac);
 
