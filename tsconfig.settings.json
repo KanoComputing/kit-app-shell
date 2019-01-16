@@ -5,6 +5,7 @@
         "declaration": true,
         "removeComments": true,
         "noLib": false,
+        "noUnusedLocals": true,
         "target": "es6",
         "sourceMap": true,
         "lib": [

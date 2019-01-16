@@ -11,8 +11,7 @@
     "connect-history-api-fallback": "^1.5.0",
     "cors": "^2.8.4",
     "rimraf": "^2.6.2",
-    "serve-static": "^1.13.2",
-    "tslint": "^5.12.1"
+    "serve-static": "^1.13.2"
   },
   "publishConfig": {
     "access": "public"
@@ -21,6 +20,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
-    "nyc": "^13.1.0"
+    "nyc": "^13.1.0",
+    "tslint": "^5.12.1"
   }
 }

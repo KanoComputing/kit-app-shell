@@ -42,7 +42,7 @@ export class AppXManifest {
     }
     setDefaultTile(app : string, key : string, value : string) : void {
         const query = `./Applications/Application/[@Id="${app}"]/uap:VisualElements/uap:DefaultTile`;
-        const visualElements : et.Element = this.root.find();
+        const visualElements : et.Element = this.root.find(query);
         visualElements.attrib[key] = value;
     }
     setCapabilities(caps : string[]) : void {

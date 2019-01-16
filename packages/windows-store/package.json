@@ -11,8 +11,7 @@
     "elementtree": "^0.1.7",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.2",
-    "sharp": "^0.21.1",
-    "tslint": "^5.12.1"
+    "sharp": "^0.21.1"
   },
   "publishConfig": {
     "access": "public"
@@ -26,6 +25,7 @@
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "mock-require": "^3.0.2",
-    "nyc": "^13.1.0"
+    "nyc": "^13.1.0",
+    "tslint": "^5.12.1"
   }
 }

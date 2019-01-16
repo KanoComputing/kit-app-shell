@@ -9,8 +9,7 @@
     "electron-osx-sign": "^0.4.11",
     "electron-packager": "^13.0.0",
     "mkdirp": "^0.5.1",
-    "rimraf": "^2.6.2",
-    "tslint": "^5.12.1"
+    "rimraf": "^2.6.2"
   },
   "scripts": {
     "test": "mocha",
@@ -28,6 +27,7 @@
     "mocha-jenkins-reporter": "^0.4.1",
     "mock-fs": "^4.7.0",
     "mock-require": "^3.0.2",
-    "nyc": "^13.1.0"
+    "nyc": "^13.1.0",
+    "tslint": "^5.12.1"
   }
 }

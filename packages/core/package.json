@@ -22,7 +22,8 @@
     "mock-fs": "^4.7.0",
     "mock-require": "^3.0.2",
     "nyc": "^13.1.0",
-    "ts-node": "^7.0.1"
+    "ts-node": "^7.0.1",
+    "tslint": "^5.12.1"
   },
   "dependencies": {
     "@babel/core": "^7.2.2",
@@ -49,7 +50,6 @@
     "rollup-plugin-virtual": "^1.0.1",
     "rollup-pluginutils": "^2.3.3",
     "stream-replace": "^1.0.0",
-    "tslint": "^5.12.1",
     "walk-parse5": "^1.0.0",
     "wd": "^1.11.1"
   },

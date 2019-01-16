@@ -16,8 +16,7 @@
     "enquirer": "^2.2.0",
     "open-file-explorer": "^1.0.2",
     "ora": "^3.0.0",
-    "sywac": "^1.2.1",
-    "tslint": "^5.12.1"
+    "sywac": "^1.2.1"
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
@@ -25,7 +24,8 @@
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "mock-require": "^3.0.2",
-    "nyc": "^13.1.0"
+    "nyc": "^13.1.0",
+    "tslint": "^5.12.1"
   },
   "publishConfig": {
     "access": "public"
