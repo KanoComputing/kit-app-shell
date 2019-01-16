@@ -1,5 +1,5 @@
 import { getModulePath } from '@kano/kit-app-shell-cordova/lib/util';
-import * as androidPlatform from'@kano/kit-app-shell-android/lib/platform';
+import * as androidPlatform from '@kano/kit-app-shell-android/lib/platform';
 
 const plugins = [
     ...androidPlatform.plugins,

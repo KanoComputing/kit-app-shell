@@ -8,6 +8,7 @@ import { copy } from '@kano/kit-app-shell-core/lib/util/fs';
 import { Bundler } from '@kano/kit-app-shell-core/lib/bundler';
 import { ElectronBuildOptions } from './types';
 import { IBuild } from '@kano/kit-app-shell-core/lib/types';
+import { snap } from './snapshot/snap';
 
 const writeFile = promisify(fs.writeFile);
 const glob = promisify(globCb);
@@ -48,23 +49,42 @@ const cleanIgnore = [
     '**/Gruntfile.js',
     '**/*.iobj',
     '**/*.lastbuildstate',
+    '**/*.tlog',
+    '**/appveyor.yml',
+    '**/appveyor.yaml',
+    '**/*.gypi',
+    // Custom exclude for node bindings of uwp
+    '**/node-v48-win32-x64/binding.node',
+    '**/node-v59-win32-x64/binding.node',
+    // Remove debugging and profileing files
+    '**/*.pdb',
+    '**/*.ipdb',
+    '**/*.map',
+    // Remove native modules sources
+    '**/*.cc',
+    '**/*.mm',
     '**/*.h',
     '**/*.cpp',
     '**/*.c',
-    '**/*.tlog',
 ];
 
 const babelTargets = {
     chrome: 66, // Electron 3 = Chromium 66
 };
 
+const DEFAULT_PATTERNS = [
+    'package.json',
+    'preload.js',
+    'node_modules/electron/**/*',
+];
+
 /**
  * Copies the electron app from the `app` directory as a template
  * @param {String} out Path to the copy destination
  */
-function copyElectronApp(out) {
+function copyElectronApp(patterns : string[], out : string) : Promise<void> {
     const cwd = path.join(__dirname, '../app');
-    return glob('**/*.*', {
+    const opts = {
         cwd,
         ignore: [
             ...cleanIgnore,
@@ -73,14 +93,38 @@ function copyElectronApp(out) {
         ],
         dot: true,
         nodir: true,
-    }).then((paths) => {
-        // Chain file copying
-        const tasks = paths.reduce((p, file) => {
-            const src = path.join(cwd, file);
-            const dest = path.join(out, file);
-            return p.then(() => copy(src, dest));
-        }, Promise.resolve());
-        return tasks;
+    };
+    const allPatterns = DEFAULT_PATTERNS.concat(patterns);
+    return allPatterns.reduce<Promise<string[]>>((p, pattern) => {
+        return p
+            .then((paths) => {
+                return glob(pattern, opts)
+                    .then((retrievedPaths) => paths.concat(retrievedPaths));
+            });
+    }, Promise.resolve([]))
+        .then((paths) => {
+            // Chain file copying
+            const tasks = paths.reduce((p, file) => {
+                const src = path.join(cwd, file);
+                const dest = path.join(out, file);
+                return p.then(() => copy(src, dest));
+            }, Promise.resolve());
+            return tasks;
+        });
+}
+
+interface IGenerateSnapshotOptions {
+    forcePlatform? : string;
+    ignore? : string[];
+}
+
+function generateSnapshot(root : string, out : string, opts : IGenerateSnapshotOptions = {}) {
+    return snap({
+        main: path.join(__dirname, '../app/main.js'),
+        electronBinaryDir: root,
+        out,
+        forcePlatform: opts.forcePlatform,
+        ignore: opts.ignore,
     });
 }
 
@@ -104,10 +148,11 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
         config,
         out,
         bundleOnly,
+        bundle = {},
     } = opts;
     processState.setStep(`Creating electron app '${config.APP_NAME}'`);
     const tasks = [
-        copyElectronApp(out),
+        copyElectronApp(bundle.patterns || [], out),
         createConfig(config, out),
         Bundler.bundle(
             path.join(__dirname, '../app/index.html'),
@@ -126,14 +171,22 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
                 html: {},
             },
         )
-            .then(bundle => Bundler.write(bundle, out)),
+            .then((b) => Bundler.write(b, out)),
     ];
-    return Promise.all(tasks)
+    return Promise.all(tasks as Array<Promise<string>>)
         .then((results) => {
-            processState.setStep(`Created electron app '${config.APP_NAME}'`);
+            processState.setStep('Generating V8 snapshot');
+            return generateSnapshot(results[2], results[2], {
+                forcePlatform: bundle.forcePlatform,
+                ignore: bundle.ignore,
+            });
+        })
+        .then((o) => {
+            processState.setSuccess('V8 snapshot generated');
+            processState.setSuccess(`Created electron app '${config.APP_NAME}'`);
             // Return bundle outputDir
-            return results[2];
+            return o;
         });
-}
+};
 
 export default electronBuild;

@@ -37,21 +37,21 @@ suite('project', () => {
                 },
             });
             mock('./chdir', {
-                chdir() {},
+                chdir: () => null,
             });
         });
         test('existing project', () => {
             class CacheClassMock {
-                getProject() {
-                    return Promise.resolve('/project');
-                }
                 static configToHash() {
                     return 'hash';
+                }
+                getProject() {
+                    return Promise.resolve('/project');
                 }
             }
             const CacheMock = {
                 ProjectCacheManager: CacheClassMock,
-            }
+            };
             mock('cordova-lib', {
                 cordova: {
                     create() {
@@ -62,7 +62,7 @@ suite('project', () => {
             mock('./cache', CacheMock);
             const { getProject } = mock.reRequire('./project');
             mockFs({
-                '/project': mockFs.directory({}),
+                '/project': mockFs.directory({ items: {} }),
             }, MOCK_DEFAULTS);
             return getProject({
                 app: '/app',
@@ -91,6 +91,9 @@ suite('project', () => {
             const testPlugin = Symbol('plugin');
 
             class CacheClassMock {
+                static configToHash() {
+                    return 'hash';
+                }
                 getProject() {
                     steps.push('get-project');
                     return Promise.resolve(null);
@@ -99,13 +102,10 @@ suite('project', () => {
                     steps.push('set-project');
                     return Promise.resolve();
                 }
-                static configToHash() {
-                    return 'hash';
-                }
             }
             const CacheMock = {
                 ProjectCacheManager: CacheClassMock,
-            }
+            };
             class MockCordovaConfigClass {
                 addHook() {}
                 setPreference() {}
@@ -152,7 +152,7 @@ suite('project', () => {
             mock('./cordova-config', MockCordovaConfig);
             const { getProject } = mock.reRequire('./project');
             mockFs({
-                '/project': mockFs.directory({}),
+                '/project': mockFs.directory({ items: {} }),
             }, MOCK_DEFAULTS);
             return getProject({
                 app: '/app',

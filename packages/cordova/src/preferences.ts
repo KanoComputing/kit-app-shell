@@ -1,4 +1,4 @@
-import { CordovaPreferences } from './types';
+import { ICordovaPreferences } from './types';
 
 /**
  * Collect the key in the options and move it under the preferences key
@@ -6,7 +6,7 @@ import { CordovaPreferences } from './types';
  * @param preference Key to set the cordova preference
  * @param key Key in the opts object
  */
-export function collectPreference(opts : { preferences : CordovaPreferences }, preference : string, key : string) {
+export function collectPreference(opts : { preferences : ICordovaPreferences }, preference : string, key : string) {
     if (!opts[key]) {
         return;
     }

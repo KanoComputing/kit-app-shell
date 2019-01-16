@@ -5,6 +5,8 @@
         "declaration": true,
         "removeComments": true,
         "noLib": false,
+        "noUnusedLocals": true,
+        "forceConsistentCasingInFileNames": true,
         "target": "es6",
         "sourceMap": true,
         "lib": [

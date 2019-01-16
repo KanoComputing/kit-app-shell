@@ -35,12 +35,15 @@ function updateAppx(root : string, app : string, src? : string) : Promise<void> 
             const manifest = new AppXManifest(manifestPath);
             return manifest.open()
                 .then(() => {
-                    // Update all known icons adn tiles
-                    manifest.setLogo(app, 'Square150x150Logo', path.join('assets', filenameFromIconKey('Square150x150Logo')));
-                    manifest.setLogo(app, 'Square44x44Logo', path.join('assets', filenameFromIconKey('Square44x44Logo')));
-                    manifest.setDefaultTile(app, 'Wide310x150Logo', path.join('assets', filenameFromIconKey('Wide310x150Logo')));
-                    manifest.setDefaultTile(app, 'Square310x310Logo', path.join('assets', filenameFromIconKey('Square310x310Logo')));
-                    manifest.setDefaultTile(app, 'Square71x71Logo', path.join('assets', filenameFromIconKey('Square71x71Logo')));
+                    // Update all known icons and tiles
+                    const logos = ['Square150x150Logo', 'Square44x44Logo'];
+                    logos.forEach((logo) => {
+                        manifest.setLogo(app, logo, path.join('assets', filenameFromIconKey(logo)));
+                    });
+                    const defaultTiles = ['Wide310x150Logo', 'Square310x310Logo', 'Square71x71Logo'];
+                    defaultTiles.forEach((tile) => {
+                        manifest.setDefaultTile(app, tile, path.join('assets', filenameFromIconKey(tile)));
+                    });
                     manifest.setMainLogo(path.join('assets', filenameFromIconKey('Square50x50Logo')));
                     return manifest.write();
                 });
@@ -87,7 +90,8 @@ const windowsStoreBuild : IBuild = (opts : WindowsStoreBuildOptions) => {
                 skipInstaller: true,
             }))
         .then((buildDir) => {
-            const icon : string|null = config.ICONS && config.ICONS.WINDOWS_STORE ? path.join(app, config.ICONS.WINDOWS_STORE) : null;
+            const icon : string|null = config.ICONS && config.ICONS.WINDOWS_STORE
+                ? path.join(app, config.ICONS.WINDOWS_STORE) : null;
             if (icon === null) {
                 processState.setWarning('Missing \'ICONS.WINDOWS_STORE\' in config, will use default icon');
             }
@@ -110,7 +114,7 @@ const windowsStoreBuild : IBuild = (opts : WindowsStoreBuildOptions) => {
                 finalSay() {
                     const preAppx = path.join(out, 'pre-appx');
                     return updateAppx(preAppx, WINDOWS_STORE.PACKAGE_NAME, icon);
-                }
+                },
             }).then(() => out);
         })
         .then((outDir) => {

@@ -5,3 +5,5 @@ const iosCli : ICli = {
     ...cli,
     group: 'iOS:',
 };
+
+export default iosCli;

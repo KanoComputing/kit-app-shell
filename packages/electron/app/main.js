@@ -1,4 +1,8 @@
 require('./lib/frozenenv');
+const { app } = require('electron');
+process.on('uncaughtException', (e) => {
+    app.quit();
+});
 const parseArgs = require('minimist');
 const path = require('path');
 
@@ -19,8 +23,7 @@ global.preload = preload;
 const defaultApp = path.join(__dirname, 'www');
 const defaultConfig = path.join(__dirname, 'config.json');
 
-const desktopApp = new App(ui || defaultApp, config || defaultConfig, args);
+// This file will always be at the root of the app directory
+const root = path.resolve(__dirname);
 
-process.on('uncaughtException', (e) => {
-    console.error(e);
-});
+const desktopApp = new App(ui || defaultApp, config || defaultConfig, root, args);

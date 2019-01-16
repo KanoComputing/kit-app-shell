@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 import * as rollup from 'rollup';
 import * as path from 'path';
-import * as nodeResolve from 'rollup-plugin-node-resolve';
+import nodeResolve = require('rollup-plugin-node-resolve');
 import { replace } from './plugins/replace';
-import * as polyfill from 'rollup-plugin-polyfill';
-import * as inject from 'rollup-plugin-inject';
-import * as virtual from 'rollup-plugin-virtual';
+import polyfill = require('rollup-plugin-polyfill');
+import inject = require('rollup-plugin-inject');
+import virtual = require('rollup-plugin-virtual');
 import * as mkdirp from 'mkdirp';
 import { replaceIndex, addRequirejs } from './html';
 import { log } from './log';
@@ -14,14 +14,22 @@ import { processState } from './process-state';
 import { ProgressTracker } from './progress';
 import { promisify } from 'util';
 import * as globCb from 'glob';
-import * as escapeRegExp from 'escape-regexp';
-import { BundleOptions, BundledFile, Bundle, BundleSourceOptions, CopyTask, KashConfig, BundleHtmlOptions } from './types';
+import escapeRegExp = require('escape-regexp');
+import {
+    IBundleOptions,
+    IBundledFile,
+    IBundle,
+    IBundleSourceOptions,
+    ICopyTask,
+    IKashConfig,
+    IBundleHtmlOptions,
+} from './types';
 
 const glob = promisify(globCb);
 
 const writeFile = promisify(fs.writeFile);
 
-function write(file : BundledFile, outputDir : string) : Promise<void> {
+function write(file : IBundledFile, outputDir : string) : Promise<void> {
     const filePath = path.join(outputDir, file.fileName);
     return writeFile(filePath, file.code);
 }
@@ -33,14 +41,15 @@ function writeStatic(root : string, file : string, outputDir : string) : Promise
 }
 
 export class Bundler {
-    static write(bundle : Bundle, outputDir : string) : Promise<string> {
+    static write(bundle : IBundle, outputDir : string) : Promise<string> {
         const tasks = [];
         const appOutputDir = path.join(outputDir, 'www');
+        // TODO: use promise style promisify
         mkdirp.sync(outputDir);
         mkdirp.sync(appOutputDir);
         tasks.push(write(bundle.html, outputDir));
-        bundle.js.forEach(file => tasks.push(write(file, outputDir)));
-        bundle.appJs.forEach(file => tasks.push(write(file, appOutputDir)));
+        bundle.js.forEach((file) => tasks.push(write(file, outputDir)));
+        bundle.appJs.forEach((file) => tasks.push(write(file, appOutputDir)));
         if (bundle.appStatic) {
             const { root, files } = bundle.appStatic;
             // Write assets in series
@@ -56,12 +65,18 @@ export class Bundler {
                 return outputDir;
             });
     }
-    static bundle(html : string, js : string, appSrc : string, config : KashConfig, opts : BundleOptions = { html: { }, js: {}, appJs: { resources: [] } }) : Promise<Bundle> {
+    static bundle(
+        html : string,
+        js : string,
+        appSrc : string,
+        config : IKashConfig,
+        opts : IBundleOptions = { html: { }, js: {}, appJs: { resources: [] } },
+    ) : Promise<IBundle> {
         processState.setStep(`Bundling app at ${appSrc}`);
         const appSrcName = path.basename(appSrc);
-        const htmlOutput = Bundler.bundleHtml(html, opts.html || {} as BundleHtmlOptions);
+        const htmlOutput = Bundler.bundleHtml(html, opts.html || {} as IBundleHtmlOptions);
         const stage1 = replaceIndex(html, js, htmlOutput);
-        const htmlBundle : BundledFile = {
+        const htmlBundle : IBundledFile = {
             fileName: path.basename(html),
             code: stage1,
         };
@@ -73,7 +88,7 @@ export class Bundler {
             tasks.push(Bundler.bundleStatic(opts.appJs.resources, path.dirname(appSrc)));
         }
         return Promise.all(tasks).then((results) => {
-            const pkg : Bundle = {
+            const pkg : IBundle = {
                 html: htmlBundle,
                 js: results[0],
                 appJs: results[1],
@@ -86,7 +101,7 @@ export class Bundler {
             return pkg;
         });
     }
-    static bundleHtml(input : string, opts : BundleHtmlOptions) : string {
+    static bundleHtml(input : string, opts : IBundleHtmlOptions) : string {
         const contents = fs.readFileSync(input, 'utf-8');
         const stage1 = addRequirejs(contents);
         const reg = /<!--\s?build:(.*?)\s?-->([\s\S]*)<!--\s?endbuild\s?-->/g;
@@ -94,7 +109,7 @@ export class Bundler {
         // Replace html comment with build tag
         return stage1.replace(reg, (m, g0) => replacements[g0] || '');
     }
-    static bundleSources(input : string, config : KashConfig, opts : BundleSourceOptions) : Promise<Array<BundledFile>> {
+    static bundleSources(input : string, config : IKashConfig, opts : IBundleSourceOptions) : Promise<IBundledFile[]> {
         const {
             polyfills = [],
             moduleContext = {},
@@ -112,11 +127,11 @@ export class Bundler {
         // TODO: This does not work on non root files, figure out a solution
         const inputRoot = path.dirname(input);
         const configPath = path.join(inputRoot, 'config.js');
-        const replacers = replaces.map(replaceOpts => replace(Object.assign(
+        const replacers = replaces.map((replaceOpts) => replace(Object.assign(
             { delimiters: ['', ''] },
             replaceOpts,
         )));
-        const defaultOptions : rollup.RollupDirOptions = {
+        const defaultOptions = {
             input: [input],
             experimentalCodeSplitting: true,
             plugins: [
@@ -145,7 +160,7 @@ export class Bundler {
             ],
             moduleContext,
             // Silence for now
-            onwarn: () => {},
+            onwarn: () => null,
         };
         if (!bundleOnly) {
             // Skip babel loading if it's not going to be used
@@ -176,23 +191,23 @@ export class Bundler {
         }
         log.trace('ROLLUP OPTIONS', defaultOptions);
         return rollup.rollup(defaultOptions)
-            .then(bundle => bundle.generate({ format: 'amd' }))
-            .then(({ output }) => Object.keys(output).map(id => {
+            .then((bundle) => bundle.generate({ format: 'amd' }))
+            .then(({ output }) => Object.keys(output).map((id) => {
                 // Rollup reports incorrect typings ¯\_(ツ)_/¯
                 return ({
                     // @ts-ignore
                     fileName: output[id].fileName,
                     // @ts-ignore
                     code: output[id].code,
-                })
+                });
             }));
     }
-    static bundleStatic(patterns : Array<string> = [], appRoot : string = '/') : Promise<CopyTask> {
-        const tasks = patterns.map(pattern => glob(pattern, { cwd: appRoot, nodir: true }));
+    static bundleStatic(patterns : string[] = [], appRoot : string = '/') : Promise<ICopyTask> {
+        const tasks = patterns.map((pattern) => glob(pattern, { cwd: appRoot, nodir: true }));
         return Promise.all(tasks)
             .then((results) => {
                 const fileList = results
-                    .reduce<Array<string>>((acc, files) => acc.concat(files), []);
+                    .reduce<string[]>((acc, files) => acc.concat(files), []);
                 return {
                     root: appRoot,
                     files: fileList,

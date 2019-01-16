@@ -4,7 +4,6 @@ const updaterBusAdapter = require('./bus/updater');
 const path = require('path');
 
 const CONTENT_SCHEME = 'kit-app';
-const CONTENT_ROOT = path.join(__dirname, '../');
 
 const Devices = require('@kano/devices-sdk/platforms/nodejs');
 const BusAdapter = require('@kano/devices-sdk/bus-adapter');
@@ -26,7 +25,7 @@ class App {
         }
         return path.join(appDir, this.config.ICONS.WINDOWS);
     }
-    constructor(appDir, config, args) {
+    constructor(appDir, config, root, args) {
         this.config = Object.assign({}, DEFAULTS, require(config));
 
         if (args.profile) {
@@ -45,11 +44,11 @@ class App {
         this.shell = new Shell({
             name: this.config.APP_NAME,
             version: this.config.UI_VERSION,
-            root: CONTENT_ROOT,
+            root,
             scheme: CONTENT_SCHEME,
             width: 1440,
             height: 900,
-            preload: path.join(__dirname, '../preload.js'),
+            preload: path.join(root, 'preload.js'),
             devMode: this.config.ENV === 'development',
             uwpTitlebar: false,
             menuTransform(menu) {

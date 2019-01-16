@@ -15,7 +15,7 @@ const { assert } = chai;
 
 const MOCK_DEFAULTS = { createCwd: false, createTmp: false };
 
-function mockFsAssertWriteOptions(testOptions) {
+function mockFsAssertWriteOptions(testOptions : any) {
     mockRequire('fs', {
         createReadStream() {
             return new Readable({
@@ -24,10 +24,10 @@ function mockFsAssertWriteOptions(testOptions) {
                 },
             });
         },
-        createWriteStream(a, options) {
+        createWriteStream(a : any, options : any) {
             assert.equal(options, testOptions);
             return new Writable({
-                write() {},
+                write: () => null,
             });
         },
     });
@@ -49,7 +49,7 @@ suite('fs', () => {
         test('existing directory', () => {
             mock({
                 '/src/file.txt': 'contents',
-                '/dest': mock.directory({}),
+                '/dest': mock.directory({ items: {} }),
             }, MOCK_DEFAULTS);
             return copy('/src/file.txt', '/dest/file.txt')
                 .then(() => {
@@ -59,7 +59,7 @@ suite('fs', () => {
         test('accepts transform', () => {
             mock({
                 '/src/file.txt': 'contents',
-                '/dest': mock.directory({}),
+                '/dest': mock.directory({ items: {} }),
             }, MOCK_DEFAULTS);
             const transform = new Transform({
                 transform(chunk, encoding, callback) {

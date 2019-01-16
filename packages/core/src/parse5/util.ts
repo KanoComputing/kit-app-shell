@@ -1,13 +1,6 @@
-export interface INodeTree {
-    nodeName : string,
-    tagName : string,
-    attrs : Array<{ [key : string] : string|number }>,
-    namespaceURI : string,
-    childNodes : Array<{ nodeName : string, value : string|number|INodeTree }>,
-    parentNode: INodeTree|null,
-}
+import { DefaultTreeElement, DefaultTreeTextNode } from 'parse5';
 
-export function createScript(src : string) : INodeTree {
+export function createScript(src : string) : DefaultTreeElement {
     return {
         nodeName: 'script',
         tagName: 'script',
@@ -17,10 +10,12 @@ export function createScript(src : string) : INodeTree {
         }],
         namespaceURI: 'http://www.w3.org/1999/xhtml',
         childNodes: [],
-        parentNode: null,
+        parentNode: {
+            childNodes: [],
+        },
     };
 }
-export function createScriptWithContent(content : string) : INodeTree {
+export function createScriptWithContent(content : string) : DefaultTreeElement {
     return {
         nodeName: 'script',
         tagName: 'script',
@@ -29,7 +24,9 @@ export function createScriptWithContent(content : string) : INodeTree {
         childNodes: [{
             nodeName: '#text',
             value: content,
-        }],
-        parentNode: null,
+        } as DefaultTreeTextNode],
+        parentNode: {
+            childNodes: [],
+        },
     };
 }

@@ -34,7 +34,8 @@
     "mocha-jenkins-reporter": "^0.4.1",
     "mock-fs": "^4.7.0",
     "mock-require": "^3.0.2",
-    "nyc": "^13.1.0"
+    "nyc": "^13.1.0",
+    "tslint": "^5.12.1"
   },
   "scripts": {
     "test": "cross-env TS_NODE_FILES=true mocha",

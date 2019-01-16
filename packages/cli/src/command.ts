@@ -1,11 +1,14 @@
 import { util } from '@kano/kit-app-shell-core/lib/util';
 import { log } from '@kano/kit-app-shell-core/lib/log';
 import { agregateArgv, addConfig } from './argv';
-import { Argv } from './types';
+import { IArgv } from './types';
+import { IBuild, IRun, ISign } from '@kano/kit-app-shell-core/lib/types';
 
-export default function runCommand(command : string, platformId : string, argv : Argv) : Promise<void> {
+type IcommandFunction = IBuild|IRun|ISign;
+
+export default function runCommand(command : string, platformId : string, argv : IArgv) : Promise<void> {
     return util.platform.loadPlatformKey(platformId, command)
-        .then((platformCommand) => {
+        .then((platformCommand : IcommandFunction) => {
             // Collect all the options
             return agregateArgv(argv, platformId, command)
             .then((opts) => {

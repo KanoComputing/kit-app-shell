@@ -10,8 +10,8 @@ const getBuilder : IBuilderFactory = (wd, mocha, opts) => {
     // If the user didn't install that module they will be prompted to do so
     if (opts.provider !== 'local') {
         return loadPlatformKey('test', 'get-builder')
-            .then((getBuilder : IBuilderFactory) => {
-                return getBuilder(wd, mocha, opts);
+            .then((loadedBuilder : IBuilderFactory) => {
+                return loadedBuilder(wd, mocha, opts);
             });
     }
     return null;

@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as parse5 from 'parse5';
-import * as walk from 'walk-parse5';
+import walk = require('walk-parse5');
 import * as parse5Util from './parse5/util';
 
 export function replaceIndex(html : string, js : string, code : string) : string {
@@ -8,11 +8,9 @@ export function replaceIndex(html : string, js : string, code : string) : string
     const relJs = `./${path.relative(htmlDir, js)}`.replace(/\\/g, '/');
     const document = parse5.parse(code);
     // Find a potential script node that loads the js
-    walk(document, (node) => {
+    walk(document, (node : parse5.DefaultTreeElement) => {
         if (node.tagName === 'script') {
-            let attr;
-            for (let i = 0; i < node.attrs.length; i += 1) {
-                attr = node.attrs[i];
+            for (const attr of node.attrs) {
                 // Found if the relative path matches the src
                 if (attr.name === 'src' && attr.value === relJs) {
                     const { childNodes } = node.parentNode;

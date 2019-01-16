@@ -2,7 +2,7 @@ import { logging } from './logging';
 
 const { DEBUG } = process.env;
 
-function noop() {}
+const noop = (...args : any[]) => null;
 
 // Use logging as console. Reliably stub it during tests
 export const log = {

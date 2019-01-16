@@ -2,24 +2,24 @@
  * Copied rollup-plugin-replace, but removed
  * magicstring to avoid massive memory usage
  * This means no more sourcemaps
- * TODO: Find a way to use the oroginal plugin. Maybe contact the author about the issue
+ * TODO: Find a way to use the original plugin. Maybe contact the author about the issue
  */
 import { createFilter } from 'rollup-pluginutils';
 
-function escape(str) {
+function escape(str : string) {
     return str.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
 }
 
-function ensureFunction(functionOrValue) {
-    if (typeof functionOrValue === 'function') return functionOrValue;
+function ensureFunction<T>(functionOrValue : () => T|T) {
+    if (typeof functionOrValue === 'function') { return functionOrValue; }
     return () => functionOrValue;
 }
 
-function longest(a, b) {
+function longest(a : string, b : string) {
     return b.length - a.length;
 }
 
-function getReplacements(options) {
+function getReplacements(options : IReplaceOptions) {
     if (options.values) {
         return Object.assign({}, options.values);
     }
@@ -27,26 +27,24 @@ function getReplacements(options) {
     delete values.delimiters;
     delete values.include;
     delete values.exclude;
-    delete values.sourcemap;
-    delete values.sourceMap;
     return values;
 }
 
-function mapToFunctions(object) {
+function mapToFunctions(object : { [propName : string] : any }) {
     return Object.keys(object).reduce((functions, key) => {
-        functions[key] = ensureFunction(object[key]);
+        functions[key] = ensureFunction<string>(object[key]);
         return functions;
-    }, {});
+    }, {} as { [propName : string] : any });
 }
 
-export interface ReplaceOptions {
-    include? : Array<string>;
-    exclude? : Array<string>;
-    delimiters? : Array<string>;
+export interface IReplaceOptions {
+    include? : string[];
+    exclude? : string[];
+    delimiters? : string[];
     values? : {};
 }
 
-export function replace(options : ReplaceOptions = {}) {
+export function replace(options : IReplaceOptions = {}) {
     const filter = createFilter(options.include, options.exclude);
     const { delimiters } = options;
     const functionValues = mapToFunctions(getReplacements(options));
@@ -61,8 +59,8 @@ export function replace(options : ReplaceOptions = {}) {
     return {
         name: 'replace',
 
-        transform(code, id) {
-            if (!filter(id)) return null;
+        transform(code : string, id : string) {
+            if (!filter(id)) { return null; }
 
             let hasReplacements = false;
             let match;
@@ -71,7 +69,7 @@ export function replace(options : ReplaceOptions = {}) {
             let replacement;
             let str = code;
 
-            /* eslint no-cond-assign: 'off' */
+            // tslint:disable-next-line:no-conditional-assignment
             while ((match = pattern.exec(str))) {
                 hasReplacements = true;
 
@@ -82,11 +80,11 @@ export function replace(options : ReplaceOptions = {}) {
                 str = str.substr(0, start) + replacement + str.substr(end);
             }
 
-            if (!hasReplacements) return null;
+            if (!hasReplacements) { return null; }
 
             const result = { code: str };
 
             return result;
         },
     };
-};
+}

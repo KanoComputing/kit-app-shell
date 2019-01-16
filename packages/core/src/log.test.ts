@@ -15,12 +15,12 @@ suite('log', () => {
         log.trace('test');
     });
     test('trace when in debug mode', (done) => {
-        const testMessage = Symbol('message');
+        const testMessage = 'message';
         const originalDebug = process.env.DEBUG;
         process.env.DEBUG = '*';
         mock('./logging', {
             logging: {
-                log(message) {
+                log(message : string) {
                     assert.equal(message, testMessage);
                     done();
                 },
@@ -34,4 +34,3 @@ suite('log', () => {
         mock.stopAll();
     });
 });
-

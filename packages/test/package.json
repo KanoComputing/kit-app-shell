@@ -20,5 +20,8 @@
     "chalk": "^2.4.1",
     "log-symbols": "^2.2.0",
     "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "tslint": "^5.12.1"
   }
 }

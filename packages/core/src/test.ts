@@ -3,38 +3,45 @@ import * as wd from 'wd';
 import * as Mocha from 'mocha';
 import { promisify } from 'util';
 import * as globCb from 'glob';
-import { Builder, TestOptions } from './types';
+import { Builder, TestOptions, IBuilderFactory } from './types';
 
 const glob = promisify(globCb);
 
 class KashTestFramework {
     public wd : typeof wd;
-    public driver : wd.WebDriver;
-    _builder : Builder;
+    public driver? : wd.WebDriver;
+    private builder? : Builder;
     constructor() {
         // TODO: Add features to control API through web-bus
         this.wd = wd;
     }
-    _setBuilder(builder) {
-        this._builder = builder;
+    _setBuilder(builder : Builder) {
+        this.builder = builder;
     }
     _switchContexts() {
-        const asserter = new wd.Asserter((target, cb) => {
-            this.driver.contexts()
+        if (!this.driver) {
+            return Promise.reject('Could not switch contexts: Driver was notinitialized');
+        }
+        const driver = this.driver;
+        const asserter = new wd.Asserter<wd.Context[]>((target, cb) => {
+            driver.contexts()
                 .then((ctxs) => {
                     cb(null, ctxs.length > 1, ctxs);
                 })
-                .catch(e => cb(e));
+                .catch((e) => cb(e));
         });
-        return this.driver.waitFor(asserter)
-            .then(ctxs => this.driver.context(ctxs[1]));
+        return driver.waitFor<wd.Context[]>(asserter)
+            .then((ctxs) => driver.context(ctxs[1]));
     }
-    _beforeEach(test) {
+    _beforeEach(t? : Mocha.Test) {
         if (this.driver) {
             return this.driver.resetApp()
                 .then(() => this._switchContexts());
         }
-        return this._builder(test)
+        if (!this.builder) {
+            return Promise.reject('Could not initialize test: Builder is not defined');
+        }
+        return this.builder(t)
             .then((d) => {
                 this.driver = d;
                 return this._switchContexts();
@@ -51,12 +58,14 @@ class KashTestFramework {
     }
 }
 
-export const test = (platform, opts : TestOptions) => {
+export const test = (platform : { getBuilder : IBuilderFactory }, opts : TestOptions) => {
     const framework = new KashTestFramework();
     // Create new mocha UI inhecting the test framework
-    Mocha.interfaces['selenium-bdd'] = (suite) => {
+    // @ts-ignore
+    Mocha.interfaces['selenium-bdd'] = (suite : Mocha.Suite) => {
         Mocha.interfaces.bdd(suite);
         suite.on('pre-require', (context) => {
+            // @ts-ignore
             context.kash = framework;
         });
         suite.beforeEach(function beforeEach() {
@@ -82,12 +91,12 @@ export const test = (platform, opts : TestOptions) => {
             framework._setBuilder(builder);
             // Grab all spec files using glob
             // TODO: research and mimic mocha's glob behaviour for consistency (e.g. minimist)
-            return Promise.all((opts.spec || []).map(s => glob(s, { cwd: opts.app })))
+            return Promise.all((opts.spec || []).map((s) => glob(s, { cwd: opts.app })))
                 .then((specFiles) => {
                     // Merge all results
-                    const allFiles = specFiles.reduce<Array<string>>((acc : Array<string>, it : string) => acc.concat(it), []);
+                    const allFiles = specFiles.reduce<string[]>((acc, it) => acc.concat(it), []);
                     // Add all files to the mocha instance
-                    allFiles.forEach((file) => {
+                    allFiles.forEach((file : string) => {
                         mocha.addFile(path.join(opts.app, file));
                     });
                     // Start mocha

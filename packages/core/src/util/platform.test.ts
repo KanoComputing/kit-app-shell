@@ -4,6 +4,8 @@ import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import * as mock from 'mock-require';
 
+import 'mocha';
+
 chai.use(chaiAsPromised);
 
 const { assert } = chai;

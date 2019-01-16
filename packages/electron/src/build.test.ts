@@ -31,6 +31,7 @@ suite('electron build', () => {
         mock('@kano/kit-app-shell-core/lib/process-state', {
             processState: {
                 setStep() {},
+                setSuccess() {},
             },
         });
         mock('glob', (pattern, opts, cb) => {
@@ -38,6 +39,11 @@ suite('electron build', () => {
                 return cb(null, ['_test']);
             }
             return cb(null, []);
+        });
+        mock('./snapshot/snap', {
+            snap() {
+                return Promise.resolve('/');
+            },
         });
         const build = mock.reRequire('./build');
         mockFs({

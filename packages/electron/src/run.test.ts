@@ -12,7 +12,6 @@ const { assert } = chai;
 
 suite('electron run', () => {
     test('run', () => {
-        let closeCb;
         mock('child_process', {
             spawn(cmd, args, opts) {
                 assert.equal(args[0], '.');
@@ -20,21 +19,17 @@ suite('electron run', () => {
                 assert.equal(opts._showOutput, true);
                 assert.equal(opts.cwd, path.join(__dirname, '../app'));
                 return {
-                    stdout: new Readable({ read() {} }),
-                    stderr: new Readable({ read() {} }),
-                    on(name, cb) {
-                        if (name === 'close') {
-                            closeCb = cb;
-                        }
-                    },
+                    stdout: new Readable({ read: () => null }),
+                    stderr: new Readable({ read: () => null }),
+                    on: (name, cb) => null,
                 };
             },
         });
         mock('livereload', {
             createServer() {
                 return {
-                    watch() {},
-                    close() {},
+                    watch: () => null,
+                    close: () => null,
                 };
             },
         });
@@ -52,7 +47,7 @@ suite('electron run', () => {
             mock('livereload', {
                 createServer() {
                     return {
-                        watch() {},
+                        watch: () => null,
                         close() {
                             resolve();
                         },
@@ -64,7 +59,7 @@ suite('electron run', () => {
         return Promise.all([
             expectServerToClose,
             // Ignore error as it comes from our test
-            run.default({ app: '/app' }, {}).catch(() => {}),
+            run.default({ app: '/app' }, {}).catch(() => null),
         ]);
     });
     teardown(() => {
