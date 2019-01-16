@@ -2,24 +2,24 @@
  * Copied rollup-plugin-replace, but removed
  * magicstring to avoid massive memory usage
  * This means no more sourcemaps
- * TODO: Find a way to use the oroginal plugin. Maybe contact the author about the issue
+ * TODO: Find a way to use the original plugin. Maybe contact the author about the issue
  */
 import { createFilter } from 'rollup-pluginutils';
 
-function escape(str) {
+function escape(str : string) {
     return str.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
 }
 
-function ensureFunction(functionOrValue) {
+function ensureFunction<T>(functionOrValue : () => T|T) {
     if (typeof functionOrValue === 'function') { return functionOrValue; }
     return () => functionOrValue;
 }
 
-function longest(a, b) {
+function longest(a : string, b : string) {
     return b.length - a.length;
 }
 
-function getReplacements(options) {
+function getReplacements(options : IReplaceOptions) {
     if (options.values) {
         return Object.assign({}, options.values);
     }
@@ -27,16 +27,14 @@ function getReplacements(options) {
     delete values.delimiters;
     delete values.include;
     delete values.exclude;
-    delete values.sourcemap;
-    delete values.sourceMap;
     return values;
 }
 
-function mapToFunctions(object) {
+function mapToFunctions(object : { [propName : string] : any }) {
     return Object.keys(object).reduce((functions, key) => {
-        functions[key] = ensureFunction(object[key]);
+        functions[key] = ensureFunction<string>(object[key]);
         return functions;
-    }, {});
+    }, {} as { [propName : string] : any });
 }
 
 export interface IReplaceOptions {
@@ -61,7 +59,7 @@ export function replace(options : IReplaceOptions = {}) {
     return {
         name: 'replace',
 
-        transform(code, id) {
+        transform(code : string, id : string) {
             if (!filter(id)) { return null; }
 
             let hasReplacements = false;

@@ -2,20 +2,20 @@
 import * as path from 'path';
 import * as mockFs from 'mock-fs';
 import * as mock from 'mock-require';
-import { RcLoader } from './rc';
 import { assert } from 'chai';
 
 const MOCK_DEFAULTS = { createCwd: false, createTmp: false };
 
 suite('RcLoader', () => {
     test('check', () => {
+        const { RcLoader } = mock.reRequire('./rc');
         mockFs({
             '/file.txt': '',
         }, MOCK_DEFAULTS);
         return RcLoader.check('/file.txt')
-            .then(exists => assert.equal(exists, true))
+            .then((exists : boolean) => assert.equal(exists, true))
             .then(() => RcLoader.check('/nope.txt'))
-            .then(exists => assert.equal(exists, false));
+            .then((exists : boolean) => assert.equal(exists, false));
     });
     suite('findAll', () => {
         test('all files', () => {
@@ -38,9 +38,9 @@ suite('RcLoader', () => {
             mockFs(allFiles.reduce((acc, file) => {
                 acc[file] = '';
                 return acc;
-            }, {}), MOCK_DEFAULTS);
+            }, {} as any), MOCK_DEFAULTS);
             return RcLoader.findAll('/')
-                .then((files) => {
+                .then((files : string[]) => {
                     allFiles.forEach((f) => {
                         assert.include(files, path.normalize(f));
                     });
@@ -57,7 +57,7 @@ suite('RcLoader', () => {
             });
             const { RcLoader } = mock.reRequire('./rc');
             return RcLoader.findAll('/')
-                .then((files) => {
+                .then((files : string[]) => {
                     assert.equal(files.length, 0);
                 });
         });
@@ -87,9 +87,9 @@ suite('RcLoader', () => {
         mockFs(allFiles.reduce((acc, file) => {
             acc[file] = '';
             return acc;
-        }, {}), MOCK_DEFAULTS);
+        }, {} as any), MOCK_DEFAULTS);
         return RcLoader.load('/')
-            .then((data) => {
+            .then((data : any) => {
                 assert.containsAllKeys(data, allFiles);
             });
     });
@@ -98,4 +98,3 @@ suite('RcLoader', () => {
         mock.stopAll();
     });
 });
-

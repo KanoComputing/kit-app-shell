@@ -7,8 +7,8 @@ import 'mocha';
 
 const MOCK_DEFAULTS = { createCwd: false, createTmp: false };
 
-function mockConfig(appDir, files, version) {
-    const mocks = {};
+function mockConfig(appDir : string, files : any, version : string) {
+    const mocks = {} as any;
     Object.keys(files).forEach((fileName) => {
         const filePath = path.join(appDir, `config/${fileName}.json`);
         const fileData = files[fileName];

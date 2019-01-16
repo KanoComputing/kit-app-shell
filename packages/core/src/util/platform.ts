@@ -1,9 +1,6 @@
-export interface IPlatformPart {
-    enquire? : (prompt : typeof import('enquirer').prompt, {}) => Promise<{}>;
-    generate? : ({}) => {}|Promise<{}>;
-    group? : string;
-    (opts : any) : Promise<any>|any;
-}
+import { Sywac, IBuild, IRun, IBuilderFactory, ISign, IConfigure, ICli, ICommand } from '../types';
+
+export type IPlatformPart = IBuild|IRun|ISign|IBuilderFactory|IConfigure|ICli;
 
 // Loads a platform sub-module
 // This allows us to load just the CLI config and only the required command
@@ -11,7 +8,7 @@ export interface IPlatformPart {
 // that will never run for a session,
 // e.g. Do not load heavy testing frameworks when we only need to run the app
 // The default location is lib/<key>
-export function loadPlatformKey(name : string, key : string) : Promise<IPlatformPart> {
+export function loadPlatformKey(name : string, key : string) : Promise<IPlatformPart|null> {
     if (name === 'core' || name === 'cli') {
         return Promise.reject(new Error(`Could not load platform: '${name}' is reserved`));
     }
@@ -39,7 +36,7 @@ export function loadPlatformKey(name : string, key : string) : Promise<IPlatform
         });
 }
 
-export function registerCommands(sywac, platform) {
+export function registerCommands(sywac : Sywac, platform : { cli? : ICli }) {
     // Ignore missing cli
     if (!platform.cli) {
         return;
@@ -51,7 +48,7 @@ export function registerCommands(sywac, platform) {
     platform.cli.commands(sywac);
 }
 
-export function registerOptions(sywac, platform, command) {
+export function registerOptions(sywac : Sywac, platform : { cli? : ICli }, command : ICommand) {
     // Ignore missing cli
     if (!platform.cli) {
         return;

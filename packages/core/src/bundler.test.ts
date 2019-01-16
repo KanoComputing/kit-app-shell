@@ -2,7 +2,6 @@
 import * as path from 'path';
 import * as  mockFs from 'mock-fs';
 import * as mock from 'mock-require';
-import { Bundler } from './bundler';
 import * as chai from 'chai';
 import chaiFs = require('chai-fs');
 chai.use(chaiFs);
@@ -11,17 +10,21 @@ const { assert } = chai;
 
 const MOCK_DEFAULTS = { createCwd: false, createTmp: false };
 
-function wait(t) {
-    return new Promise(res => setTimeout(res, t));
+function wait(t : number) {
+    return new Promise((res) => setTimeout(res, t));
 }
 
 suite('Bundler', () => {
     test('bundleHtml', () => {
+        const { Bundler } = mock.reRequire('./bundler');
         const transformed = Bundler.bundleHtml(
             path.join(__dirname, '../test/resources/bundler/index.html'),
             { replacements: { test: '<div>Test</div>' } },
         );
-        assert.equal(transformed, '<html lang="en"><div>Test</div><head><script src="/require.js"></script></head><body></body></html>');
+        assert.equal(
+            transformed,
+            '<html lang="en"><div>Test</div><head><script src="/require.js"></script></head><body></body></html>',
+        );
     });
     test('write', () => {
         const bundle = {
@@ -42,6 +45,7 @@ suite('Bundler', () => {
                 files: ['a.png'],
             },
         };
+        const { Bundler } = mock.reRequire('./bundler');
         mockFs({
             '/static/a.png': 'static-test',
         }, MOCK_DEFAULTS);
@@ -58,12 +62,12 @@ suite('Bundler', () => {
     test('bundle', () => {
         // Fake rollup, avoid testing rollup
         mock('rollup', {
-            rollup(opts) {
+            rollup(opts : any) {
                 return Promise.resolve({
                     generate() {
                         // Generate fake output based on the provided inputs
                         return Promise.resolve({
-                            output: opts.input.reduce((acc, id) => {
+                            output: opts.input.reduce((acc : any, id : string) => {
                                 acc[id] = 'test';
                                 return acc;
                             }, {}),
@@ -72,11 +76,11 @@ suite('Bundler', () => {
                 });
             },
         });
-        mock('rollup-plugin-minify-html-literals', { default: () => {} });
-        mock('rollup-plugin-uglify-es', () => {});
-        mock('@babel', () => {});
+        mock('rollup-plugin-minify-html-literals', { default: () => null });
+        mock('rollup-plugin-uglify-es', () => null);
+        mock('@babel', () => null);
         // Fake bable plugin. Babel always tries to resolve its plugins
-        mock('rollup-plugin-babel', () => {});
+        mock('rollup-plugin-babel', () => null);
         const html = '/index.html';
         const js = '/index.js';
         const appJs = '/app.js';
@@ -101,7 +105,7 @@ suite('Bundler', () => {
         });
         const { Bundler } = mock.reRequire('./bundler');
         return Bundler.bundleStatic(['testPattern'])
-            .then((result) => {
+            .then((result : any) => {
                 assert.equal(result.root, '/');
                 assert.equal(result.files.indexOf('path1'), 0);
                 assert.equal(result.files.indexOf('path2'), 1);

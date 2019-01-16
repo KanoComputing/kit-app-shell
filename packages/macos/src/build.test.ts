@@ -45,7 +45,7 @@ suite('macOS build', () => {
                 'snapshot_blob.bin': '',
                 'v8_context_snapshot.bin': '',
             },
-            [path.resolve('/App.app/Contents/Frameworks/Electron Framework.framework/Resources')]: mockFs.directory(),
+            [path.resolve('/App.app/Contents/Frameworks/Electron Framework.framework/Resources')]: mockFs.directory({ items: {} }),
         });
 
         return Promise.all([
@@ -91,7 +91,7 @@ suite('macOS build', () => {
                 'snapshot_blob.bin': '',
                 'v8_context_snapshot.bin': '',
             },
-            [path.resolve('/Test.app/Contents/Frameworks/Electron Framework.framework/Resources')]: mockFs.directory(),
+            [path.resolve('/Test.app/Contents/Frameworks/Electron Framework.framework/Resources')]: mockFs.directory({ items: {} }),
         });
         return build.default({
             app: '/app',

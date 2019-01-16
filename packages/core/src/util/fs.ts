@@ -1,15 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as replace from 'stream-replace';
+import replace = require('stream-replace');
 import * as mkdirpCb from 'mkdirp';
 import { promisify } from 'util';
-import { Writable } from 'stream';
 
 const mkdirp = promisify(mkdirpCb);
 
 interface ICopyOptions {
-    transform? : Writable;
-    writeOptions? : {};
+    transform? : NodeJS.ReadWriteStream;
+    writeOptions? : any;
 }
 
 /**
@@ -48,7 +47,12 @@ export function copy(src : string, dest : string, opts? : ICopyOptions) : Promis
         .then(() => _copy(src, dest, opts));
 }
 
-export function fromTemplate(tmpPath : string, dest : string, options : {}, writeOptions? : {}) : Promise<void> {
+export function fromTemplate(
+    tmpPath : string,
+    dest : string,
+    options : { [K : string] : string },
+    writeOptions? : {},
+) : Promise<void> {
     const transform = replace(/\$\{(.*?)\}/g, (match, g1) => options[g1] || '');
     return copy(tmpPath, dest, {
         transform,

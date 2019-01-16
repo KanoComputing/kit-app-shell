@@ -173,7 +173,7 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
         )
             .then((b) => Bundler.write(b, out)),
     ];
-    return Promise.all(tasks)
+    return Promise.all(tasks as Array<Promise<string>>)
         .then((results) => {
             processState.setStep('Generating V8 snapshot');
             return generateSnapshot(results[2], results[2], {

@@ -82,17 +82,27 @@ export declare type TestOptions = IOptions & {
     spec? : string[];
 };
 
-export interface IDisposable {
-    dispose();
+export interface ISignOptions {
+    app : string;
 }
 
-export type Builder = (test : Mocha.Test) => Promise<import('wd').WebDriver>;
+export interface IDisposable {
+    dispose() : void;
+}
 
-export type IBuilderFactory = (wd : typeof import('wd'), mocha : import('mocha'), opts : any) => Promise<Builder>;
+export type WD = any;
+export type WebDriver = any;
+export type Sywac = any;
+
+export type Builder = (test? : Mocha.Test) => Promise<WebDriver>;
+
+export type IBuilderFactory = (wd : WD, mocha : import('mocha'), opts : any) => Promise<Builder>;
 
 export type IBuild = (opts : IBuildOptions)  => Promise<string>;
 
 export type IRun = (opts : IRunOptions)  => Promise<any>;
+
+export type ISign = (opts : ISignOptions)  => Promise<any>;
 
 interface IAnswers {
     [propName : string] : any;
@@ -104,13 +114,21 @@ export interface IConfigure {
     generate?(answers : IAnswers) : any;
 }
 
-export type ISywacConfigure = (sywac : typeof import('sywac'))  => void;
+export type ISywacConfigure = (sywac : Sywac)  => void;
 
-export interface ICli {
+export enum ICommand {
+    Run = 'run',
+    Build = 'build',
+    Test = 'test',
+    Sign = 'sign',
+    Configure = 'configure',
+}
+
+type ICliCommand = {
+    [key in ICommand]? : ISywacConfigure;
+};
+
+export type ICli = ICliCommand & {
     group? : string;
     commands? : ISywacConfigure;
-    run? : ISywacConfigure;
-    build? : ISywacConfigure;
-    test? : ISywacConfigure;
-    sign? : ISywacConfigure;
-}
+};

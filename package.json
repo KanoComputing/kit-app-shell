@@ -4,6 +4,9 @@
     "packages/*"
   ],
   "private": true,
+  "resolutions": {
+    "typescript": "3.2.2"
+  },
   "scripts": {
     "lint": "tslint -p tsconfig.settings.json",
     "tsc": "tsc",

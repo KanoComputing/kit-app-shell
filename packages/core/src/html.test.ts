@@ -13,7 +13,11 @@ suite('html.js', () => {
         );
     });
     test('replaceIndex', () => {
-        const result = replaceIndex('/index.html', '/js/boot.js', '<html><body><script type="module" src="./js/boot.js"></script></body></html>');
+        const result = replaceIndex(
+            '/index.html',
+            '/js/boot.js',
+            '<html><body><script type="module" src="./js/boot.js"></script></body></html>',
+        );
         assert.equal(result.indexOf('type="module" src="./js/boot.js"'), -1, 'Original script wasn\'t replaced');
     });
 });

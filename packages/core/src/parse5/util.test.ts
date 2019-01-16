@@ -2,6 +2,7 @@
 import { assert } from 'chai';
 import { createScript, createScriptWithContent } from './util';
 import 'mocha';
+import { DefaultTreeTextNode } from 'parse5';
 
 function randomString() {
     return Math.random()
@@ -21,6 +22,6 @@ suite('parse5/util.js', () => {
     test('createScriptWithContent', () => {
         const content = randomString();
         const script = createScriptWithContent(content);
-        assert.equal(script.childNodes[0].value, content);
+        assert.equal((script.childNodes[0] as DefaultTreeTextNode).value, content);
     });
 });

@@ -6,7 +6,7 @@ import * as Api from 'sywac/api';
 // This saves a lot of time as the big modules for building are not loaded is not needed
 import * as platformUtils from '@kano/kit-app-shell-core/lib/util/platform';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
-import { IDisposable, ICli } from '@kano/kit-app-shell-core/lib/types';
+import { IDisposable, ICli, ICommand } from '@kano/kit-app-shell-core/lib/types';
 import chalk from 'chalk';
 import { ISywac, IArgv } from './types';
 
@@ -166,7 +166,7 @@ class CLI {
     secondPass(platformId : string) : Promise<any> {
         const sywac = new Api();
         return platformUtils.loadPlatformKey(platformId, 'cli')
-            .then((platformCli) => {
+            .then((platformCli : ICli) => {
                 const platform = {
                     cli: platformCli || {} as ICli,
                 };
@@ -192,7 +192,7 @@ class CLI {
                         const sywacPatch = CLI.patchSywacOptions(s, {
                             group: platform.cli.group || 'Platform: ',
                         });
-                        platformUtils.registerOptions(s, platform, 'build');
+                        platformUtils.registerOptions(s, platform, ICommand.Build);
                         sywacPatch.dispose();
                     },
                     run: (argv) => {
@@ -213,7 +213,7 @@ class CLI {
                         const sywacPatch = CLI.patchSywacOptions(s, {
                             group: platform.cli.group || 'Platform: ',
                         });
-                        platformUtils.registerOptions(s, platform, 'run');
+                        platformUtils.registerOptions(s, platform, ICommand.Run);
                         sywacPatch.dispose();
                     },
                     run: (argv) => {
@@ -240,7 +240,7 @@ class CLI {
                         const sywacPatch = CLI.patchSywacOptions(s, {
                             group: platform.cli.group || 'Platform: ',
                         });
-                        platformUtils.registerOptions(s, platform, 'test');
+                        platformUtils.registerOptions(s, platform, ICommand.Test);
                         sywacPatch.dispose();
                     },
                     run: (argv) => {
@@ -261,7 +261,7 @@ class CLI {
                         const sywacPatch = CLI.patchSywacOptions(s, {
                             group: platform.cli.group || 'Platform: ',
                         });
-                        platformUtils.registerOptions(s, platform, 'sign');
+                        platformUtils.registerOptions(s, platform, ICommand.Sign);
                         sywacPatch.dispose();
                     },
                     run: (argv) => {
@@ -281,7 +281,7 @@ class CLI {
                         const sywacPatch = CLI.patchSywacOptions(s, {
                             group: platform.cli.group || 'Platform: ',
                         });
-                        platformUtils.registerOptions(s, platform, 'configure');
+                        platformUtils.registerOptions(s, platform, ICommand.Configure);
                         sywacPatch.dispose();
                     },
                     run: (argv) => {

@@ -35,7 +35,9 @@ export const RcLoader = {
     },
     load(app : string) : Promise<IOptions> {
         return RcLoader.findAll(app)
-            .then((files) => files.reduce((acc, file) => deepMerge(acc, require(file)), {}))
+            .then((files) => files.reduce<IBuildOptions>(
+                (acc, file) => deepMerge(acc, require(file)), {} as IBuildOptions),
+            )
             .then((opts : IBuildOptions) => {
                 // Get the defined temporary directory or use the system one
                 opts.tmpdir = process.env.KASH_TMP_DIR ? path.resolve(process.env.KASH_TMP_DIR) : os.tmpdir();

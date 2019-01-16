@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 import * as rollup from 'rollup';
 import * as path from 'path';
-import * as nodeResolve from 'rollup-plugin-node-resolve';
+import nodeResolve = require('rollup-plugin-node-resolve');
 import { replace } from './plugins/replace';
-import * as polyfill from 'rollup-plugin-polyfill';
-import * as inject from 'rollup-plugin-inject';
-import * as virtual from 'rollup-plugin-virtual';
+import polyfill = require('rollup-plugin-polyfill');
+import inject = require('rollup-plugin-inject');
+import virtual = require('rollup-plugin-virtual');
 import * as mkdirp from 'mkdirp';
 import { replaceIndex, addRequirejs } from './html';
 import { log } from './log';
@@ -14,7 +14,7 @@ import { processState } from './process-state';
 import { ProgressTracker } from './progress';
 import { promisify } from 'util';
 import * as globCb from 'glob';
-import * as escapeRegExp from 'escape-regexp';
+import escapeRegExp = require('escape-regexp');
 import {
     IBundleOptions,
     IBundledFile,
@@ -131,7 +131,7 @@ export class Bundler {
             { delimiters: ['', ''] },
             replaceOpts,
         )));
-        const defaultOptions : rollup.RollupDirOptions = {
+        const defaultOptions = {
             input: [input],
             experimentalCodeSplitting: true,
             plugins: [

@@ -13,7 +13,20 @@ import * as cp from 'child_process';
 
 let innoSetupPath = path.join(path.dirname(path.dirname(require.resolve('innosetup-compiler'))), 'bin', 'ISCC.exe');
 
-function packageInnoSetup(iss, options, cb) {
+interface IPackageInnoSetupOptions {
+    definitions? : {
+        [propName : string] : string;
+    };
+    verbose? : boolean;
+    signtoolname? : string;
+    signtoolcommand? : string;
+    gui? : boolean;
+    [propName : string] : any;
+}
+
+type ICallback = (err : Error|null) => void;
+
+function packageInnoSetup(iss : string, options : IPackageInnoSetupOptions, cb : ICallback) {
     options = options || {};
 
     const definitions = options.definitions || {};
@@ -62,6 +75,6 @@ function packageInnoSetup(iss, options, cb) {
         .on('exit', () => cb(null));
 }
 
-export function buildWin32Setup(opts, cb) {
+export function buildWin32Setup(opts : IPackageInnoSetupOptions, cb : ICallback) {
     packageInnoSetup(opts.iss, opts, cb);
 }
