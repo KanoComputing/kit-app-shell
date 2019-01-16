@@ -13,9 +13,10 @@ type WebRunOptions = {
 const webRun : IRun = function ({ app, config = {}, port = 8000 } : WebRunOptions) {
     const server = serve(app, config).listen(port);
 
-    const address = server.address() as AddressInfo;
-
-    processState.setInfo(`Serving ${chalk.blue(app)} at ${chalk.green(`http://localhost:${address.port}`)}`);
+    server.on('listening', () => {
+        const address = server.address() as AddressInfo;
+        processState.setInfo(`Serving ${chalk.blue(app)} at ${chalk.green(`http://localhost:${address.port}`)}`);
+    });
 
     // Never resolves, to let the CLI hang while the server runs
     return new Promise(() => {});
