@@ -8,7 +8,7 @@ import * as platformUtils from '@kano/kit-app-shell-core/lib/util/platform';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import { IDisposable, ICli } from '@kano/kit-app-shell-core/lib/types';
 import chalk from 'chalk';
-import { Sywac, Argv } from './types';
+import { ISywac, IArgv } from './types';
 
 type ProcessState = typeof processState;
 
@@ -16,7 +16,42 @@ type ProcessState = typeof processState;
  * Parses inputs, runs the commands and report to the user
  */
 class CLI {
-    processArgv : Array<string>;
+    static parseCommon(sywac : ISywac) : ISywac {
+        return sywac
+            .positional('[app=./]', {
+                params: [{
+                    required: true,
+                    desc: 'Path to the root of the app',
+                    coerce: path.resolve,
+                }],
+            })
+            .string('env', {
+                desc: 'Target environment',
+                defaultValue: 'development',
+            });
+    }
+    static applyStyles(sywac : ISywac) : ISywac {
+        return sywac.style({
+            group: (s) => chalk.cyan.bold(s),
+            desc: (s) => chalk.white(s),
+            hints: (s) => chalk.dim(s),
+            flagsError: (s) => chalk.red(s),
+        });
+    }
+    static patchSywacOptions(sywac : ISywac, forcedOptions : any) : IDisposable {
+        const originalOptions = sywac._addOptionType.bind(sywac);
+        sywac._addOptionType = (flags, opts, type) => originalOptions(
+            flags,
+            Object.assign({}, opts, forcedOptions),
+            type,
+        );
+        return {
+            dispose() {
+                sywac._addOptionType = originalOptions;
+            },
+        };
+    }
+    processArgv : string[];
     startedAt : number;
     duration : number;
     reporter : import('./reporters/reporter').IReporter;
@@ -33,6 +68,7 @@ class CLI {
                 if (result.argv.platform) {
                     return this.secondPass(result.argv.platform);
                 }
+                // tslint:disable-next-line:no-console
                 console.log(result.output);
                 return this.end(result.code);
             });
@@ -64,42 +100,7 @@ class CLI {
             return this.end(1);
         });
     }
-    static parseCommon(sywac : Sywac) : Sywac {
-        return sywac
-            .positional('[app=./]', {
-                params: [{
-                    required: true,
-                    desc: 'Path to the root of the app',
-                    coerce: path.resolve,
-                }],
-            })
-            .string('env', {
-                desc: 'Target environment',
-                defaultValue: 'development',
-            });
-    }
-    static applyStyles(sywac : Sywac) : Sywac {
-        return sywac.style({
-            group: s => chalk.cyan.bold(s),
-            desc: s => chalk.white(s),
-            hints: s => chalk.dim(s),
-            flagsError: s => chalk.red(s),
-        });
-    }
-    static patchSywacOptions(sywac : Sywac, forcedOptions : any) : IDisposable {
-        const originalOptions = sywac._addOptionType.bind(sywac);
-        sywac._addOptionType = (flags, opts, type) => originalOptions(
-            flags,
-            Object.assign({}, opts, forcedOptions),
-            type,
-        );
-        return {
-            dispose() {
-                sywac._addOptionType = originalOptions;
-            },
-        };
-    }
-    mountReporter(argv : Argv) : Promise<void> {
+    mountReporter(argv : IArgv) : Promise<void> {
         if (argv.quiet) {
             return Promise.resolve();
         }
@@ -113,7 +114,7 @@ class CLI {
             p = import('./reporters/console');
         }
         p
-            .then((ReporterModule : { default: any }) => {
+            .then((ReporterModule : { default : any }) => {
                 this.reporter = (new ReporterModule.default()) as import('./reporters/reporter').IReporter;
                 this.processState.on('step', ({ message = '' }) => this.reporter.onStep(message));
                 this.processState.on('success', ({ message = '' }) => this.reporter.onSuccess(message));
@@ -135,21 +136,21 @@ class CLI {
         commands.forEach((cmd) => {
             sywac.command(`${cmd} <platform> --help`, {
                 desc: `Show help for the ${cmd} command`,
-                run: argv => this.secondPass(argv.platform),
+                run: (argv) => this.secondPass(argv.platform),
             });
         });
 
         // Allow custom commands from the platform itself
-        sywac.positional(`<command> <platform> --help`, {
+        sywac.positional('<command> <platform> --help', {
             desc: 'A platform command',
-            run: argv => this.secondPass(argv.platform),
+            run: (argv) => this.secondPass(argv.platform),
         });
 
         sywac.command('open config', {
             desc: 'Open the location of your configuration',
             run: () => {
                 return import('./open-config')
-                    .then(openConfig => openConfig.default());
+                    .then((openConfig) => openConfig.default());
             },
         });
 
@@ -169,7 +170,7 @@ class CLI {
                 const platform = {
                     cli: platformCli || {} as ICli,
                 };
-        
+
                 sywac.command('build <platform>', {
                     desc: 'build the application',
                     setup: (s) => {
@@ -204,7 +205,7 @@ class CLI {
                             });
                     },
                 });
-        
+
                 sywac.command('run <platform>', {
                     desc: 'run the application',
                     setup: (s) => {
@@ -225,7 +226,7 @@ class CLI {
                             });
                     },
                 });
-        
+
                 sywac.command('test <platform>', {
                     desc: 'test the application',
                     setup: (s) => {
@@ -252,7 +253,7 @@ class CLI {
                             });
                     },
                 });
-        
+
                 sywac.command('sign <platform>', {
                     desc: 'sign an application package',
                     setup: (s) => {
@@ -273,7 +274,7 @@ class CLI {
                             });
                     },
                 });
-        
+
                 sywac.command('configure <platform>', {
                     desc: 'configure kash',
                     setup: (s) => {
@@ -293,36 +294,37 @@ class CLI {
                             });
                     },
                 });
-        
+
                 sywac.boolean('--quiet, -q', {
                     desc: 'Silence all outputs',
                     defaultValue: false,
                 });
-        
+
                 sywac.boolean('--verbose', {
                     desc: 'Displays verbose logs',
                     defaultValue: false,
                 });
-        
+
                 sywac.help();
                 sywac.showHelpByDefault();
-        
+
                 sywac.version();
-        
+
                 sywac.configure({ name: 'kash' });
-        
+
                 // Register the global commands for the platform
-                const sywacPatch = CLI.patchSywacOptions(sywac, {
+                const sywacPatcher = CLI.patchSywacOptions(sywac, {
                     group: platform.cli.group || 'Platform: ',
                 });
                 platformUtils.registerCommands(sywac, platform);
-                sywacPatch.dispose();
-        
+                sywacPatcher.dispose();
+
                 CLI.applyStyles(sywac);
-        
+
                 return sywac.parse(this.processArgv)
                     .then((result) => {
                         if (result.output.length) {
+                            // tslint:disable-next-line:no-console
                             console.log(result.output);
                         }
                         this.end(result.code);

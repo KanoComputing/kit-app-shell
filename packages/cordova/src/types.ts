@@ -1,43 +1,43 @@
-import { BuildOptions, RunOptions } from '@kano/kit-app-shell-core/lib/types';
+import { IBuildOptions, IRunOptions } from '@kano/kit-app-shell-core/lib/types';
 
 // From cordova documentation. See https://cordova.apache.org/docs/en/latest/guide/appdev/hooks/
-export type Hooks = {
-    before_platform_add? : Array<string>;
-    after_platform_add? : Array<string>;
-    before_platform_rm? : Array<string>;
-    after_platform_rm? : Array<string>;
-    before_platform_ls? : Array<string>;
-    after_platform_ls? : Array<string>;
-    before_prepare? : Array<string>;
-    after_prepare? : Array<string>;
-    before_compile? : Array<string>;
-    after_compile? : Array<string>;
-    before_deploy? : Array<string>;
-    before_build? : Array<string>;
-    after_build? : Array<string>;
-    before_emulate? : Array<string>;
-    after_emulate? : Array<string>;
-    before_run? : Array<string>;
-    after_run? : Array<string>;
-    before_serve? : Array<string>;
-    after_serve? : Array<string>;
-    before_clean? : Array<string>;
-    after_clean? : Array<string>;
-    pre_package? : Array<string>;
-    before_plugin_add? : Array<string>;
-    after_plugin_add? : Array<string>;
-    before_plugin_rm? : Array<string>;
-    after_plugin_rm? : Array<string>;
-    before_plugin_ls? : Array<string>;
-    after_plugin_ls? : Array<string>;
-    before_plugin_search? : Array<string>;
-    after_plugin_search? : Array<string>;
-    before_plugin_install? : Array<string>;
-    after_plugin_install? : Array<string>;
-    before_plugin_uninstall? : Array<string>;
-};
+export interface IHooks {
+    before_platform_add? : string[];
+    after_platform_add? : string[];
+    before_platform_rm? : string[];
+    after_platform_rm? : string[];
+    before_platform_ls? : string[];
+    after_platform_ls? : string[];
+    before_prepare? : string[];
+    after_prepare? : string[];
+    before_compile? : string[];
+    after_compile? : string[];
+    before_deploy? : string[];
+    before_build? : string[];
+    after_build? : string[];
+    before_emulate? : string[];
+    after_emulate? : string[];
+    before_run? : string[];
+    after_run? : string[];
+    before_serve? : string[];
+    after_serve? : string[];
+    before_clean? : string[];
+    after_clean? : string[];
+    pre_package? : string[];
+    before_plugin_add? : string[];
+    after_plugin_add? : string[];
+    before_plugin_rm? : string[];
+    after_plugin_rm? : string[];
+    before_plugin_ls? : string[];
+    after_plugin_ls? : string[];
+    before_plugin_search? : string[];
+    after_plugin_search? : string[];
+    before_plugin_install? : string[];
+    after_plugin_install? : string[];
+    before_plugin_uninstall? : string[];
+}
 
-export type CordovaPreferences = {
+export interface ICordovaPreferences {
     AllowInlineMediaPlayback? : boolean;
     AndroidLaunchMode? : string;
     ['android-maxSdkVersion']? : number;
@@ -91,20 +91,20 @@ export type CordovaPreferences = {
     ['target-device']? : string;
     ['windows-phone-target-version']? : string;
     ['windows-target-version']? : string;
-};
+}
 
-export type CordovaBuildOptions = CordovaOptions & BuildOptions & {
-    clean? : Array<string>;
-    run: boolean;
-    buildOpts: {};
-};
-
-export interface CordovaOptions {
-    plugins : Array<string>;
-    platforms : Array<string>;
-    hooks : Hooks;
+export interface ICordovaOptions {
+    plugins : string[];
+    platforms : string[];
+    hooks : IHooks;
     cacheId : string;
-    preferences : CordovaPreferences;
-};
+    preferences : ICordovaPreferences;
+}
 
-export type CordovaRunOptions = CordovaOptions & RunOptions;
+export interface ICordovaBuildOptions extends ICordovaOptions, IBuildOptions {
+    clean? : string[];
+    run : boolean;
+    buildOpts : {};
+}
+
+export type CordovaRunOptions = ICordovaOptions & IRunOptions;

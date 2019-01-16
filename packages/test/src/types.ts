@@ -1,31 +1,34 @@
-import { Options, Builder } from '@kano/kit-app-shell-core/lib/types';
+import { IOptions, Builder } from '@kano/kit-app-shell-core/lib/types';
 
-export interface SaucelabsOptions {
-    user: string;
-    key : string;
-}
-
-export interface BitBarOptions {
-    key : string;
-}
-
-export interface BrowserstackOptions {
+export interface ISaucelabsOptions {
     user : string;
     key : string;
+}
+
+export interface IBitBarOptions {
+    key : string;
+}
+
+export interface IBrowserstackOptions {
+    user : string;
+    key : string;
+}
+
+export interface IKobitonOptions {
+    user : string;
+    key : string;
+}
+
+export type TestOptions = IOptions & {
+    saucelabs? : ISaucelabsOptions;
+    bitbar? : IBitBarOptions;
+    browserstack? : IBrowserstackOptions;
+    kobiton? : IKobitonOptions;
 };
 
-export interface KobitonOptions {
-    user : string;
-    key : string;
-}
-
-export type TestOptions = Options & {
-    saucelabs? : SaucelabsOptions;
-    bitbar? : BitBarOptions;
-    browserstack? : BrowserstackOptions;
-    kobiton? : KobitonOptions;
-}
-
-export interface IProvider {
-    (app : string, wd : typeof import('wd'), mocha : import('mocha'), opts : TestOptions) : Promise<Builder>;
-}
+export type IProvider = (
+    app : string,
+    wd : typeof import('wd'),
+    mocha : import('mocha'),
+    opts : TestOptions,
+)  => Promise<Builder>;

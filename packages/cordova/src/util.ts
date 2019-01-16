@@ -16,7 +16,13 @@ export function getModulePath(name : string) : string {
  * @param {Number} height Height of the destination image
  * @param {{ fit: 'cover'|'contain'|'fill'|'inside'|'outside' }} opts Fitting options
  */
-export function resizeImage(src : string, out : string, width : number, height : number, { fit = 'cover' } = {}) : Promise<void> {
+export function resizeImage(
+    src : string,
+    out : string,
+    width : number,
+    height : number,
+    { fit = 'cover' } = {},
+) : Promise<void> {
     return sharp(src)
         .resize({ width, height, fit })
         .toFile(out);

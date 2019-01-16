@@ -1,10 +1,10 @@
 export interface INodeTree {
-    nodeName : string,
-    tagName : string,
-    attrs : Array<{ [key : string] : string|number }>,
-    namespaceURI : string,
-    childNodes : Array<{ nodeName : string, value : string|number|INodeTree }>,
-    parentNode: INodeTree|null,
+    nodeName : string;
+    tagName : string;
+    attrs : Array<{ [key : string] : string|number }>;
+    namespaceURI : string;
+    childNodes : Array<{ nodeName : string, value : string|number|INodeTree }>;
+    parentNode : INodeTree|null;
 }
 
 export function createScript(src : string) : INodeTree {

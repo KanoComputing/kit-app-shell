@@ -15,6 +15,12 @@ const writeFile = promisify(fs.writeFile);
  * Will always re-use a project to save time
  */
 export class ProjectCacheManager {
+    /**
+     * Returns a hash of a provided config object
+     */
+    static configToHash(config) {
+        return crypto.createHash('md5').update(JSON.stringify(config)).digest('hex');
+    }
     private id : string;
     private dbPath : string;
     private cache : {};
@@ -37,7 +43,7 @@ export class ProjectCacheManager {
         }
         // Read the cache DB file and populate the in-memory object
         return readFile(this.dbPath, 'utf-8')
-            .then(contents => JSON.parse(contents))
+            .then((contents) => JSON.parse(contents))
             // Any error up there, create a new cache
             .catch(() => ({}))
             .then((cache) => {
@@ -54,12 +60,6 @@ export class ProjectCacheManager {
         // Ensure the directory exists, then write
         return mkdirp(path.dirname(this.dbPath))
             .then(() => writeFile(this.dbPath, contents));
-    }
-    /**
-     * Returns a hash of a provided config object
-     */
-    static configToHash(config) {
-        return crypto.createHash('md5').update(JSON.stringify(config)).digest('hex');
     }
     /**
      * Loads and find a project with the same configuration

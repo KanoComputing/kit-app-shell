@@ -7,7 +7,7 @@ import { Writable } from 'stream';
 
 const mkdirp = promisify(mkdirpCb);
 
-interface CopyOptions {
+interface ICopyOptions {
     transform? : Writable;
     writeOptions? : {};
 }
@@ -17,7 +17,7 @@ interface CopyOptions {
  * Allows to pass an optional transform stream
  * TODO: Use fs.copyFile is exists and no transform is required for speed improvements
  */
-function _copy(src : string, dest : string, options : CopyOptions = {}) : Promise<void> {
+function _copy(src : string, dest : string, options : ICopyOptions = {}) : Promise<void> {
     const { transform = null, writeOptions = null } = options;
     return new Promise((resolve, reject) => {
         const read = fs.createReadStream(src);
@@ -42,7 +42,7 @@ function _copy(src : string, dest : string, options : CopyOptions = {}) : Promis
 /**
  * Safely copies a file, creating the target directory if needed
  */
-export function copy(src : string, dest : string, opts? : CopyOptions) : Promise<void> {
+export function copy(src : string, dest : string, opts? : ICopyOptions) : Promise<void> {
     const out = path.dirname(dest);
     return mkdirp(out)
         .then(() => _copy(src, dest, opts));

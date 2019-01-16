@@ -52,7 +52,6 @@ function createInstaller(opts) {
         iss: INSTALLER_FILE,
     };
 
-
     const builder = new Promise((resolve, reject) => {
         buildWin32Setup(compilerOptions, (e) => {
             if (e) {
@@ -65,7 +64,7 @@ function createInstaller(opts) {
     return builder;
 }
 
-const windowsBuild : IBuild =  function (opts : WindowsBuildOptions) {
+const windowsBuild : IBuild = (opts : WindowsBuildOptions) => {
     const {
         app,
         config,
@@ -125,7 +124,10 @@ const windowsBuild : IBuild =  function (opts : WindowsBuildOptions) {
             const V8_CONTEXT_SNAPSHOT = 'v8_context_snapshot.bin';
             // Move the snapshot files to the root of the generated app
             return rename(path.join(resourcesDir, SNAPSHOT_BLOB), path.join(appDir, SNAPSHOT_BLOB))
-                .then(() => rename(path.join(resourcesDir, V8_CONTEXT_SNAPSHOT), path.join(appDir,  V8_CONTEXT_SNAPSHOT)))
+                .then(() => rename(
+                    path.join(resourcesDir, V8_CONTEXT_SNAPSHOT),
+                    path.join(appDir,  V8_CONTEXT_SNAPSHOT),
+                ))
                 // Add the vccorlib dll to the generated electron app
                 .then(() => copy(
                     path.join(__dirname, '../vccorlib140.dll'),
@@ -152,6 +154,6 @@ const windowsBuild : IBuild =  function (opts : WindowsBuildOptions) {
                     return out;
                 });
         });
-}
+};
 
 export default windowsBuild;

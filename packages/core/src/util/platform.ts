@@ -1,4 +1,4 @@
-export type PlatformPart = {
+export interface IPlatformPart {
     enquire? : (prompt : typeof import('enquirer').prompt, {}) => Promise<{}>;
     generate? : ({}) => {}|Promise<{}>;
     group? : string;
@@ -11,12 +11,12 @@ export type PlatformPart = {
 // that will never run for a session,
 // e.g. Do not load heavy testing frameworks when we only need to run the app
 // The default location is lib/<key>
-export function loadPlatformKey(name : string, key : string) : Promise<PlatformPart> {
+export function loadPlatformKey(name : string, key : string) : Promise<IPlatformPart> {
     if (name === 'core' || name === 'cli') {
         return Promise.reject(new Error(`Could not load platform: '${name}' is reserved`));
     }
     return import(`@kano/kit-app-shell-${name}/lib/${key}`)
-        .then((imported : { default : PlatformPart }) => {
+        .then((imported : { default : IPlatformPart }) => {
             return imported.default;
         })
         .catch(() => {

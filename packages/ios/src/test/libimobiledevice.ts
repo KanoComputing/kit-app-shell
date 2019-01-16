@@ -1,6 +1,6 @@
 import { spawn } from 'child_process';
 
-export function id() : Promise<Array<string>> {
+export function id() : Promise<string[]> {
     return new Promise((resolve, reject) => {
         const p = spawn('idevice_id', ['-l']);
 
@@ -18,7 +18,7 @@ export function id() : Promise<Array<string>> {
             if (code !== 0) {
                 return reject(new Error(`Could not run idevice_id: ${error}`));
             }
-            return resolve(output.split('\n').filter(i => i && i !== ''));
+            return resolve(output.split('\n').filter((i) => i && i !== ''));
         });
     });
 }

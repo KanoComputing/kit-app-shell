@@ -5,9 +5,9 @@ import { util } from '@kano/kit-app-shell-core/lib/util';
 import { RcLoader } from '@kano/kit-app-shell-core/lib/rc';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import chalk from 'chalk';
-import { Argv } from './types';
+import { IArgv } from './types';
 
-export default function configure(argv : Argv, platformId : string) : Promise<void> {
+export default function configure(argv : IArgv, platformId : string) : Promise<void> {
     processState.setInfo(`Configuring options for platform ${chalk.green(platformId)}`);
     return util.platform.loadPlatformKey(platformId, 'configure')
         .then((platformConfigure) => {
@@ -42,10 +42,10 @@ export default function configure(argv : Argv, platformId : string) : Promise<vo
                             return deepMerge(cfg, scopedAnswers);
                         })
                         // Persist the new config
-                        .then(updatedCfg => RcLoader.saveHomeRc(updatedCfg))
+                        .then((updatedCfg) => RcLoader.saveHomeRc(updatedCfg))
                         .then(() => {
                             processState.setSuccess(`Your local config has been updated. Use ${chalk.cyan('kash open config')} to see it`);
                         });
                 });
         });
-};
+}

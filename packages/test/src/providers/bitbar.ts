@@ -2,14 +2,14 @@ import { promisify } from 'util';
 import { createReadStream } from 'fs';
 import { post as postCb } from 'request';
 import chalk from 'chalk';
-import { BitBarOptions, IProvider } from '../types';
+import { IBitBarOptions, IProvider } from '../types';
 
 const post = promisify(postCb);
 
 const BITBAR_HUB = 'https://appium.bitbar.com/wd/hub';
 const BITBAR_UPLOAD = 'https://appium.bitbar.com/upload';
 
-function upload(app, { key } : BitBarOptions) {
+function upload(app, { key } : IBitBarOptions) {
     const stream = createReadStream(app);
     const auth = `Basic ${Buffer.from(`${key}:`).toString('base64')}`;
     // Post to the bitbar API
@@ -27,10 +27,10 @@ function upload(app, { key } : BitBarOptions) {
                 },
             },
         },
-    }).then(response => JSON.parse(response.body));
+    }).then((response) => JSON.parse(response.body));
 }
 
-const bitbarProvider : IProvider = function (app, wd, mocha, opts) {
+const bitbarProvider : IProvider = (app, wd, mocha, opts) => {
     // Retrieve saucelabs options
     const { bitbar } = opts;
     // Authentication options are required, throw an error
@@ -66,6 +66,6 @@ const bitbarProvider : IProvider = function (app, wd, mocha, opts) {
         };
         return builder;
     });
-}
+};
 
 export default bitbarProvider;

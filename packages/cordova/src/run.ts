@@ -14,7 +14,7 @@ import { AddressInfo } from 'net';
 import { CordovaRunOptions } from './types';
 import { IRun } from '@kano/kit-app-shell-core/lib/types';
 
-const namedResolutionMiddleware = require('@kano/es6-server/named-resolution-middleware');
+import * as namedResolutionMiddleware from '@kano/es6-server/named-resolution-middleware';
 
 // Finding the machine's IP address in a local network can be unreliable
 // This allows users to define the name of their network interface
@@ -43,7 +43,7 @@ function serve(app : string) : connect.Server {
         .use(serveStatic(app));
 }
 
-interface Tunnel {
+interface ITunnel {
     tunnel : {
         url : string;
     };
@@ -55,7 +55,7 @@ interface Tunnel {
  * Also creates a livereload server and watches the files in the app directory
  * @param {String} app Path to the app to tunnel
  */
-function setupTunnel(app : string) : Promise<Tunnel> {
+function setupTunnel(app : string) : Promise<ITunnel> {
     const server = serve(app).listen(0);
     const { port } = server.address() as AddressInfo;
     // TODO: Move this to core. It can be re-used to live-reload any platform or project
@@ -110,15 +110,15 @@ const cordovaRun : IRun = (opts : CordovaRunOptions) => Promise.all([
                 html: {},
             },
         )
-            .then(bundle => Bundler.write(bundle, wwwPath))
+            .then((bundle) => Bundler.write(bundle, wwwPath))
             .then(() => processState.setInfo('Starting dev app on device'))
             .then(() => {
-                const platformIds = opts.platforms.map(platform => path.basename(platform).replace('cordova-', ''));
+                const platformIds = opts.platforms.map((platform) => path.basename(platform).replace('cordova-', ''));
                 return cordova.run({ platforms: platformIds });
             })
             .then(() => {
                 processState.setSuccess('Dev app started');
-                return new Promise(() => {});
+                return new Promise(() => null);
             })
             .catch((e) => {
                 server.stop();

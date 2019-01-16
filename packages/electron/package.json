@@ -22,13 +22,15 @@
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-json": "^3.1.0",
     "rollup-plugin-node-resolve": "^4.0.0",
-    "rollup-plugin-replace": "^2.1.0"
+    "rollup-plugin-replace": "^2.1.0",
+    "tslint": "^5.12.1"
   },
   "publishConfig": {
     "access": "public"
   },
   "gitHead": "250044f792455c30f34f57965c31872beb03cfcb",
   "devDependencies": {
+    "@types/rollup-plugin-json": "^3.0.1",
     "chai": "^4.2.0",
     "chai-fs": "^2.0.0",
     "chai-json-schema": "^1.5.0",

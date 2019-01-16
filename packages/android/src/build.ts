@@ -4,10 +4,10 @@ import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import * as platform from './platform';
 import { promisify } from 'util';
 import * as globCb from 'glob';
-import * as mkdirpCb from 'mkdirp'
+import * as mkdirpCb from 'mkdirp';
 import * as path from 'path';
 import * as fs from 'fs';
-import { CordovaBuildOptions, CordovaPreferences } from '@kano/kit-app-shell-cordova/lib/types';
+import { ICordovaBuildOptions, ICordovaPreferences } from '@kano/kit-app-shell-cordova/lib/types';
 import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 
 const mkdirp = promisify(mkdirpCb);
@@ -19,15 +19,15 @@ const DEFAULT_PREFERENCES = {
     'android-targetSdkVersion': 28,
 };
 
-function collectPreferences(opts : { preferences : CordovaPreferences }) : void {
-    opts.preferences = opts.preferences || {} as CordovaPreferences;
+function collectPreferences(opts : { preferences : ICordovaPreferences }) : void {
+    opts.preferences = opts.preferences || {} as ICordovaPreferences;
     collectPreference(opts, 'android-minSdkVersion', 'minSdkVersion');
     collectPreference(opts, 'android-maxSdkVersion', 'maxSdkVersion');
     collectPreference(opts, 'android-targetSdkVersion', 'targetSdkVersion');
     opts.preferences = Object.assign({}, DEFAULT_PREFERENCES, opts.preferences);
 }
 
-const androidBuild : IBuild = (opts : CordovaBuildOptions) => {
+const androidBuild : IBuild = (opts : ICordovaBuildOptions) => {
     collectPreferences(opts);
     return build({
         ...opts,

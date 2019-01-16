@@ -2,7 +2,7 @@ import { promisify } from 'util';
 import { post as postCb } from 'request';
 import { createReadStream } from 'fs';
 import chalk from 'chalk';
-import { BrowserstackOptions, IProvider } from '../types';
+import { IBrowserstackOptions, IProvider } from '../types';
 
 const post = promisify(postCb);
 
@@ -14,7 +14,7 @@ const HUB_URL = 'http://hub-cloud.browserstack.com/wd/hub';
  * @param {String} app Path to the app to upload
  * @param {{ user: String, key: String }} param1 Browserstack credentials
  */
-function upload(app, { user, key } : BrowserstackOptions) {
+function upload(app, { user, key } : IBrowserstackOptions) {
     if (!user) {
         return Promise.reject(new Error('Could not upload to browserstack: Missing \'user\' param'));
     }
@@ -30,10 +30,10 @@ function upload(app, { user, key } : BrowserstackOptions) {
             user,
             pass: key,
         },
-    }).then(response => JSON.parse(response.body));
+    }).then((response) => JSON.parse(response.body));
 }
 
-const browserstackProvider : IProvider = function (app, wd, mocha, opts) {
+const browserstackProvider : IProvider = (app, wd, mocha, opts) => {
     // Retrieve browserstack options
     const { browserstack } = opts;
     // Authentication options are required, throw an error
@@ -52,22 +52,22 @@ const browserstackProvider : IProvider = function (app, wd, mocha, opts) {
             const driver = wd.promiseChainRemote(HUB_URL);
             return driver.init({
                 // TODO: parametrize this
-                device: 'Google Nexus 6',
-                os_version: '6.0',
+                'device': 'Google Nexus 6',
+                'os_version': '6.0',
                 'browserstack.user': user,
                 'browserstack.key': key,
                 // Create custom build name using the options from the config
-                build: `${opts.config.APP_NAME} v${opts.config.UI_VERSION} Android`,
+                'build': `${opts.config.APP_NAME} v${opts.config.UI_VERSION} Android`,
                 // Set the test name to be the mocha test name
-                name: test.fullTitle(),
+                'name': test.fullTitle(),
                 // Use the browserstack app URL (bs://<hash>)
-                app: app_url,
+                'app': app_url,
                 // Let appium switch to the webview context for us
-                autoWebview: true,
+                'autoWebview': true,
             }).then(() => driver);
         };
         return builder;
     });
-}
+};
 
 export default browserstackProvider;

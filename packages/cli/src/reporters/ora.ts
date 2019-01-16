@@ -3,8 +3,6 @@ import { IReporter } from './reporter';
 
 export default class OraReporter implements IReporter {
     spinner : ora.Ora;
-    start() {}
-    stop() {}
     getSpinner() : ora.Ora {
         if (!this.spinner || !this.spinner.isSpinning) {
             this.spinner = ora('').start();

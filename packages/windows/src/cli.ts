@@ -6,5 +6,5 @@ export default {
             defaultValue: false,
             desc: 'Generate a windows app without installer',
         });
-    }
+    },
 };

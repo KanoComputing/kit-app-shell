@@ -16,7 +16,8 @@
     "enquirer": "^2.2.0",
     "open-file-explorer": "^1.0.2",
     "ora": "^3.0.0",
-    "sywac": "^1.2.1"
+    "sywac": "^1.2.1",
+    "tslint": "^5.12.1"
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",

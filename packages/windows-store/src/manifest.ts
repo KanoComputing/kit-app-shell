@@ -31,18 +31,21 @@ export class AppXManifest {
     /**
      * Update or create a logo entry in the manifest
      * @param app PackageName of the app
-     * @param key Logo key. See https://docs.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-uap-visualelements
+     * @param key Logo key.
+     * See https://docs.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-uap-visualelements
      * @param value Path to the logo
      */
     setLogo(app : string, key : string, value : string) : void {
-        const visualElements : et.Element = this.root.find(`./Applications/Application/[@Id="${app}"]/uap:VisualElements`);
+        const query = `./Applications/Application/[@Id="${app}"]/uap:VisualElements`;
+        const visualElements : et.Element = this.root.find(query);
         visualElements.attrib[key] = value;
     }
     setDefaultTile(app : string, key : string, value : string) : void {
-        const visualElements : et.Element = this.root.find(`./Applications/Application/[@Id="${app}"]/uap:VisualElements/uap:DefaultTile`);
+        const query = `./Applications/Application/[@Id="${app}"]/uap:VisualElements/uap:DefaultTile`;
+        const visualElements : et.Element = this.root.find();
         visualElements.attrib[key] = value;
     }
-    setCapabilities(caps : Array<string>) : void {
+    setCapabilities(caps : string[]) : void {
         const el : et.Element = this.root.find('./Capabilities');
         el.clear();
         caps.forEach((capString) => {

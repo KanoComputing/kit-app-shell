@@ -8,7 +8,7 @@ export type WindowsStoreConfig = WindowsConfig & {
         PACKAGE_DISPLAY_NAME? : string;
     };
     ICONS? : {
-        WINDOWS_STORE?: string;
+        WINDOWS_STORE? : string;
     };
 };
 

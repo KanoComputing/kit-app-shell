@@ -60,7 +60,7 @@ function createProject(opts : CordovaRunOptions, hash : string) {
     const TMP_DIR = path.join(tmpdir, `kash-${cacheId}-build`, hash);
 
     // Resolve the location of the default plugins
-    const defaultPlugins = DEFAULT_PLUGINS.map(name => getModulePath(name));
+    const defaultPlugins = DEFAULT_PLUGINS.map((name) => getModulePath(name));
 
     // Merge default plugins and platform plugins
     const allPlugins = defaultPlugins.concat(plugins);
@@ -172,7 +172,7 @@ export function getProject(opts : CordovaRunOptions & { skipCache : boolean }) {
             const hash = ProjectCacheManager.configToHash(opts.config);
             return createProject(opts, hash)
                 // Save the project path in cache. For future use
-                .then(newProjectPath => cache.setProject(opts.config, newProjectPath)
+                .then((newProjectPath) => cache.setProject(opts.config, newProjectPath)
                     .then(() => {
                         processState.setSuccess('Created cordova project');
                         return newProjectPath;

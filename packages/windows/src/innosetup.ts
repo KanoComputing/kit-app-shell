@@ -3,7 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-// Taken from https://github.com/Microsoft/vscode/blob/8ddcdbfa954f7561e8e23d229853aedc70e32a4c/build/gulpfile.vscode.win32.js
+// Taken from
+// https://github.com/Microsoft/vscode/blob/8ddcdbfa954f7561e8e23d229853aedc70e32a4c/build/gulpfile.vscode.win32.js
 // And adapted with some of the node-innosetup npm module
 
 import * as path from 'path';
@@ -18,9 +19,12 @@ function packageInnoSetup(iss, options, cb) {
     const definitions = options.definitions || {};
     const keys = Object.keys(definitions);
 
-    keys.forEach(key => assert(typeof definitions[key] === 'string', `Missing value for '${key}' in Inno Setup package step`));
+    keys.forEach((key) => assert(
+        typeof definitions[key] === 'string',
+        `Missing value for '${key}' in Inno Setup package step`,
+    ));
 
-    const defs = keys.map(key => `/d${key}=${definitions[key]}`);
+    const defs = keys.map((key) => `/d${key}=${definitions[key]}`);
     const args = [iss].concat(defs);
 
     if (!(options && options.verbose)) {
