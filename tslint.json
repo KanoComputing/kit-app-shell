@@ -1,0 +1,26 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "linebreak-style": [true, "LF"],
+        "quotemark": [true, "single", "avoid-escape", "avoid-template"],
+        "ordered-imports": false,
+        "object-literal-sort-keys": false,
+        "member-access": false,
+        "typedef-whitespace": [
+            true,
+            {
+                "call-signature": "onespace",
+                "index-signature": "onespace",
+                "parameter": "onespace",
+                "property-declaration": "onespace",
+                "variable-declaration": "onespace"
+            }
+        ],
+        "max-line-length": [true, {"limit": 120, "ignore-pattern": "`(.+)`"}]
+    },
+    "rulesDirectory": []
+}

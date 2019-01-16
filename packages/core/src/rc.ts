@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as deepMerge from 'deepmerge';
 import { promisify } from 'util';
-import { BuildOptions, Options } from './types';
+import { IBuildOptions, IOptions } from './types';
 
 const writeFile = promisify(fs.writeFile);
 
@@ -19,13 +19,13 @@ const RC_PATH = path.join(os.homedir(), '.kashrc.json');
 export const RcLoader = {
     check(filePath : string) : Promise<boolean> {
         // Use fs.access to test if file exists. resolve with a boolean
-        return new Promise(r => fs.access(filePath, fs.constants.F_OK, e => r(!e)));
+        return new Promise((r) => fs.access(filePath, fs.constants.F_OK, (e) => r(!e)));
     },
-    findAll(app : string) : Promise<Array<string>> {
-        const resolved : Array<string> = [];
-        const files = NAMES.map(name => path.join(app, name));
+    findAll(app : string) : Promise<string[]> {
+        const resolved : string[] = [];
+        const files = NAMES.map((name) => path.join(app, name));
         files.push(RC_PATH);
-        const tasks = files.map(filePath => RcLoader.check(filePath)
+        const tasks = files.map((filePath) => RcLoader.check(filePath)
             .then((exists) => {
                 if (exists) {
                     resolved.push(filePath);
@@ -33,10 +33,10 @@ export const RcLoader = {
             }));
         return Promise.all(tasks).then(() => resolved);
     },
-    load(app : string) : Promise<Options> {
+    load(app : string) : Promise<IOptions> {
         return RcLoader.findAll(app)
-            .then(files => files.reduce((acc, file) => deepMerge(acc, require(file)), {}))
-            .then((opts : BuildOptions) => {
+            .then((files) => files.reduce((acc, file) => deepMerge(acc, require(file)), {}))
+            .then((opts : IBuildOptions) => {
                 // Get the defined temporary directory or use the system one
                 opts.tmpdir = process.env.KASH_TMP_DIR ? path.resolve(process.env.KASH_TMP_DIR) : os.tmpdir();
                 return opts;
@@ -45,7 +45,7 @@ export const RcLoader = {
     hasHomeRc() : Promise<boolean> {
         return RcLoader.check(RC_PATH);
     },
-    loadHomeRc() : Promise<Options> {
+    loadHomeRc() : Promise<IOptions> {
         return RcLoader.hasHomeRc()
             .then((exists) => {
                 if (!exists) {

@@ -3,8 +3,8 @@ import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import build from '@kano/kit-app-shell-electron/lib/build';
 import * as path from 'path';
 import * as os from 'os';
-import * as glob  from 'glob';
-import * as fs  from 'fs';
+import * as glob from 'glob';
+import * as fs from 'fs';
 import snake = require('snake-case');
 import * as kebab from 'dashify';
 import * as mkdirpCb from 'mkdirp';
@@ -78,16 +78,16 @@ function copyExtra(app, out, config) {
             const icons = glob.sync('*.png', { cwd: appsPath, nodir: true });
             const apps = glob.sync('*.app', { cwd: appsPath, nodir: true });
             // Copy icons to the icons share
-            const tasks = icons.map(icon => copy(
+            const tasks = icons.map((icon) => copy(
                 path.join(appsPath, icon),
                 path.join(iconsPath, icon),
             ));
             // Copy icons to the desktop share
-            tasks.concat(icons.map(icon => copy(
+            tasks.concat(icons.map((icon) => copy(
                 path.join(appsPath, icon),
                 path.join(desktopIconsPath, icon),
             )));
-            tasks.concat(apps.map(a => copy(
+            tasks.concat(apps.map((a) => copy(
                 path.join(appsPath, a),
                 path.join(appsTargetPath, a),
             )));
@@ -127,7 +127,7 @@ function checkEnv(skipAr = false) : Promise<void> {
         .then(() => null);
 }
 
-const kanoBuild : IBuild = function (opts : KanoBuildOptions) {
+const kanoBuild : IBuild = (opts : KanoBuildOptions) => {
     const {
         app,
         config,
@@ -162,7 +162,7 @@ const kanoBuild : IBuild = function (opts : KanoBuildOptions) {
                 ],
                 forcePlatform: 'linux',
                 ignore: ['bluetooth-hci-socket'],
-            }
+            },
         }))
         .then((buildOut) => {
             processState.setInfo('Creating linux app');
@@ -188,7 +188,10 @@ const kanoBuild : IBuild = function (opts : KanoBuildOptions) {
             const V8_CONTEXT_SNAPSHOT = 'v8_context_snapshot.bin';
             // Move the snapshot files to the root of the generated app
             return rename(path.join(resourcesDir, SNAPSHOT_BLOB), path.join(appDir, SNAPSHOT_BLOB))
-                .then(() => rename(path.join(resourcesDir, V8_CONTEXT_SNAPSHOT), path.join(appDir,  V8_CONTEXT_SNAPSHOT)))
+                .then(() => rename(
+                    path.join(resourcesDir, V8_CONTEXT_SNAPSHOT),
+                    path.join(appDir,  V8_CONTEXT_SNAPSHOT),
+                ))
                 // Delete the electron directory, it was needed during packaaging, but must not be shipped
                 .then(() => rimraf(path.join(resourcesDir, 'node_modules/electron')))
                 .then(() => pkgDir);
@@ -221,6 +224,6 @@ const kanoBuild : IBuild = function (opts : KanoBuildOptions) {
             return createDeb(dir, out, config)
                 .then(() => processState.setSuccess('Created .deb file'));
         });
-}
+};
 
 export default kanoBuild;

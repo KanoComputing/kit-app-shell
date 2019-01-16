@@ -2,19 +2,19 @@ import Config = require('cordova-config');
 import * as et from 'elementtree';
 
 export class CordovaConfig extends Config {
-    _absoluteRoot : et.Element;
-    _root : et.Element;
-    _doc : et.Element;
+    private absoluteRoot : et.Element;
+    private root : et.Element;
+    private doc : et.Element;
     selectPlatform(name : string) : void {
-        this._absoluteRoot = this._root;
-        this._root = this._root.find(`./platform/[@name="${name}"]`);
+        this.absoluteRoot = this.root;
+        this.root = this.root.find(`./platform/[@name="${name}"]`);
     }
     selectRoot() : void {
-        this._root = this._absoluteRoot || this._root;
-        this._absoluteRoot = this._root;
+        this.root = this.absoluteRoot || this.root;
+        this.absoluteRoot = this.root;
     }
     removeAll(query : string) : void {
-        this._doc.findall(`./${query}`).forEach(tag => this._root.remove(tag));
+        this.doc.findall(`./${query}`).forEach((tag) => this.root.remove(tag));
     }
     removeIcons() : void {
         this.removeAll('icon');
@@ -33,7 +33,7 @@ export class CordovaConfig extends Config {
     }
     addElement(tagName : string, content : string, attribs : object = {}) : void {
         const el = new et.Element(tagName);
-        this._root.append(el);
+        this.root.append(el);
 
         if (typeof content === 'object') {
             el.append(content);
@@ -45,7 +45,7 @@ export class CordovaConfig extends Config {
         el.attrib = Object.assign({}, attribs);
     }
     setWidgetAttribute(name : string, value : string) : void {
-        this._root.attrib[name] = value;
+        this.root.attrib[name] = value;
     }
     addEditConfig(file : string, target : string, mode : string, contents : string) {
         this.addElement('edit-config', et.XML(contents), { file, mode, target });

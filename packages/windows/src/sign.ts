@@ -7,7 +7,7 @@ export default function sign(opts) {
     return new Promise((resolve, reject) => {
         const p = spawn(path.join(__dirname, '../sign.bat'), [opts.app], { stdio: 'inherit' });
 
-        p.on('error', e => reject(e));
+        p.on('error', (e) => reject(e));
         p.on('exit', (code) => {
             if (code !== 0) {
                 return reject(new Error(`Could not sign ${opts.app}: Signtool returned a non zero exit code: ${code}`));
@@ -16,4 +16,4 @@ export default function sign(opts) {
             return resolve();
         });
     });
-};
+}

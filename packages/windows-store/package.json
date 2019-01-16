@@ -11,7 +11,8 @@
     "elementtree": "^0.1.7",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.2",
-    "sharp": "^0.21.1"
+    "sharp": "^0.21.1",
+    "tslint": "^5.12.1"
   },
   "publishConfig": {
     "access": "public"

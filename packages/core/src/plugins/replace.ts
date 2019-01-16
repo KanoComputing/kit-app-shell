@@ -11,7 +11,7 @@ function escape(str) {
 }
 
 function ensureFunction(functionOrValue) {
-    if (typeof functionOrValue === 'function') return functionOrValue;
+    if (typeof functionOrValue === 'function') { return functionOrValue; }
     return () => functionOrValue;
 }
 
@@ -39,14 +39,14 @@ function mapToFunctions(object) {
     }, {});
 }
 
-export interface ReplaceOptions {
-    include? : Array<string>;
-    exclude? : Array<string>;
-    delimiters? : Array<string>;
+export interface IReplaceOptions {
+    include? : string[];
+    exclude? : string[];
+    delimiters? : string[];
     values? : {};
 }
 
-export function replace(options : ReplaceOptions = {}) {
+export function replace(options : IReplaceOptions = {}) {
     const filter = createFilter(options.include, options.exclude);
     const { delimiters } = options;
     const functionValues = mapToFunctions(getReplacements(options));
@@ -62,7 +62,7 @@ export function replace(options : ReplaceOptions = {}) {
         name: 'replace',
 
         transform(code, id) {
-            if (!filter(id)) return null;
+            if (!filter(id)) { return null; }
 
             let hasReplacements = false;
             let match;
@@ -71,7 +71,7 @@ export function replace(options : ReplaceOptions = {}) {
             let replacement;
             let str = code;
 
-            /* eslint no-cond-assign: 'off' */
+            // tslint:disable-next-line:no-conditional-assignment
             while ((match = pattern.exec(str))) {
                 hasReplacements = true;
 
@@ -82,11 +82,11 @@ export function replace(options : ReplaceOptions = {}) {
                 str = str.substr(0, start) + replacement + str.substr(end);
             }
 
-            if (!hasReplacements) return null;
+            if (!hasReplacements) { return null; }
 
             const result = { code: str };
 
             return result;
         },
     };
-};
+}

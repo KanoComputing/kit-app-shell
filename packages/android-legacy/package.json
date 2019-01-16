@@ -6,7 +6,8 @@
   "dependencies": {
     "@kano/kit-app-shell-android": "^0.0.3-alpha.12",
     "@kano/kit-app-shell-cordova": "^0.0.3-alpha.12",
-    "cordova-plugin-crosswalk-webview": "^2.4.0"
+    "cordova-plugin-crosswalk-webview": "^2.4.0",
+    "tslint": "^5.12.1"
   },
   "publishConfig": {
     "access": "public"

@@ -38,7 +38,7 @@ const PROMPTS = {
 
 function createQuestions(id, cfg) {
     const prompts = PROMPTS[id];
-    return prompts.map(p => Object.assign({}, p, {
+    return prompts.map((p) => Object.assign({}, p, {
         // Initial value is the value already in the config or the one defined in the question
         initial: cfg[id] ? cfg[id][p.name] || p.initial : p.initial,
     }));
@@ -67,7 +67,7 @@ export default {
                 return null;
             }
             return prompt(createQuestions(answers.provider, cfg))
-                .then(ans => ({
+                .then((ans) => ({
                     [answers.provider]: ans,
                 }));
         });

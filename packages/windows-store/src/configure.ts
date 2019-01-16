@@ -6,7 +6,8 @@ import { makeCert } from './cert';
 
 const rimraf = promisify(rimrafCb);
 
-const appData = process.env.APPDATA || (process.platform === 'darwin' ? path.join(process.env.HOME, 'Library/Preferences') : '/var/local');
+const appData = process.env.APPDATA || (process.platform === 'darwin'
+    ? path.join(process.env.HOME, 'Library/Preferences') : '/var/local');
 
 const appDataDir = 'kash-windows-store';
 const certificatesDir = 'certificates';
@@ -50,7 +51,7 @@ function enquireCert(prompt, config) {
         }
         // No previous cert found, continue
         return makeCert(publisher, certFilePath, windowsKit);
-    }).then(devCert => ({
+    }).then((devCert) => ({
         certificates: {
             [publisher]: devCert,
         },

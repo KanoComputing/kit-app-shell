@@ -1,7 +1,9 @@
 import { resizeImage } from '@kano/kit-app-shell-cordova/lib/util';
 import { CordovaConfig } from '@kano/kit-app-shell-cordova/lib/cordova-config';
 import * as path from 'path';
+// tslint:disable-next-line:no-var-requires
 const icons = require('../../data/icons');
+// tslint:disable-next-line:no-var-requires
 const screens = require('../../data/screens');
 
 function getIconPath(key, projectPath) {
