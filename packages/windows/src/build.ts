@@ -85,6 +85,13 @@ const windowsBuild : IBuild =  function (opts : WindowsBuildOptions) {
             app,
             config,
             out: BUILD_DIR,
+            bundle: {
+                // Add noble-uwp to the mix
+                patterns: [
+                    'node_modules/noble-uwp/**/*',
+                ],
+                forcePlatform: 'win32',
+            },
         }))
         .then(() => {
             processState.setInfo('Creating windows application');
@@ -124,6 +131,8 @@ const windowsBuild : IBuild =  function (opts : WindowsBuildOptions) {
                     path.join(__dirname, '../vccorlib140.dll'),
                     path.join(appDir, 'vccorlib140.dll'),
                 ))
+                // Delete the electron directory, it was needed during packaaging, but must not be shipped
+                .then(() => rimraf(path.join(resourcesDir, 'node_modules/electron')))
                 .then(() => pkgDir);
         })
         .then((pkgDir) => {

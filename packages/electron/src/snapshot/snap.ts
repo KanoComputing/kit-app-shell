@@ -11,21 +11,29 @@ const mkdirp = promisify(mkdirpCb);
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-export function snap(main : string, electron : string, out : string) : Promise<string> {
+interface ISnapOptions {
+    main : string;
+    electronBinaryDir : string;
+    out : string;
+    forcePlatform? : string;
+    ignore? : string[];
+}
+
+export function snap(opts : ISnapOptions) : Promise<string> {
     const tmpSnapshotDir = path.join(os.tmpdir(), 'snapshot');
     const tmpSnapshotPath = path.join(tmpSnapshotDir, 'snapshot.js');
     return mkdirp(tmpSnapshotDir)
-        .then(() => bundle(main))
+        .then(() => bundle(opts.main, { platform: opts.forcePlatform, ignore: opts.ignore }))
         .then((bundleSource) => {
             return generateSnapshotSource(
                 bundleSource,
                 tmpSnapshotPath,
             )
         })
-        .then(source => mksnapshot(source, electron))
-        .then(() => generateEntryFile(path.join(out, '_main.js')))
+        .then(source => mksnapshot(source, opts.electronBinaryDir))
+        .then(() => generateEntryFile(path.join(opts.out, '_main.js')))
         .then(() => {
-            const pckPath = path.join(out, 'package.json');
+            const pckPath = path.join(opts.out, 'package.json');
             return readFile(pckPath, 'utf-8')
                 .then((content) => {
                     const pck = JSON.parse(content);
@@ -33,5 +41,5 @@ export function snap(main : string, electron : string, out : string) : Promise<s
                     return writeFile(pckPath, JSON.stringify(pck, null, '    '), 'utf-8');
                 });
         })
-        .then(() => out);
+        .then(() => opts.out);
 }

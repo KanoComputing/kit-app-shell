@@ -49,9 +49,6 @@ const cleanIgnore = [
     '**/Gruntfile.js',
     '**/*.iobj',
     '**/*.lastbuildstate',
-    '**/*.h',
-    '**/*.cpp',
-    '**/*.c',
     '**/*.tlog',
     '**/appveyor.yml',
     '**/appveyor.yaml',
@@ -59,16 +56,25 @@ const cleanIgnore = [
     // Custom exclude for node bindings of uwp
     '**/node-v48-win32-x64/binding.node',
     '**/node-v59-win32-x64/binding.node',
+    // Remove debugging and profileing files
+    '**/*.pdb',
+    '**/*.ipdb',
+    '**/*.map',
+    // Remove native modules sources
+    '**/*.cc',
+    '**/*.mm',
+    '**/*.h',
+    '**/*.cpp',
+    '**/*.c',
 ];
 
 const babelTargets = {
     chrome: 66, // Electron 3 = Chromium 66
 };
 
-const patterns = [
+const DEFAULT_PATTERNS = [
     'package.json',
     'preload.js',
-    'node_modules/noble-uwp/**/*',
     'node_modules/electron/**/*',
 ];
 
@@ -76,7 +82,7 @@ const patterns = [
  * Copies the electron app from the `app` directory as a template
  * @param {String} out Path to the copy destination
  */
-function copyElectronApp(out) : Promise<void> {
+function copyElectronApp(patterns : string[], out : string) : Promise<void> {
     const cwd = path.join(__dirname, '../app');
     const opts = {
         cwd,
@@ -88,7 +94,8 @@ function copyElectronApp(out) : Promise<void> {
         dot: true,
         nodir: true,
     };
-    return patterns.reduce<Promise<string[]>>((p, pattern) => {
+    const allPatterns = DEFAULT_PATTERNS.concat(patterns);
+    return allPatterns.reduce<Promise<string[]>>((p, pattern) => {
         return p
             .then((paths) => {
                 return glob(pattern, opts)
@@ -106,12 +113,19 @@ function copyElectronApp(out) : Promise<void> {
         });
 }
 
-function generateSnapshot(root : string, out : string) {
-    return snap(
-        path.join(__dirname, '../app/main.js'),
-        root,
+interface IGenerateSnapshotOptions {
+    forcePlatform? : string;
+    ignore? : string[];
+}
+
+function generateSnapshot(root : string, out : string, opts : IGenerateSnapshotOptions = {}) {
+    return snap({
+        main: path.join(__dirname, '../app/main.js'),
+        electronBinaryDir: root,
         out,
-    );
+        forcePlatform: opts.forcePlatform,
+        ignore: opts.ignore,
+    });
 }
 
 /**
@@ -134,10 +148,11 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
         config,
         out,
         bundleOnly,
+        bundle = {},
     } = opts;
     processState.setStep(`Creating electron app '${config.APP_NAME}'`);
     const tasks = [
-        copyElectronApp(out),
+        copyElectronApp(bundle.patterns || [], out),
         createConfig(config, out),
         Bundler.bundle(
             path.join(__dirname, '../app/index.html'),
@@ -161,7 +176,10 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
     return Promise.all(tasks)
         .then((results) => {
             processState.setStep('Generating V8 snapshot');
-            return generateSnapshot(results[2], results[2]);
+            return generateSnapshot(results[2], results[2], {
+                forcePlatform: opts.bundle.forcePlatform,
+                ignore: opts.bundle.ignore,
+            });
         })
         .then((out) => {
             processState.setSuccess('V8 snapshot generated');

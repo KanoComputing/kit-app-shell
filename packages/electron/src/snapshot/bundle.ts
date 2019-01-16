@@ -22,7 +22,38 @@ const dirname = (root) => ({
     },
 });
 
-export function bundle(input: string) {
+interface IBundleOptions {
+    platform?: string;
+    ignore? : string[];
+}
+
+const DEFAULT_REPLACEMENTS = {
+    // UWP hack
+    [`const uwpRoot = '../uwp/';`]: `const uwpRoot = './node_modules/noble-uwp/uwp/';`,
+    // jszip
+    'support.nodestream': 'true',
+    [`exports.nodestream = !!require('readable-stream').Readable;`]: 'exports.nodestream = true;',
+    // Readable stream hack
+    'process.env.READABLE_STREAM': `'disable'`,
+    [`('readable-stream')`]: `('stream')`,
+    // Unhack browserify
+    [`'mv' + ''`]: `'mv'`,
+    [`'dtrace-provider' + ''`]: `'dtrace-provider'`,
+    [`'source-map-support' + ''`]: `'source-map-support'`,
+}
+
+export function bundle(input: string, opts: IBundleOptions) {
+    const replacements = {
+        ...DEFAULT_REPLACEMENTS,
+    };
+    // If a platform is provided, hardcode it
+    if (opts.platform) {
+        Object.assign(replacements, {
+            'process.platform': `'${opts.platform}'`,
+            'os.platform()': `'${opts.platform}'`,
+            'process.env.GRACEFUL_FS_PLATFORM': `'${opts.platform}'`,
+        });
+    }
     return rollup.rollup({
         input,
         plugins: [
@@ -32,30 +63,14 @@ export function bundle(input: string) {
             }),
             replace({
                 delimiters: ['', ''],
-                values: {
-                    'process.platform': "'win32'",
-                    'os.platform()': "'win32'",
-                    'process.env.GRACEFUL_FS_PLATFORM': "'win32'",
-                    // UWP hack
-                    [`const uwpRoot = '../uwp/';`]: `const uwpRoot = './node_modules/noble-uwp/uwp/';`,
-                    // jszip
-                    'support.nodestream': 'true',
-                    [`exports.nodestream = !!require('readable-stream').Readable;`]: 'exports.nodestream = true;',
-                    // Readable stream hack
-                    'process.env.READABLE_STREAM': `'disable'`,
-                    [`('readable-stream')`]: `('stream')`,
-                    // Unhack browserify
-                    [`'mv' + ''`]: `'mv'`,
-                    [`'dtrace-provider' + ''`]: `'dtrace-provider'`,
-                    [`'source-map-support' + ''`]: `'source-map-support'`,
-                },
+                values: replacements,
             }),
             dirname(path.dirname(input)),
             commonjs({
-                ignore: ['util', 'electron']
+                ignore: ['util', 'electron'].concat(opts.ignore),
             }),
         ],
-        onwarn() { }
+        onwarn: () => null,
     })
         .then(bundle => bundle.generate({ format: 'cjs' }))
         .then(({ output }) => {
@@ -65,6 +80,5 @@ export function bundle(input: string) {
             return mkdirp(tmpOut)
                 .then(() => writeFile(tmpOutFile, main.code, 'utf-8'))
                 .then(() => tmpOutFile);
-            ;
         });
 }
