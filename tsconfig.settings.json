@@ -13,7 +13,13 @@
             "es6",
             "es2017",
             "scripthost"
-        ]
+        ],
+        "newLine": "LF",
+        "noEmitOnError": false,
+        "strictNullChecks": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedParameters": true
     },
     "exclude": [
         "node_modules",

@@ -79,7 +79,7 @@ class App {
                 icon,
                 show: false,
                 autoHideMenuBar: true,
-                backgroundColor: config.BACKGROUND_COLOR || DEFAULT_BACKGROUND_COLOR,
+                backgroundColor: this.config.BACKGROUND_COLOR || DEFAULT_BACKGROUND_COLOR,
             }
         });
 

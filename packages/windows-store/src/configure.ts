@@ -7,7 +7,7 @@ import { makeCert } from './cert';
 const rimraf = promisify(rimrafCb);
 
 const appData = process.env.APPDATA || (process.platform === 'darwin'
-    ? path.join(process.env.HOME, 'Library/Preferences') : '/var/local');
+    ? path.join(process.env.HOME || '', 'Library/Preferences') : '/var/local');
 
 const appDataDir = 'kash-windows-store';
 const certificatesDir = 'certificates';

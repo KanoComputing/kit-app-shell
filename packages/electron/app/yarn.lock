@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@kano/common/-/common-1.0.2.tgz#84f12d7e924a0b20434bc2d27ee8690b208777a3"
   integrity sha512-D0k6UzNWkHQel5MpBbOXpJcAHKPHDumwaELlaJUm8VBqgURP6iYPPO7SX6E6Q0vGqKnkZX0xvFvazrf6oulG9w==
 
-"@kano/desktop-shell@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@kano/desktop-shell/-/desktop-shell-1.0.7.tgz#a9c6c9d6bdcf1060f287bd3ed488e8d35552d198"
-  integrity sha512-1ycQLosZxBizsNZJ7LlZ8e7Y8DhLMnDepWHGbTBVb3tci0PITCc1Oz7XNYa+9PTwpp4hBfUm0Hg6OYOfzCVSCA==
+"@kano/desktop-shell@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@kano/desktop-shell/-/desktop-shell-1.0.8.tgz#4ca3910d0d10fbbe2606722e9c661612d91d0cdd"
+  integrity sha512-XctoacfdPWpYylmyTMGJcHHT64OChy0fyppbMz4o2JTGesSqnJLEOiCC+LjfiTszX5w2Za7DgAzzaEetxGTbGw==
   dependencies:
     bunyan "^1.8.12"
     bunyan-debug-stream "^1.0.8"
@@ -1583,6 +1583,11 @@ uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
+
+v8-compile-cache@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.0.2.tgz#a428b28bb26790734c4fc8bc9fa106fccebf6a6c"
+  integrity sha512-1wFuMUIM16MDJRCrpbpuEPTUGmM5QMUg0cr3KFwra2XgOgFcPGDQHDh3CszSCD2Zewc/dh/pamNEW8CbfDebUw==
 
 validate-npm-package-license@^3.0.1:
   version "3.0.4"

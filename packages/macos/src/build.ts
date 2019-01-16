@@ -24,7 +24,7 @@ const macosBuild : IBuild = (opts : MacosBuildOptions) => {
         bundleOnly,
         tmpdir = os.tmpdir(),
     } = opts;
-    const warnings = [];
+    const warnings : string[] = [];
     const TMP_DIR = path.join(tmpdir, 'kash-macos-build');
     const icon = config.ICONS && config.ICONS.MACOS ?
         path.join(app, config.ICONS.MACOS) : defaultIconPath;

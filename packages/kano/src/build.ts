@@ -117,10 +117,10 @@ function checkCmd(cmd) {
     });
 }
 
-function checkEnv(skipAr = false) : Promise<void> {
+function checkEnv(skipAr = false) : Promise<null> {
     // No check if last packaging step is skipped
     if (skipAr) {
-        return Promise.resolve();
+        return Promise.resolve(null);
     }
     return checkCmd('tar')
         .then(() => checkCmd('ar'))

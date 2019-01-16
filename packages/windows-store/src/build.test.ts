@@ -27,7 +27,7 @@ const certStoreSample : WindowsStoreBuildOptions = {
 suite('build', () => {
     setup(() => {
         mock('@kano/kit-app-shell-windows/lib/build', {
-            default: (opts) => {
+            default: () => {
                 return Promise.resolve('/');
             },
         });

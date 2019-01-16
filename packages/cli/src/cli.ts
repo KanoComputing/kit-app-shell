@@ -113,7 +113,7 @@ class CLI {
             // Use normal logging for machines (e.g. CI)
             p = import('./reporters/console');
         }
-        p
+        return p
             .then((ReporterModule : { default : any }) => {
                 this.reporter = (new ReporterModule.default()) as import('./reporters/reporter').IReporter;
                 this.processState.on('step', ({ message = '' }) => this.reporter.onStep(message));
@@ -288,7 +288,7 @@ class CLI {
                         this.mountReporter(argv);
                         return import('./configure')
                             .then((configure) => {
-                                const task = configure.default(argv, platformId);
+                                const task = configure.default(platformId);
                                 this.setTask(task);
                                 return task;
                             });

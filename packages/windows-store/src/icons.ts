@@ -38,7 +38,7 @@ export function filenameFromIconKey(key : string) : string {
     return `${key}.png`;
 }
 
-export function generateIcons(root : string, src : string) : Promise<void> {
+export function generateIcons(root : string, src : string) : Promise<null> {
     const assetsPath : string = getAssetsPath(root);
     const tasks = Object.keys(icons).map<Promise<void>>((key : string) => {
         const [width, height] = icons[key];

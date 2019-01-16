@@ -15,7 +15,7 @@ const writeFile = promisify(fs.writeFile);
 const dirname = (root) => ({
     name: 'dirname',
     transform: (code, id) => {
-        return code.replace(/__dirname/g, (m) => {
+        return code.replace(/__dirname/g, () => {
             const rel = path.relative(root, path.dirname(id));
             return `path.resolve(__dirname, \`${rel.replace(/\\/g, '/')}\`)`;
         });
@@ -67,7 +67,7 @@ export function bundle(input : string, opts : IBundleOptions) {
             }),
             dirname(path.dirname(input)),
             commonjs({
-                ignore: ['util', 'electron'].concat(opts.ignore),
+                ignore: ['util', 'electron'].concat(opts.ignore || []),
             }),
         ],
         onwarn: () => null,

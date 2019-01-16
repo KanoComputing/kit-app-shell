@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@kano/common": "^1.0.2",
-    "@kano/desktop-shell": "^1.0.7",
+    "@kano/desktop-shell": "^1.0.8",
     "@kano/devices-sdk": "git+ssh://git@github.com:KanoComputing/kano-devices-sdk#^1.0.30",
     "@kano/electron-updater": "^1.0.0",
     "@kano/es6-resolution": "^1.0.14",
@@ -16,7 +16,8 @@
     "minimist": "^1.2.0",
     "noble": "^1.9.1",
     "node-pre-gyp": "^0.12.0",
-    "utf-8-validate": "^5.0.2"
+    "utf-8-validate": "^5.0.2",
+    "v8-compile-cache": "^2.0.2"
   },
   "devDependencies": {
     "electron": "^3.1.0"

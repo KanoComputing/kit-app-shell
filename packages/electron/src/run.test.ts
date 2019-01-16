@@ -13,7 +13,7 @@ const { assert } = chai;
 suite('electron run', () => {
     test('run', () => {
         mock('child_process', {
-            spawn(cmd, args, opts) {
+            spawn(_, args, opts) {
                 assert.equal(args[0], '.');
                 assert.equal(args[2], '/app');
                 assert.equal(opts._showOutput, true);
@@ -21,7 +21,7 @@ suite('electron run', () => {
                 return {
                     stdout: new Readable({ read: () => null }),
                     stderr: new Readable({ read: () => null }),
-                    on: (name, cb) => null,
+                    on: () => null,
                 };
             },
         });

@@ -58,7 +58,7 @@ const windowsStoreBuild : IBuild = (opts : WindowsStoreBuildOptions) => {
         certificates,
         tmpdir = os.tmpdir(),
     } = opts;
-    const { WINDOWS_STORE } = config;
+    const { WINDOWS_STORE = {} } = config;
     let devCert = opts.devCert;
     if (!devCert) {
         if (!WINDOWS_STORE) {
@@ -113,7 +113,7 @@ const windowsStoreBuild : IBuild = (opts : WindowsStoreBuildOptions) => {
                 deploy: false,
                 finalSay() {
                     const preAppx = path.join(out, 'pre-appx');
-                    return updateAppx(preAppx, WINDOWS_STORE.PACKAGE_NAME, icon);
+                    return updateAppx(preAppx, WINDOWS_STORE.PACKAGE_NAME || '', icon || '');
                 },
             }).then(() => out);
         })
