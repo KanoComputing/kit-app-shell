@@ -30,7 +30,7 @@ function upload(app, { key } : IBitBarOptions) {
     }).then((response) => JSON.parse(response.body));
 }
 
-const bitbarProvider : IProvider = (app, wd, mocha, opts) => {
+const bitbarProvider : IProvider = (app, wd, _, opts) => {
     // Retrieve saucelabs options
     const { bitbar } = opts;
     // Authentication options are required, throw an error

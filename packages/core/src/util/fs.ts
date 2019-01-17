@@ -53,7 +53,7 @@ export function fromTemplate(
     options : { [K : string] : string },
     writeOptions? : {},
 ) : Promise<void> {
-    const transform = replace(/\$\{(.*?)\}/g, (match, g1) => options[g1] || '');
+    const transform = replace(/\$\{(.*?)\}/g, (_, g1) => options[g1] || '');
     return copy(tmpPath, dest, {
         transform,
         writeOptions,
