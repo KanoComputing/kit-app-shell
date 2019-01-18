@@ -13,7 +13,8 @@
     "watch": "tsc -b --watch",
     "test": "lerna run test",
     "test-ci": "lerna run test-ci",
-    "prepublishOnly": "tsc -b"
+    "prepublishOnly": "tsc -b",
+    "kash": "node ./packages/cli/lib/cli.js"
   },
   "devDependencies": {
     "@kano/eslint-config": "^1.0.0",

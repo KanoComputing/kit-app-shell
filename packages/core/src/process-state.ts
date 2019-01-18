@@ -9,7 +9,7 @@ class ProcessState extends EventEmitter {
     setSuccess(message : string) : void {
         this.emit('success', { message });
     }
-    setFailure(message : Error) : void {
+    setFailure(message : Error|string) : void {
         this.emit('failure', { message });
     }
     setWarning(message : string) : void {

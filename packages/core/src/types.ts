@@ -1,4 +1,5 @@
 import { IReplaceOptions } from './plugins/replace';
+import { ICheck } from './check';
 
 export interface IBundleHtmlOptions {
     replacements? : {
@@ -114,6 +115,10 @@ export interface IConfigure {
     generate?(answers : IAnswers) : any;
 }
 
+export interface IDoctor {
+    checks? : ICheck[];
+}
+
 export type ISywacConfigure = (sywac : Sywac)  => void;
 
 export enum ICommand {
@@ -122,6 +127,7 @@ export enum ICommand {
     Test = 'test',
     Sign = 'sign',
     Configure = 'configure',
+    Doctor = 'doctor',
 }
 
 type ICliCommand = {
