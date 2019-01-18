@@ -23,5 +23,6 @@
   },
   "devDependencies": {
     "tslint": "^5.12.1"
-  }
+  },
+  "gitHead": "089e3bcd40f63022ad27e6ab66d1772608bfc1c5"
 }
