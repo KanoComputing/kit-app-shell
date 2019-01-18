@@ -3,6 +3,7 @@ import { serve } from './serve';
 import chalk from 'chalk';
 import { AddressInfo } from 'net';
 import { IRun } from '@kano/kit-app-shell-core/lib/types';
+import * as livereload from 'livereload';
 
 interface IWebRunOptions {
     app : string;
@@ -12,6 +13,10 @@ interface IWebRunOptions {
 
 const webRun : IRun = ({ app, config = {}, port = 8000 } : IWebRunOptions) => {
     const server = serve(app, config).listen(port);
+    const livereloadServer = livereload.createServer();
+
+    config.LR_URL = 'http://localhost:35729';
+    livereloadServer.watch(app);
 
     server.on('listening', () => {
         const address = server.address() as AddressInfo;
