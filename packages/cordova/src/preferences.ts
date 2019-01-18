@@ -13,3 +13,10 @@ export function collectPreference(opts : { preferences : ICordovaPreferences }, 
     opts.preferences[preference] = opts[key];
     delete opts[key];
 }
+
+export function collectPreferences(opts : { preferences: ICordovaPreferences }, mapping : { [from: string] : any }, defaults : ICordovaPreferences) {
+    opts.preferences = opts.preferences || {} as ICordovaPreferences;
+
+    Object.keys(mapping).forEach(from => collectPreference(opts, mapping[from], from));
+    opts.preferences = Object.assign({}, defaults, opts.preferences);
+}
