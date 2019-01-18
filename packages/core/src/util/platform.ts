@@ -1,6 +1,6 @@
-import { Sywac, IBuild, IRun, IBuilderFactory, ISign, IConfigure, ICli, ICommand } from '../types';
+import { Sywac, IBuild, IRun, IBuilderFactory, ISign, IConfigure, ICli, ICommand, IDoctor } from '../types';
 
-export type IPlatformPart = IBuild|IRun|ISign|IBuilderFactory|IConfigure|ICli;
+export type IPlatformPart = IBuild|IRun|ISign|IBuilderFactory|IConfigure|ICli|IDoctor;
 
 // Loads a platform sub-module
 // This allows us to load just the CLI config and only the required command
@@ -8,7 +8,7 @@ export type IPlatformPart = IBuild|IRun|ISign|IBuilderFactory|IConfigure|ICli;
 // that will never run for a session,
 // e.g. Do not load heavy testing frameworks when we only need to run the app
 // The default location is lib/<key>
-export function loadPlatformKey(name : string, key : string) : Promise<IPlatformPart|null> {
+export function loadPlatformKey(name : string, key : string, ignoreError? : boolean) : Promise<IPlatformPart|null> {
     if (name === 'core' || name === 'cli') {
         return Promise.reject(new Error(`Could not load platform: '${name}' is reserved`));
     }
@@ -17,11 +17,15 @@ export function loadPlatformKey(name : string, key : string) : Promise<IPlatform
             return imported.default;
         })
         .catch(() => {
+            // Sometimes we don't want a hard fail on a missing method
+            if (ignoreError) {
+                return null;
+            }
             // Could not find the specific file. Need to figure out if the platform is not installed
             // Or doesn't implement that file
             // Use require.resolve here to avoid loading the whole module
             try {
-                const modulePath = require.resolve(`@kano/kit-app-shell-${name}`);
+                const modulePath = require.resolve(`@kano/kit-app-shell-${name}/package.json`);
                 if (modulePath) {
                     throw new Error(`Platform '${name}' does not implement '${key}'`);
                 }

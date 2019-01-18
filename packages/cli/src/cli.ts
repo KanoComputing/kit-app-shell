@@ -6,6 +6,7 @@ import * as Api from 'sywac/api';
 // This saves a lot of time as the big modules for building are not loaded is not needed
 import * as platformUtils from '@kano/kit-app-shell-core/lib/util/platform';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
+import { runChecks, ICheck, ICheckResult, CheckResultSatus } from '@kano/kit-app-shell-core/lib/check';
 import { IDisposable, ICli, ICommand } from '@kano/kit-app-shell-core/lib/types';
 import chalk from 'chalk';
 import { ISywac, IArgv } from './types';
@@ -64,9 +65,11 @@ class CLI {
         // Parse the output once to deal with command discovery and help
         return this.firstPass()
             .then((result) => {
+                // Try to grab the platform from the argv
+                const [, platform] = result.argv._;
                 // This won't run if the user input a correct command with a platform
-                if (result.argv.platform) {
-                    return this.secondPass(result.argv.platform);
+                if (platform) {
+                    return this.secondPass(platform);
                 }
                 // tslint:disable-next-line:no-console
                 console.log(result.output);
@@ -123,6 +126,30 @@ class CLI {
                 this.processState.on('info', ({ message = '' }) => this.reporter.onInfo(message));
             });
     }
+    runDoctor() {
+        return import('@kano/kit-app-shell-core/lib/checks/index')
+            .then((checkModule : { default : ICheck[] }) => {
+                return runChecks(checkModule.default);
+            });
+    }
+    displayDoctorResults(results : ICheckResult[]) : void {
+        const DOCTOR_SUCCESS_DEFAULT = 'All good';
+        const DOCTOR_WARNING_DEFAULT = 'Warning';
+        const DOCTOR_FAILURE_DEFAULT = 'Error';
+        let failed = false;
+        results.forEach((result) => {
+            const message : string|null = result.message ? result.message.replace(/\n/g, '\n  ') : null;
+            if (result.status === CheckResultSatus.Success) {
+                processState.setSuccess(`${result.title}: ${message || DOCTOR_SUCCESS_DEFAULT}`);
+            } else if (result.status === CheckResultSatus.Warning) {
+                processState.setWarning(`${result.title}: ${message || DOCTOR_WARNING_DEFAULT}`);
+            } else {
+                processState.setFailure(`${result.title}: ${message || DOCTOR_FAILURE_DEFAULT}`);
+                failed = true;
+            }
+        });
+        this.end(failed ? 1 : 0);
+    }
     firstPass() : Promise<any> {
         // Create local sywac
         const sywac = new Api();
@@ -140,10 +167,14 @@ class CLI {
             });
         });
 
-        // Allow custom commands from the platform itself
-        sywac.positional('<command> <platform> --help', {
-            desc: 'A platform command',
-            run: (argv) => this.secondPass(argv.platform),
+        sywac.command('doctor [platform] --help', {
+            desc: 'Show help for the doctor command',
+            run: (argv) => {
+                if (!argv.platform) {
+                    return this.runDoctor();
+                }
+                return this.secondPass(argv.platform);
+            },
         });
 
         sywac.command('open config', {
@@ -289,6 +320,28 @@ class CLI {
                         return import('./configure')
                             .then((configure) => {
                                 const task = configure.default(platformId);
+                                this.setTask(task);
+                                return task;
+                            });
+                    },
+                });
+
+                sywac.command('doctor <platform>', {
+                    desc: 'run system checks for a platform',
+                    setup: (s) => {
+                        const sywacPatch = CLI.patchSywacOptions(s, {
+                            group: platform.cli.group || 'Platform: ',
+                        });
+                        platformUtils.registerOptions(s, platform, ICommand.Doctor);
+                        sywacPatch.dispose();
+                    },
+                    run: (argv) => {
+                        this.mountReporter(argv);
+                        return import('./doctor')
+                            .then((doctor) => {
+                                const task = doctor.default(platformId)
+                                    .then((checks) => runChecks(checks))
+                                    .then((results) => this.displayDoctorResults(results));
                                 this.setTask(task);
                                 return task;
                             });
