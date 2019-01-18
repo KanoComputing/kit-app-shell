@@ -1,6 +1,6 @@
 {
   "name": "@kano/kit-app-shell-cli",
-  "version": "0.0.3-alpha.15",
+  "version": "0.0.3-alpha.16",
   "license": "MIT",
   "bin": {
     "kit-app-shell": "lib/cli.js",
