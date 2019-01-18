@@ -5,7 +5,7 @@ import * as path from 'path';
 import * as nodeResolve from 'rollup-plugin-node-resolve';
 import * as mkdirpCb from 'mkdirp';
 import * as commonjs from 'rollup-plugin-commonjs';
-import json from 'rollup-plugin-json';
+import * as json from 'rollup-plugin-json';
 import { replace } from '@kano/kit-app-shell-core/lib/plugins/replace';
 import { promisify } from 'util';
 

@@ -29,7 +29,6 @@
   },
   "gitHead": "089e3bcd40f63022ad27e6ab66d1772608bfc1c5",
   "devDependencies": {
-    "@types/rollup-plugin-json": "^3.0.1",
     "chai": "^4.2.0",
     "chai-fs": "^2.0.0",
     "chai-json-schema": "^1.5.0",

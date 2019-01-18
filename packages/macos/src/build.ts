@@ -36,6 +36,7 @@ const macosBuild : IBuild = (opts : MacosBuildOptions) => {
     return rimraf(TMP_DIR)
         .then(() => mkdirp(TMP_DIR))
         .then(() => build({
+            ...opts,
             app,
             config,
             out: TMP_DIR,
