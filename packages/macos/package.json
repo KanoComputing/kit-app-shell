@@ -1,6 +1,6 @@
 {
   "name": "@kano/kit-app-shell-macos",
-  "version": "0.0.3-alpha.17",
+  "version": "0.0.3-alpha.18",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
