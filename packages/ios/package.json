@@ -1,10 +1,10 @@
 {
   "name": "@kano/kit-app-shell-ios",
-  "version": "0.0.3-alpha.14",
+  "version": "0.0.3-alpha.15",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@kano/kit-app-shell-cordova": "^0.0.3-alpha.14",
+    "@kano/kit-app-shell-cordova": "^0.0.3-alpha.15",
     "@kano/kit-app-shell-core": "^0.0.3-alpha.14",
     "@webcomponents/webcomponentsjs": "^2.2.1",
     "appium": "^1.10.0",
