@@ -26,29 +26,28 @@ Depending on the platforms you're planning to use, you might need to set up a di
 
 _TODO: Figure this out._
 
-## Quickstart Guide
+## Getting Started
 
-This guide will explain how to set up a minimal app using kash and run it on all the supported platforms. We'll start with an empty directory:
+This guide explains how to set up a minimal app using `kash` and test it using the _web_ platform. We'll start with an empty app directory:
 
 ```sh
 mkdir kash-example
 cd kash-example
 ```
 
-Then we install the `kash` CLI and the _web_ platform to start.
+Then we'll install the `kash` CLI tool and the _web_ platform.
 
 ```sh
 yarn add @kano/kit-app-shell-cli
 yarn add @kano/kit-app-shell-web
 ```
 
-We need to create a default config file and set the `APP_ID` and `APP_NAME` options. These will be used by Cordova/Electron under the hood when building the files. `kash` will be looking for the configuration in the `config/` directory.
+When starting up, the app shell will be looking for two files:
 
-```sh
-mkdir config
-```
+* `config/default.json` to provide info necessary to build the app
+* `index.js` to define a class that will bootstrap the UI
 
-It always loads `config/default.json`. You can also provide further environment-specific configuration (e.g., `staging.json`, `production.json`). To learn more about configuration, see the [TODO comprehensive guide](#TODO). We'll only create `default.json` with the following content:
+In the config, we'll need to set the `APP_ID` and `APP_NAME` options. These will be used by Cordova/Electron when building the app. You can also provide environment-specific configs (e.g., `staging.json`, `production.json`) in the same directory. To learn more about that, see the [TODO comprehensive guide](#TODO). In this case, `config/default.json` will be enough:
 
 ```json
 {
@@ -57,7 +56,7 @@ It always loads `config/default.json`. You can also provide further environment-
 }
 ```
 
-Finally, we need to define the main class. The shell will use it to bootstrap the UI. We'll create `index.js` in the root of our project with the following code:
+Then we'll need to define the main class in `index.js`:
 
 ```js
 class ExampleApp {
@@ -70,29 +69,57 @@ class ExampleApp {
 Shell.define(ExampleApp);
 ```
 
-The only thing we need to do is to set up the root element in the constructor. Note the available parameters. You can use `bus` to communicate with devices and `config` to access the app configuration.
+The app shell will instantiate it with a reference to the `bus` that can be used to communicate with devices and `config` to access the app config above. It will expect the constructor to initialise the `root` property. For the purposes of this example, we create a simple `div` with the application's name in it.
 
-Now we can test the setup. We'll use the version of kash installed in the project tree.
+With the main class in place, we can test the setup on the _web_ platform by running `kash` from the project tree as follows:
 
 ```sh
 ./node_modules/.bin/kash run web .
 ```
 
-The _web_ platform will start a local server:
+The _web_ platform will start a simple web server.
 
 <img src="https://user-images.githubusercontent.com/169328/51049160-f1710500-15c4-11e9-9e05-b2b6110fe7ec.png" width="486">
 
-Going to `http://localhost:4000` will load our new app:
+You can test the app by going to http://localhost:4000:
 
 <img src="https://user-images.githubusercontent.com/169328/51050307-39455b80-15c8-11e9-9591-090c6c216650.png" width="400">
 
-_TODO_ more platforms.
+
+## CLI Commands
+
+The basic interface looks like this:
+
+```
+Usage: kash [options] <command> <platform>
+```
+
+The commands are platform-specific. Here are the most frequently used ones:
+
+### run
+
+
+
+**Example**:
+
+```
+kash run ios ../app-folder
+```
+
+### build
+
+### test
+
+### sign
+
+### configure
+
 
 ## Development
 
 This repository contains the CLI, core module and platform implementation for the App Shell platform
 
-This repository uses lerna and yarn workspaces to manage dependencies, development and tests of its packages.
+This repository uses lerna and yarn workspaces to manage dependencies, development and tests of its packages
 
 Pull the dependencies with `lerna bootstrap`.
 
