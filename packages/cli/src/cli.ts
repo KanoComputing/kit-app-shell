@@ -154,7 +154,7 @@ class CLI {
             },
         });
 
-        sywac.help();
+        sywac.help('-h, --help');
         sywac.showHelpByDefault();
 
         sywac.version();
@@ -305,7 +305,7 @@ class CLI {
                     defaultValue: false,
                 });
 
-                sywac.help();
+                sywac.help('-h, --help');
                 sywac.showHelpByDefault();
 
                 sywac.version();
