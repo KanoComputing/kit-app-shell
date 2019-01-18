@@ -2,7 +2,7 @@ import { fromTemplate } from '@kano/kit-app-shell-core/lib/util/fs';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import { spawn } from 'child_process';
 import electronPath = require('electron/index');
-import * as  livereload from 'livereload';
+import * as livereload from 'livereload';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';

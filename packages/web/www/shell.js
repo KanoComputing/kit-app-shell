@@ -11,6 +11,12 @@ function getJSON(url) {
         .then(r => r.json());
 }
 
+function setupLivereload(url) {
+    const s = document.createElement('script');
+    s.src = `${url}/livereload.js?snipver=1`;
+    document.body.appendChild(s);
+}
+
 function loadConfig() {
     return getJSON('/_config')
         .then((config) => {
@@ -40,6 +46,11 @@ p
             OS_PLATFORM: 'web',
             OS_VERSION: navigator.userAgent,
         });
+
+        if (config.LR_URL) {
+            setupLivereload(config.LR_URL);
+        }
+
         document.body.style.backgroundColor = config.BACKGROUND_COLOR || DEFAULT_BACKGROUND_COLOR;
         window.Shell = {
             defined: false,
