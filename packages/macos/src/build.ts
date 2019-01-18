@@ -48,7 +48,7 @@ const macosBuild : IBuild = (opts : MacosBuildOptions) => {
                     'node_modules/bluetooth-hci-socket/**/*',
                 ],
                 forcePlatform: 'darwin',
-                ignore: ['noble-mac', 'bluetooth-hci-socket'],
+                ignore: ['noble-mac', 'bluetooth-hci-socket', 'xpc-connection'],
             },
         }))
         .then((buildDir) => {
