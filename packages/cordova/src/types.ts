@@ -74,7 +74,7 @@ export interface ICordovaPreferences {
     PaginationMode? : string;
     SetFullscreen? : boolean;
     ShowTitle? : boolean;
-    SplashScreenBackgroundColor : string;
+    SplashScreenBackgroundColor? : string;
     Suppresses3DTouchGesture? : boolean;
     SuppressesIncrementalRendering? : boolean;
     SuppressesLongPressGesture? : boolean;
