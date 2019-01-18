@@ -1,5 +1,5 @@
 import build from '@kano/kit-app-shell-cordova/lib/build';
-import { collectPreference } from '@kano/kit-app-shell-cordova/lib/preferences';
+import { collectPreferences } from '@kano/kit-app-shell-cordova/lib/preferences';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import { promisify } from 'util';
 import * as path from 'path';
@@ -8,26 +8,15 @@ import * as platform from './platform';
 import * as globCb from 'glob';
 import * as mkdirpCb from 'mkdirp';
 import { IBuild } from '@kano/kit-app-shell-core/lib/types';
+import { PREFERENCE_MAPPING, DEFAULT_PREFERENCES } from './preferences';
+import { ICordovaBuildOptions } from '@kano/kit-app-shell-cordova/lib/types';
 
 const glob = promisify(globCb);
 const mkdirp = promisify(mkdirpCb);
 const rename = promisify(fs.rename);
 
-const DEFAULT_PREFERENCES = {
-    Scheme: 'kit-app',
-    DisallowOverscroll: true,
-};
-
-function collectPreferences(opts) {
-    opts.preferences = opts.preferences || {};
-    collectPreference(opts, 'target-device', 'targetDevice');
-    collectPreference(opts, 'deployment-target', 'deploymentTarget');
-    collectPreference(opts, 'Scheme', 'scheme');
-    opts.preferences = Object.assign({}, DEFAULT_PREFERENCES, opts.preferences);
-}
-
-const iosBuild : IBuild = (opts) => {
-    collectPreferences(opts);
+const iosBuild : IBuild = (opts : ICordovaBuildOptions) => {
+    collectPreferences(opts, PREFERENCE_MAPPING, DEFAULT_PREFERENCES);
     return build({
         ...opts,
         cacheId: 'ios',

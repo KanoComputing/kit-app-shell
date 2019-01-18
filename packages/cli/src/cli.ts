@@ -25,7 +25,7 @@ class CLI {
                     coerce: path.resolve,
                 }],
             })
-            .string('env', {
+            .string('--env, -e', {
                 desc: 'Target environment',
                 defaultValue: 'development',
             });
@@ -175,7 +175,7 @@ class CLI {
                     desc: 'build the application',
                     setup: (s) => {
                         CLI.parseCommon(s);
-                        s.array('resources')
+                        s.array('--resources')
                             .string('--out, -o', {
                                 desc: 'Output directory',
                                 coerce: path.resolve,
