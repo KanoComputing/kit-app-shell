@@ -1,8 +1,8 @@
 import { copy, fromTemplate } from '@kano/kit-app-shell-core/lib/util/fs';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
+import { getBuildPath } from '@kano/kit-app-shell-core/lib/tmp';
 import build from '@kano/kit-app-shell-electron/lib/build';
 import * as path from 'path';
-import * as os from 'os';
 import * as glob from 'glob';
 import * as fs from 'fs';
 import snake = require('snake-case');
@@ -134,7 +134,7 @@ const kanoBuild : IBuild = (opts : KanoBuildOptions) => {
         out,
         bundleOnly,
     } = opts;
-    const TMP_DIR = path.join(opts.tmpdir || os.tmpdir(), 'kash-kano-build');
+    const TMP_DIR = path.join(getBuildPath(), 'kano');
     const BUILD_DIR = path.join(TMP_DIR, 'build');
     const APP_DIR = path.join(TMP_DIR, 'app');
     const skipAr = opts['skip-ar'];

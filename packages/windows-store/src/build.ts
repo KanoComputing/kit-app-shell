@@ -1,7 +1,7 @@
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
+import { getBuildPath } from '@kano/kit-app-shell-core/lib/tmp';
 import build from '@kano/kit-app-shell-windows/lib/build';
 import * as path from 'path';
-import * as os from 'os';
 import { promisify } from 'util';
 import chalk from 'chalk';
 import * as convertToWindowsStore from 'electron-windows-store';
@@ -15,7 +15,7 @@ import { WindowsStoreBuildOptions } from './types';
 const mkdirp = promisify(mkdirpCb);
 const rimraf = promisify(rimrafCb);
 
-const TMP_DIRNAME = 'kash-windows-store-build';
+const TMP_DIRNAME = 'windows-store';
 
 /**
  * Updates the appx manifest and generates the appx icons
@@ -56,7 +56,6 @@ const windowsStoreBuild : IBuild = (opts : WindowsStoreBuildOptions) => {
         config,
         out,
         certificates,
-        tmpdir = os.tmpdir(),
     } = opts;
     const { WINDOWS_STORE = {} } = config;
     let devCert = opts.devCert;
@@ -77,7 +76,7 @@ const windowsStoreBuild : IBuild = (opts : WindowsStoreBuildOptions) => {
     // This is read by electron-windows-store to make logs silent
     // @ts-ignore
     global.isModuleUse = true;
-    const TMP_DIR = path.join(tmpdir, TMP_DIRNAME);
+    const TMP_DIR = path.join(getBuildPath(), TMP_DIRNAME);
     // Prepare a temp directory for the build
     return rimraf(TMP_DIR)
         .then(() => mkdirp(TMP_DIR))

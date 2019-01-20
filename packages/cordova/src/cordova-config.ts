@@ -1,20 +1,24 @@
 import Config = require('cordova-config');
 import * as et from 'elementtree';
 
+// This extends the Config class from cordova-config. Leading underscores are used for properties
+
 export class CordovaConfig extends Config {
     private absoluteRoot : et.Element;
-    private root : et.Element;
-    private doc : et.Element;
+    // tslint:disable-next-line:variable-name
+    private _root : et.Element;
+    // tslint:disable-next-line:variable-name
+    private _doc : et.Element;
     selectPlatform(name : string) : void {
-        this.absoluteRoot = this.root;
-        this.root = this.root.find(`./platform/[@name="${name}"]`);
+        this.absoluteRoot = this._root;
+        this._root = this._root.find(`./platform/[@name="${name}"]`);
     }
     selectRoot() : void {
-        this.root = this.absoluteRoot || this.root;
-        this.absoluteRoot = this.root;
+        this._root = this.absoluteRoot || this._root;
+        this.absoluteRoot = this._root;
     }
     removeAll(query : string) : void {
-        this.doc.findall(`./${query}`).forEach((tag) => this.root.remove(tag));
+        this._doc.findall(`./${query}`).forEach((tag) => this._root.remove(tag));
     }
     removeIcons() : void {
         this.removeAll('icon');
@@ -33,7 +37,7 @@ export class CordovaConfig extends Config {
     }
     addElement(tagName : string, content : string, attribs : object = {}) : void {
         const el = new et.Element(tagName);
-        this.root.append(el);
+        this._root.append(el);
 
         if (typeof content === 'object') {
             el.append(content);
@@ -45,7 +49,7 @@ export class CordovaConfig extends Config {
         el.attrib = Object.assign({}, attribs);
     }
     setWidgetAttribute(name : string, value : string) : void {
-        this.root.attrib[name] = value;
+        this._root.attrib[name] = value;
     }
     addEditConfig(file : string, target : string, mode : string, contents : string) {
         this.addElement('edit-config', et.XML(contents), { file, mode, target });

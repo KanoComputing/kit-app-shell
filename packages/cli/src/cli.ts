@@ -8,6 +8,8 @@ import * as platformUtils from '@kano/kit-app-shell-core/lib/util/platform';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import { runChecks, ICheck, ICheckResult, CheckResultSatus } from '@kano/kit-app-shell-core/lib/check';
 import { IDisposable, ICli, ICommand } from '@kano/kit-app-shell-core/lib/types';
+import * as tmp from '@kano/kit-app-shell-core/lib/tmp';
+import * as prettyBytes from 'pretty-bytes';
 import chalk from 'chalk';
 import { ISywac, IArgv } from './types';
 
@@ -174,6 +176,48 @@ class CLI {
                     return this.runDoctor();
                 }
                 return this.secondPass(argv.platform);
+            },
+        });
+
+        sywac.command('cache', {
+            desc: 'Manage the cache files used by kash',
+            setup: (setup) => {
+                setup.command('status', {
+                    desc: 'Displays the status of the cache directory',
+                    run: (argv) => {
+                        this.mountReporter(argv);
+                        return tmp.status()
+                            .then((status) => {
+                                let total = 0;
+                                Object.keys(status).forEach((key) => {
+                                    const st = status[key];
+                                    total += st.size;
+                                    processState.setInfo(`${key} size: ${prettyBytes(st.size)}`);
+                                });
+                                processState.setInfo(`Total size: ${prettyBytes(total)}`);
+                                if (total !== 0) {
+                                    processState.setInfo(`Run ${chalk.cyan('kash cache clear')} to free up some space`);
+                                } else {
+                                    processState.setSuccess('No cache to clear');
+                                }
+                            })
+                            .then(() => this.end(0));
+                    },
+                });
+                setup.command('clear', {
+                    desc: 'Deletes the contents of the cache directory',
+                    run: (argv) => {
+                        this.mountReporter(argv);
+                        return tmp.status()
+                            .then((status) => {
+                                const total = Object.keys(status).reduce((acc, key) => {
+                                    return acc + status[key].size;
+                                }, 0);
+                                return tmp.clear()
+                                    .then(() => processState.setSuccess(`Cleared ${prettyBytes(total)}`));
+                            });
+                    },
+                });
             },
         });
 

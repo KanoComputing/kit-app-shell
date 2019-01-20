@@ -4,6 +4,7 @@ import * as os from 'os';
 import * as deepMerge from 'deepmerge';
 import { promisify } from 'util';
 import { IBuildOptions, IOptions } from './types';
+import { getTmpDir } from './tmp';
 
 const writeFile = promisify(fs.writeFile);
 
@@ -40,7 +41,7 @@ export const RcLoader = {
             )
             .then((opts : IBuildOptions) => {
                 // Get the defined temporary directory or use the system one
-                opts.tmpdir = process.env.KASH_TMP_DIR ? path.resolve(process.env.KASH_TMP_DIR) : os.tmpdir();
+                opts.tmpdir = getTmpDir();
                 return opts;
             });
     },

@@ -1,8 +1,8 @@
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
+import { getBuildPath } from '@kano/kit-app-shell-core/lib/tmp';
 import { copy } from '@kano/kit-app-shell-core/lib/util/fs';
 import build from '@kano/kit-app-shell-electron/lib/build';
 import * as path from 'path';
-import * as os from 'os';
 import * as fs from 'fs';
 import { promisify } from 'util';
 import * as packager from 'electron-packager';
@@ -70,9 +70,8 @@ const windowsBuild : IBuild = (opts : WindowsBuildOptions) => {
         config,
         out,
         skipInstaller = false,
-        tmpdir = os.tmpdir(),
     } = opts;
-    const TMP_DIR = path.join(tmpdir, 'kash-windows-build');
+    const TMP_DIR = path.join(getBuildPath(), 'windows');
     const BUILD_DIR = path.join(TMP_DIR, 'build');
     const PKG_DIR = path.join(TMP_DIR, 'app');
     const icon = config.ICONS && config.ICONS.WINDOWS ? path.join(app, config.ICONS.WINDOWS) : DEFAULT_ICON;

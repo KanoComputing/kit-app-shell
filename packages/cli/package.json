@@ -16,6 +16,7 @@
     "enquirer": "^2.2.0",
     "open-file-explorer": "^1.0.2",
     "ora": "^3.0.0",
+    "pretty-bytes": "^5.1.0",
     "sywac": "^1.2.1"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
-import * as os from 'os';
+import { getCachePath } from '@kano/kit-app-shell-core/lib/tmp';
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
@@ -55,9 +55,8 @@ function createProject(opts : CordovaRunOptions, hash : string) {
         platforms,
         hooks,
         cacheId = 'cordova',
-        tmpdir = os.tmpdir(),
     } = opts;
-    const TMP_DIR = path.join(tmpdir, `kash-${cacheId}-build`, hash);
+    const TMP_DIR = path.join(getCachePath(), cacheId, hash);
 
     // Resolve the location of the default plugins
     const defaultPlugins = DEFAULT_PLUGINS.map((name) => getModulePath(name));

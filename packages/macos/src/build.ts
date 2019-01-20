@@ -1,7 +1,7 @@
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
+import { getBuildPath } from '@kano/kit-app-shell-core/lib/tmp';
 import build from '@kano/kit-app-shell-electron/lib/build';
 import * as path from 'path';
-import * as os from 'os';
 import * as fs from 'fs';
 import * as packager from 'electron-packager';
 import { promisify } from 'util';
@@ -22,10 +22,11 @@ const macosBuild : IBuild = (opts : MacosBuildOptions) => {
         config = {} as any,
         out,
         bundleOnly,
-        tmpdir = os.tmpdir(),
     } = opts;
     const warnings : string[] = [];
-    const TMP_DIR = path.join(tmpdir, 'kash-macos-build');
+    const TMP_DIR = path.join(getBuildPath(), 'macos');
+    const BUILD_DIR = path.join(TMP_DIR, 'build');
+    const APP_DIR = path.join(TMP_DIR, 'app');
     const icon = config.ICONS && config.ICONS.MACOS ?
         path.join(app, config.ICONS.MACOS) : defaultIconPath;
     let name = config.APP_NAME;
@@ -34,18 +35,20 @@ const macosBuild : IBuild = (opts : MacosBuildOptions) => {
         name = 'App';
     }
     return rimraf(TMP_DIR)
-        .then(() => mkdirp(TMP_DIR))
+        .then(() => mkdirp(BUILD_DIR))
+        .then(() => mkdirp(APP_DIR))
         .then(() => build({
             ...opts,
             app,
             config,
-            out: TMP_DIR,
+            out: BUILD_DIR,
             bundleOnly,
             bundle: {
                 // Ship noble-mac binaries
                 patterns: [
                     'node_modules/noble-mac/**/*',
                     'node_modules/bluetooth-hci-socket/**/*',
+                    'node_modules/xpc-connection/**/*',
                 ],
                 forcePlatform: 'darwin',
                 ignore: ['noble-mac', 'bluetooth-hci-socket', 'xpc-connection'],
@@ -57,7 +60,7 @@ const macosBuild : IBuild = (opts : MacosBuildOptions) => {
                 dir: buildDir,
                 packageManager: 'yarn',
                 overwrite: true,
-                out,
+                out: APP_DIR,
                 prune: false,
                 name,
                 platform: 'darwin',
@@ -85,10 +88,16 @@ const macosBuild : IBuild = (opts : MacosBuildOptions) => {
                 .then(() => rimraf(path.join(resourcesDir, 'node_modules/electron')))
                 .then(() => pkgDir);
         })
-        .then(() => {
+        .then((pkgDir) => {
             warnings.forEach((w) => processState.setWarning(w));
-            processState.setSuccess('Created macOS app');
-            return out;
+            const appName = `${name}.app`;
+            const appDir = path.resolve(pkgDir, appName);
+            const dest = path.join(out, appName);
+            return mkdirp(out)
+                .then(() => rename(appDir, dest))
+                .then(() => {
+                    processState.setSuccess(`Created macOS app at '${dest}'`);
+                });
         });
 };
 
