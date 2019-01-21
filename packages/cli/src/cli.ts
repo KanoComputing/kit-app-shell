@@ -191,12 +191,16 @@ class CLI {
                                 Object.keys(status).forEach((key) => {
                                     const st = status[key];
                                     total += st.size;
+                                    // tslint:disable-next-line:no-console
                                     console.log(`  ${key} size: ${prettyBytes(st.size)}`);
                                 });
+                                // tslint:disable-next-line:no-console
                                 console.log(`  Total size: ${prettyBytes(total)}`);
                                 if (total !== 0) {
+                                    // tslint:disable-next-line:no-console
                                     console.log(`Run ${chalk.cyan('kash cache clear')} to free up some space`);
                                 } else {
+                                    // tslint:disable-next-line:no-console
                                     console.log('No cache to clear');
                                 }
                             })
@@ -220,6 +224,7 @@ class CLI {
                 setup.command('dir', {
                     desc: 'Displays the cache directory location',
                     run: () => {
+                        // tslint:disable-next-line:no-console
                         console.log(tmp.getRootPath());
                     },
                 });
