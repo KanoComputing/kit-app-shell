@@ -14,7 +14,6 @@ suite('macOS build', () => {
         mock('electron-packager', (opts) => {
             assert.equal(opts.dir, '/build');
             assert.equal(opts.icon, path.join(__dirname, '../icons/1024.png.icns'));
-            assert.equal(opts.out, '/out');
             assert.equal(opts.name, 'App');
             return Promise.resolve('/out');
         });
@@ -35,7 +34,7 @@ suite('macOS build', () => {
                     },
                     setSuccess() {},
                     setInfo() {},
-                }
+                },
             });
         });
         const build = mock.reRequire('./build');
@@ -63,7 +62,6 @@ suite('macOS build', () => {
         mock('electron-packager', (opts) => {
             assert.equal(opts.dir, '/build');
             assert.equal(opts.icon, path.join('/app', 'assets/test-icons.png.icns'));
-            assert.equal(opts.out, '/out');
             assert.equal(opts.name, 'Test');
             return Promise.resolve('/out');
         });

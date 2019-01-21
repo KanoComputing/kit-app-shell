@@ -76,7 +76,7 @@ suite('project', () => {
         test('non-existing project', () => {
             // Runs the build script in a sandbox ( No fs, fake cache, ... )
             // Expect the project creation steps to run in order with the right properties
-            const expectedProjectPath = path.normalize('/test-tmp/kash-test-build/hash/project');
+            const expectedProjectPath = path.normalize('/test-tmp/kash/cache/test/hash/project');
             const expectedSteps = [
                 'get-project',
                 'create',
