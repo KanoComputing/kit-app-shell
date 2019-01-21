@@ -184,21 +184,20 @@ class CLI {
             setup: (setup) => {
                 setup.command('status', {
                     desc: 'Displays the status of the cache directory',
-                    run: (argv) => {
-                        this.mountReporter(argv);
+                    run: () => {
                         return tmp.status()
                             .then((status) => {
                                 let total = 0;
                                 Object.keys(status).forEach((key) => {
                                     const st = status[key];
                                     total += st.size;
-                                    processState.setInfo(`${key} size: ${prettyBytes(st.size)}`);
+                                    console.log(`  ${key} size: ${prettyBytes(st.size)}`);
                                 });
-                                processState.setInfo(`Total size: ${prettyBytes(total)}`);
+                                console.log(`  Total size: ${prettyBytes(total)}`);
                                 if (total !== 0) {
-                                    processState.setInfo(`Run ${chalk.cyan('kash cache clear')} to free up some space`);
+                                    console.log(`Run ${chalk.cyan('kash cache clear')} to free up some space`);
                                 } else {
-                                    processState.setSuccess('No cache to clear');
+                                    console.log('No cache to clear');
                                 }
                             })
                             .then(() => this.end(0));
@@ -207,8 +206,8 @@ class CLI {
                 setup.command('clear', {
                     desc: 'Deletes the contents of the cache directory',
                     run: (argv) => {
-                        this.mountReporter(argv);
-                        return tmp.status()
+                        return this.mountReporter(argv)
+                            .then(() => tmp.status())
                             .then((status) => {
                                 const total = Object.keys(status).reduce((acc, key) => {
                                     return acc + status[key].size;
@@ -216,6 +215,12 @@ class CLI {
                                 return tmp.clear()
                                     .then(() => processState.setSuccess(`Cleared ${prettyBytes(total)}`));
                             });
+                    },
+                });
+                setup.command('dir', {
+                    desc: 'Displays the cache directory location',
+                    run: () => {
+                        console.log(tmp.getRootPath());
                     },
                 });
             },
