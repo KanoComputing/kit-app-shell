@@ -47,11 +47,16 @@ const macosBuild : IBuild = (opts : MacosBuildOptions) => {
                 // Ship noble-mac binaries
                 patterns: [
                     'node_modules/noble-mac/**/*',
-                    'node_modules/bluetooth-hci-socket/**/*',
+                    'node_modules/bindings/**/*',
                     'node_modules/xpc-connection/**/*',
+                    'node_modules/noble/**/*',
+                    'node_modules/bplist-parser/**/*',
                 ],
                 forcePlatform: 'darwin',
-                ignore: ['noble-mac', 'bluetooth-hci-socket', 'xpc-connection'],
+                ignore: [
+                    'noble-mac',
+                    'noble',
+                ],
             },
         }))
         .then((buildDir) => {
@@ -94,6 +99,7 @@ const macosBuild : IBuild = (opts : MacosBuildOptions) => {
             const appDir = path.resolve(pkgDir, appName);
             const dest = path.join(out, appName);
             return mkdirp(out)
+                .then(() => rimraf(dest))
                 .then(() => rename(appDir, dest))
                 .then(() => {
                     processState.setSuccess(`Created macOS app at '${dest}'`);
