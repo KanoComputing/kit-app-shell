@@ -88,17 +88,17 @@ You can test the app by going to http://localhost:4000:
 
 ## CLI Commands
 
-The basic interface looks like this:
+`kash` has a sub-comand-based interface. Make sure the platform you want to use is installed.
 
 ```
 Usage: kash [options] <command> <platform>
 ```
 
-The commands are platform-specific. Here are the most frequently used ones:
+The commands are platform-specific. Here's an overview:
 
 ### run
 
-
+Starts the app locally with live reload for development purposes. The behaviour of `run` depends on the target platform. For Cordova-based platforms, it will build an app and deploy it to a test device (if available). See the platform-specific notes for more information.
 
 **Example**:
 
@@ -108,12 +108,37 @@ kash run ios ../app-folder
 
 ### build
 
+Builds the app for the selected platform. The build will be stored in the directory specified by the `-o, --out` parameter.
+
+**Example**:
+
+```
+kash build ios ../app-folder -o ../output-dir
+```
+
+### configure
+
+A CLI-based UI will walk you through the set up required for each platform. The configuration is system-wide and shared between different projects. You might need to run this before you first build.
+
 ### test
+
+Runs integration tests against a prebuilt app (specified via `--prebuilt-app`).
+
+**Example**:
+
+```
+kash build ios ../app-folder --prebuilt-app ../output-dir/app-build.ipa
+```
 
 ### sign
 
-### configure
+Sign a build for distribution. Not every platform implements this command.
 
+**Example**:
+
+```
+TODO
+```
 
 ## Development
 
