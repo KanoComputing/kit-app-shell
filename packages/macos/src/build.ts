@@ -43,21 +43,24 @@ const macosBuild : IBuild = (opts : MacosBuildOptions) => {
             config,
             out: BUILD_DIR,
             bundleOnly,
-            bundle: {
-                // Ship noble-mac binaries
-                patterns: [
-                    'node_modules/noble-mac/**/*',
-                    'node_modules/bindings/**/*',
-                    'node_modules/xpc-connection/**/*',
-                    'node_modules/noble/**/*',
-                    'node_modules/bplist-parser/**/*',
-                ],
-                forcePlatform: 'darwin',
-                ignore: [
-                    'noble-mac',
-                    'noble',
-                ],
-            },
+            disableV8Snapshot: true,
+            // Settings working for v8 snapshot
+            // Use them if figure out how to solve the __dirname issue
+            // bundle: {
+            //     // Ship noble-mac binaries
+            //     patterns: [
+            //         'node_modules/noble-mac/**/*',
+            //         'node_modules/bindings/**/*',
+            //         'node_modules/xpc-connection/**/*',
+            //         'node_modules/noble/**/*',
+            //         'node_modules/bplist-parser/**/*',
+            //     ],
+            //     forcePlatform: 'darwin',
+            //     ignore: [
+            //         'noble-mac',
+            //         'noble',
+            //     ],
+            // },
         }))
         .then((buildDir) => {
             processState.setInfo('Creating macOS app');
@@ -78,20 +81,23 @@ const macosBuild : IBuild = (opts : MacosBuildOptions) => {
         })
         .then((pkgDirs) => {
             const [pkgDir] = pkgDirs;
-            const appDir = path.resolve(pkgDir, `${name}.app`);
-            const resourcesDir = path.join(appDir, 'Contents/Resources/app');
-            const targetDir = path.join(appDir, 'Contents/Frameworks/Electron Framework.framework/Resources');
-            const SNAPSHOT_BLOB = 'snapshot_blob.bin';
-            const V8_CONTEXT_SNAPSHOT = 'v8_context_snapshot.bin';
-            // Move the snapshot files to the root of the generated app
-            return rename(path.join(resourcesDir, SNAPSHOT_BLOB), path.join(targetDir, SNAPSHOT_BLOB))
-                .then(() => rename(
-                    path.join(resourcesDir, V8_CONTEXT_SNAPSHOT),
-                    path.join(targetDir,  V8_CONTEXT_SNAPSHOT),
-                ))
-                // Delete the electron directory, it was needed during packaaging, but must not be shipped
-                .then(() => rimraf(path.join(resourcesDir, 'node_modules/electron')))
-                .then(() => pkgDir);
+            return pkgDir;
+            // Code to copy the v8 snapshot files into the app dir
+            // Use when v8 snapshot issue is solved
+            // const appDir = path.resolve(pkgDir, `${name}.app`);
+            // const resourcesDir = path.join(appDir, 'Contents/Resources/app');
+            // const targetDir = path.join(appDir, 'Contents/Frameworks/Electron Framework.framework/Resources');
+            // const SNAPSHOT_BLOB = 'snapshot_blob.bin';
+            // const V8_CONTEXT_SNAPSHOT = 'v8_context_snapshot.bin';
+            // // Move the snapshot files to the root of the generated app
+            // return rename(path.join(resourcesDir, SNAPSHOT_BLOB), path.join(targetDir, SNAPSHOT_BLOB))
+            //     .then(() => rename(
+            //         path.join(resourcesDir, V8_CONTEXT_SNAPSHOT),
+            //         path.join(targetDir,  V8_CONTEXT_SNAPSHOT),
+            //     ))
+            //     // Delete the electron directory, it was needed during packaaging, but must not be shipped
+            //     .then(() => rimraf(path.join(resourcesDir, 'node_modules/electron')))
+            //     .then(() => pkgDir);
         })
         .then((pkgDir) => {
             warnings.forEach((w) => processState.setWarning(w));

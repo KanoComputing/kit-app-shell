@@ -151,8 +151,16 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
         bundle = {},
     } = opts;
     processState.setStep(`Creating electron app '${config.APP_NAME}'`);
+    const patterns = bundle.patterns || [];
+    if (opts.disableV8Snapshot) {
+        patterns.push(
+            'node_modules/**/*',
+            'lib/**/*',
+            'main.js',
+        );
+    }
     const tasks = [
-        copyElectronApp(bundle.patterns || [], out),
+        copyElectronApp(patterns, out),
         createConfig(config, out),
         Bundler.bundle(
             path.join(__dirname, '../app/index.html'),
@@ -175,14 +183,19 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
     ];
     return Promise.all(tasks as Array<Promise<string>>)
         .then((results) => {
+            if (opts.disableV8Snapshot) {
+                return results[2];
+            }
             processState.setStep('Generating V8 snapshot');
             return generateSnapshot(results[2], results[2], {
                 forcePlatform: bundle.forcePlatform,
                 ignore: bundle.ignore,
+            }).then(() => {
+                processState.setSuccess('V8 snapshot generated');
+                return results[2];
             });
         })
         .then((o) => {
-            processState.setSuccess('V8 snapshot generated');
             processState.setSuccess(`Created electron app '${config.APP_NAME}'`);
             // Return bundle outputDir
             return o;
