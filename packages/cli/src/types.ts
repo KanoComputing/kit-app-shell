@@ -5,5 +5,6 @@ export interface IArgv {
 export interface ISywac {
     _addOptionType(flags : string, opts : any, type : string);
     positional(flags : string, opts : any);
+    string(flags : string, opts : any);
     style(opts : any);
 }

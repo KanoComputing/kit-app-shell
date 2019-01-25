@@ -19,18 +19,31 @@ type ProcessState = typeof processState;
  * Parses inputs, runs the commands and report to the user
  */
 class CLI {
-    static parseCommon(sywac : ISywac) : ISywac {
+    static parseEnv(sywac : ISywac) : ISywac {
         return sywac
-            .positional('[app=./]', {
+            .string('--env, -e', {
+                desc: 'Target environment',
+                defaultValue: 'development',
+            });
+    }
+    static parseAppRoot(sywac : ISywac) : ISywac {
+        return sywac
+            .positional('<app=./>', {
                 params: [{
                     required: true,
                     desc: 'Path to the root of the app',
                     coerce: path.resolve,
                 }],
-            })
-            .string('--env, -e', {
-                desc: 'Target environment',
-                defaultValue: 'development',
+            });
+    }
+    static parseAppBuild(sywac : ISywac) : ISywac {
+        return sywac
+            .positional('<build>', {
+                params: [{
+                    required: true,
+                    desc: 'Path to the built app',
+                    coerce: path.resolve,
+                }],
             });
     }
     static applyStyles(sywac : ISywac) : ISywac {
@@ -259,7 +272,8 @@ class CLI {
                 sywac.command('build <platform>', {
                     desc: 'build the application',
                     setup: (s) => {
-                        CLI.parseCommon(s);
+                        CLI.parseAppRoot(s);
+                        CLI.parseEnv(s);
                         s.array('--resources')
                             .string('--out, -o', {
                                 desc: 'Output directory',
@@ -294,7 +308,8 @@ class CLI {
                 sywac.command('run <platform>', {
                     desc: 'run the application',
                     setup: (s) => {
-                        CLI.parseCommon(s);
+                        CLI.parseAppRoot(s);
+                        CLI.parseEnv(s);
                         const sywacPatch = CLI.patchSywacOptions(s, {
                             group: platform.cli.group || 'Platform: ',
                         });
@@ -315,7 +330,8 @@ class CLI {
                 sywac.command('test <platform>', {
                     desc: 'test the application',
                     setup: (s) => {
-                        CLI.parseCommon(s);
+                        CLI.parseAppRoot(s);
+                        CLI.parseEnv(s);
                         s.string('--prebuilt-app', {
                             aliases: ['prebuilt-app', 'prebuiltApp'],
                             desc: 'Path to the built app to test',
@@ -342,7 +358,8 @@ class CLI {
                 sywac.command('sign <platform>', {
                     desc: 'sign an application package',
                     setup: (s) => {
-                        CLI.parseCommon(s);
+                        CLI.parseAppBuild(s);
+                        CLI.parseEnv(s);
                         const sywacPatch = CLI.patchSywacOptions(s, {
                             group: platform.cli.group || 'Platform: ',
                         });
