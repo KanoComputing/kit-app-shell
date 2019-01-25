@@ -9,9 +9,9 @@
   "dependencies": {
     "@kano/common": "^1.0.2",
     "@kano/desktop-shell": "^1.0.8",
-    "@kano/devices-sdk": "git+ssh://git@github.com:KanoComputing/kano-devices-sdk#^1.0.30",
+    "@kano/devices-sdk": "git+ssh://git@github.com:KanoComputing/kano-devices-sdk#speaker",
     "@kano/electron-updater": "^1.0.0",
-    "@kano/es6-resolution": "^1.0.14",
+    "@kano/es6-resolution": "^1.0.15",
     "bufferutil": "^4.0.1",
     "minimist": "^1.2.0",
     "noble": "^1.9.1",

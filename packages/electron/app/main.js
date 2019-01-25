@@ -1,8 +1,8 @@
 require('./lib/frozenenv');
 const { app } = require('electron');
-process.on('uncaughtException', (e) => {
-    app.quit();
-});
+// process.on('uncaughtException', (e) => {
+//     app.quit();
+// });
 const parseArgs = require('minimist');
 const path = require('path');
 
