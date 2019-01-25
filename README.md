@@ -4,7 +4,7 @@ _kash_ is a web app platform built on top of [Electron](https://electronjs.org/)
 
 The shell will run any HTML/CSS/JS frontend. On all platforms extept _web_, it allows the app to communicate with Kano bluetooth/serial devices using the [@kano/devices-sdk](https://github.com/KanoComputing/kano-devices-sdk).
 
-The `kash` CLI tool provides an unified interface to build, run, test and sign your app across all [supported platforms](#Platforms). A minimal usage example:
+The `kash` CLI tool provides an unified interface to build, run, test and sign your app across all [supported platforms](#Platforms). The usual workflow looks like this:
 
 ```sh
 yarn add @kano/kit-app-shell-cli
@@ -22,20 +22,74 @@ kash run macos ./your-app-dir
 
 ## Setup
 
-Depending on the platforms you're planning to use, you might need to set up a different set of external tools (xcode, Android Studio, etc).
+Depending on the platforms you're planning to use, you might need to set up a different set of external tools on your system (xcode, Android Studio, etc).
 
 _TODO: Figure this out._
 
-## Getting Started
+## Usage
 
-This guide explains how to set up a minimal app using `kash` and test it using the _web_ platform. We'll start with an empty app directory:
+`kash` has a sub-comand-based interface. The commands are platform-specific. Make sure the platform you want to use is installed.
+
+```
+Usage: kash <command> <platform> [options]
+```
+
+Here's an overview:
+
+### run
+
+Starts the app locally with live reload for development purposes. The behaviour of `run` depends on the target platform. For Cordova-based platforms, it will build an app and deploy it to a test device (if available). See the platform-specific notes for more information.
+
+**Example**:
+
+```
+kash run ios ../app-folder
+```
+
+### build
+
+Builds the app for the selected platform. The build will be stored in the directory specified by the `-o, --out` parameter.
+
+**Example**:
+
+```
+kash build ios ../app-folder -o ../output-dir
+```
+
+### configure
+
+A CLI-based UI will walk you through the set up required for each platform. The configuration is system-wide and shared between different projects. You might need to run this before you first build.
+
+### test
+
+Runs integration tests against a prebuilt app (specified via `--prebuilt-app`).
+
+**Example**:
+
+```
+kash test ios ../app-folder --prebuilt-app ../output-dir/app-build.ipa
+```
+
+### sign
+
+Sign a build for distribution. Not every platform implements this command.
+
+**Example**:
+
+```
+kash sign macos ../output-dir/app-build.ipa
+```
+
+## Creating a New App
+
+This guide explains how to set up a minimal app using `kash` and try it out using the _web_ platform. We'll start with an empty app directory:
 
 ```sh
 mkdir kash-example
 cd kash-example
 ```
 
-Then we'll install the `kash` CLI tool and the _web_ platform.
+We'll install the `kash` CLI tool and the _web_ platform.
 
 ```sh
 yarn add @kano/kit-app-shell-cli
@@ -69,7 +123,7 @@ class ExampleApp {
 Shell.define(ExampleApp);
 ```
 
-The app shell will instantiate it with a reference to the `bus` that can be used to communicate with devices and `config` to access the app config above. It will expect the constructor to initialise the `root` property. For the purposes of this example, we create a simple `div` with the application's name in it.
+The app shell will pass to the constructor a reference to the `bus` that can be used to communicate with devices and `config` to access the app configuration above. It will expect you to initialise the `root` property with your app's UI which will be stamped to the DOM when the app loads. For the purposes of this example, we create a simple `div` with the application's name in it.
 
 With the main class in place, we can test the setup on the _web_ platform by running `kash` from the project tree as follows:
 
@@ -84,61 +138,6 @@ The _web_ platform will start a simple web server.
 You can test the app by going to http://localhost:4000:
 
 <img src="https://user-images.githubusercontent.com/169328/51050307-39455b80-15c8-11e9-9591-090c6c216650.png" width="400">
-
-
-## CLI Commands
-
-`kash` has a sub-comand-based interface. Make sure the platform you want to use is installed.
-
-```
-Usage: kash [options] <command> <platform>
-```
-
-The commands are platform-specific. Here's an overview:
-
-### run
-
-Starts the app locally with live reload for development purposes. The behaviour of `run` depends on the target platform. For Cordova-based platforms, it will build an app and deploy it to a test device (if available). See the platform-specific notes for more information.
-
-**Example**:
-
-```
-kash run ios ../app-folder
-```
-
-### build
-
-Builds the app for the selected platform. The build will be stored in the directory specified by the `-o, --out` parameter.
-
-**Example**:
-
-```
-kash build ios ../app-folder -o ../output-dir
-```
-
-### configure
-
-A CLI-based UI will walk you through the set up required for each platform. The configuration is system-wide and shared between different projects. You might need to run this before you first build.
-
-### test
-
-Runs integration tests against a prebuilt app (specified via `--prebuilt-app`).
-
-**Example**:
-
-```
-kash build ios ../app-folder --prebuilt-app ../output-dir/app-build.ipa
-```
-
-### sign
-
-Sign a build for distribution. Not every platform implements this command.
-
-**Example**:
-
-```
-TODO
-```
 
 ## Development
 
