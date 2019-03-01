@@ -7,4 +7,5 @@ export interface ISywac {
     positional(flags : string, opts : any);
     string(flags : string, opts : any);
     style(opts : any);
+    array(flags : any, opts? : any);
 }

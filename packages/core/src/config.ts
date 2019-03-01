@@ -4,7 +4,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as deepMerge from 'deepmerge';
-import { IKashConfig } from './types';
+import { IKashConfig, IConfigOverrides } from './types';
 
 const DEFAULTS = {
     APP_NAME: 'Unnamed App',
@@ -24,7 +24,7 @@ function softRequire(moduleId : string, fallback = {}) : any {
 }
 
 export class ConfigLoader {
-    static load(appDir : string, env : string = 'development') : IKashConfig {
+    static load(appDir : string, env : string = 'development', overrides? : IConfigOverrides) : IKashConfig {
         const configDir = path.join(appDir, 'config');
         const defaultConfig = softRequire(path.join(configDir, 'default.json'));
         const envConfig = softRequire(path.join(configDir, `${env}.json`));
@@ -39,6 +39,8 @@ export class ConfigLoader {
         // Property used to be called UI_VERSION, alias it for backward compatibility
         config.UI_VERSION = config.VERSION;
 
-        return deepMerge<IKashConfig>(DEFAULTS, config);
+        const merged = deepMerge<IKashConfig>(DEFAULTS, config);
+
+        return deepMerge<IKashConfig>(merged, overrides);
     }
 }

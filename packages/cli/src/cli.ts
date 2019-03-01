@@ -46,6 +46,35 @@ class CLI {
                 }],
             });
     }
+    static parseOverrideAppConfig(sywac : ISywac) : ISywac {
+        return sywac
+            .array('-C, --override-app-config <values..>', {
+                desc: 'Override app configuration (syntax key.subkey=value)',
+                /**
+                 * Transforms an array of key.subkey=value pairs into an object
+                 * structure with those resolved:  { key: { subkey: value } }
+                 */
+                coerce: (strings : string[]) => {
+                    const overrides = {};
+                    strings.forEach((s) => {
+                        const [ key, value ] = s.split('=');
+                        const keyComponents = key.split('.');
+
+                        let currentLevel = overrides;
+                        while (keyComponents.length > 1) {
+                            const keyComponent = keyComponents.shift();
+                            currentLevel[keyComponent] = currentLevel[keyComponent] || {};
+                            currentLevel = currentLevel[keyComponent];
+                        }
+
+                        const topLevelKey = keyComponents[0];
+                        currentLevel[topLevelKey] = value;
+                    });
+
+                    return overrides;
+                },
+            });
+    }
     static applyStyles(sywac : ISywac) : ISywac {
         return sywac.style({
             group: (s) => chalk.cyan.bold(s),
@@ -274,6 +303,7 @@ class CLI {
                     setup: (s) => {
                         CLI.parseAppRoot(s);
                         CLI.parseEnv(s);
+                        CLI.parseOverrideAppConfig(s);
                         s.array('--resources')
                             .string('--out, -o', {
                                 desc: 'Output directory',
@@ -310,6 +340,7 @@ class CLI {
                     setup: (s) => {
                         CLI.parseAppRoot(s);
                         CLI.parseEnv(s);
+                        CLI.parseOverrideAppConfig(s);
                         const sywacPatch = CLI.patchSywacOptions(s, {
                             group: platform.cli.group || 'Platform: ',
                         });
@@ -332,6 +363,7 @@ class CLI {
                     setup: (s) => {
                         CLI.parseAppRoot(s);
                         CLI.parseEnv(s);
+                        CLI.parseOverrideAppConfig(s);
                         s.string('--prebuilt-app', {
                             aliases: ['prebuilt-app', 'prebuiltApp'],
                             desc: 'Path to the built app to test',
