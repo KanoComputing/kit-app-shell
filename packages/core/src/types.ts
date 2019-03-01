@@ -62,6 +62,10 @@ export interface IKashConfig {
     BACKGROUND_COLOR? : string;
 }
 
+export interface IConfigOverrides {
+    [propName : string] : any;
+}
+
 export interface IOptions {
     app : string;
     config : IKashConfig;

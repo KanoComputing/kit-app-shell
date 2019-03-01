@@ -1,5 +1,6 @@
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import { ConfigLoader } from '@kano/kit-app-shell-core/lib/config';
+import { IConfigOverrides } from '@kano/kit-app-shell-core/lib/types';
 import { Bundler } from '@kano/kit-app-shell-core/lib/bundler';
 import { getProject } from './project';
 import * as ngrok from 'ngrok';
@@ -22,16 +23,18 @@ const { KASH_NET_INTERFACE_NAME } = process.env;
 
 /**
  * Serves the app, resolve named modules, create an endpoint to GET the config
- * @param {String} app Path to the app to run
+ * @param app Path to the app to run
+ * @param env Target environment.
+ * @param configOverrides Config options passed through the CLI.
  */
-function serve(app : string) : connect.Server {
+function serve(app : string, env : string, overrides : IConfigOverrides) : connect.Server {
     return connect()
         .use(cors())
         .use((req, res, next) => {
             if (req.method === 'GET') {
                 if (req.url === '/_config') {
                     // Load on every request to get the latest config
-                    const config = ConfigLoader.load(app);
+                    const config = ConfigLoader.load(app, env, overrides);
                     res.writeHead(200, { 'Content-Type': 'application/json' });
                     config.APP_SRC = './www/index.js';
                     return res.end(JSON.stringify(config));
@@ -53,10 +56,13 @@ interface ITunnel {
 /**
  * Create a server and tunnels it using ngrok
  * Also creates a livereload server and watches the files in the app directory
- * @param {String} app Path to the app to tunnel
+ *
+ * @param app Path to the app to tunnel.
+ * @param env Target environment.
+ * @param configOverrides Config options passed through the CLI.
  */
-function setupTunnel(app : string) : Promise<ITunnel> {
-    const server = serve(app).listen(0);
+function setupTunnel(app : string, env : string, overrides : IConfigOverrides) : Promise<ITunnel> {
+    const server = serve(app, env, overrides).listen(0);
     const { port } = server.address() as AddressInfo;
     // TODO: Move this to core. It can be re-used to live-reload any platform or project
     const lrServer = livereload.createServer();
@@ -76,7 +82,7 @@ function setupTunnel(app : string) : Promise<ITunnel> {
 }
 
 const cordovaRun : IRun = (opts : CordovaRunOptions) => Promise.all([
-    setupTunnel(opts.app),
+    setupTunnel(opts.app, opts.env, opts['override-app-config']),
     getProject({
         ...opts,
         skipCache: opts['no-cache'],
