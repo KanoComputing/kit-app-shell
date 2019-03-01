@@ -60,6 +60,7 @@ export interface IKashConfig {
     APP_SRC? : string;
     BUILD_NUMBER? : string;
     BACKGROUND_COLOR? : string;
+    [propName : string] : any;
 }
 
 export interface IConfigOverrides {

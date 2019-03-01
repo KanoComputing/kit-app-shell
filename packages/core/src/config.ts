@@ -24,7 +24,7 @@ function softRequire(moduleId : string, fallback = {}) : any {
 }
 
 export class ConfigLoader {
-    static load(appDir : string, env : string = 'development', overrides? : IConfigOverrides) : IKashConfig {
+    static load(appDir : string, env : string = 'development', overrides : IConfigOverrides = {}) : IKashConfig {
         const configDir = path.join(appDir, 'config');
         const defaultConfig = softRequire(path.join(configDir, 'default.json'));
         const envConfig = softRequire(path.join(configDir, `${env}.json`));
