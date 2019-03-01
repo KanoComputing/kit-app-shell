@@ -53,6 +53,22 @@ suite('ConfigLoader', () => {
             assert.equal(result.APP_NAME, mocker.files.default.APP_NAME);
             assert.equal(result.APP_ID, mocker.files.staging.APP_ID);
         });
+        test('override existing key', () => {
+            mockConfig(fakeAppDir, {
+                default: { APP_NAME: 'default' },
+                staging: { APP_ID: 'staging', FOO: { BAR: 5 } },
+            }, '1.0.0');
+            const result = ConfigLoader.load(fakeAppDir, 'staging', { FOO: { BAR: 6 } });
+            assert.equal(result.FOO.BAR, 6);
+        });
+        test('override new key', () => {
+            mockConfig(fakeAppDir, {
+                default: { APP_NAME: 'default' },
+                staging: { APP_ID: 'staging' },
+            }, '1.0.0');
+            const result = ConfigLoader.load(fakeAppDir, 'staging', { FOO: { BAR: 7 } });
+            assert.equal(result.FOO.BAR, 7);
+        });
     });
     teardown(() => {
         mockFS.restore();
