@@ -4,7 +4,8 @@
   "main": "main.js",
   "license": "MIT",
   "resolutions": {
-    "electron": "3.1.0"
+    "electron": "3.1.0",
+    "debug": "^2.6.9"
   },
   "dependencies": {
     "@kano/common": "^1.0.2",
