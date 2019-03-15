@@ -37,4 +37,6 @@ if (platform() === 'darwin') {
      */
     packagesToRebuild.push('noble-uwp');
     execSync(`npm rebuild ${packagesToRebuild.join(' ')} ${BUILD_PARAMS}`, { cwd: APP_PATH, stdio: 'inherit' });
+} else {
+    runYarn();
 }
