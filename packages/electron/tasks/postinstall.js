@@ -4,7 +4,6 @@ const { platform } = require('os');
 const { readFileSync, writeFileSync } = require('fs');
 
 const APP_PATH = resolve('./app');
-const BUILD_PARAMS = '--arch=x64 --target_arch=x64 --target=3.1.0 --runtime=electron --dist-url=https://atom.io/download/electron';
 const packagesToRebuild = [];
 
 if (platform() === 'darwin') {
