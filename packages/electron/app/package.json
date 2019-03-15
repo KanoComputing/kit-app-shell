@@ -3,6 +3,9 @@
   "version": "1.0.0-alpha.1",
   "main": "main.js",
   "license": "MIT",
+  "scripts": {
+    "electron-rebuild": "electron-rebuild"
+  },
   "resolutions": {
     "electron": "3.1.0",
     "debug": "^2.6.9"
@@ -21,7 +24,8 @@
     "v8-compile-cache": "^2.0.2"
   },
   "devDependencies": {
-    "electron": "^3.1.0"
+    "electron": "^3.1.0",
+    "electron-rebuild": "^1.8.4"
   },
   "optionalDependencies": {
     "noble-uwp": "^0.6.2"
