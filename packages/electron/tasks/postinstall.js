@@ -15,7 +15,7 @@ if (platform() === 'darwin') {
     writeFileSync(packageJsonPath, `${JSON.stringify(pkg, null, '  ')}\n`);
 
     packagesToRebuild.push('xpc-connection');
-} else if (platform() === 'window32') {
+} else if (platform() === 'win32') {
     packagesToRebuild.push('noble-uwp');
 }
 
