@@ -1,5 +1,5 @@
 const { Readable } = require('stream');
-const upgradeBody = require('@kano/es6-resolution');
+const { resolveNamedPath } = require('@kano/es6-resolution');
 
 module.exports = (rootDir) => {
     return (stream, mime, url) => {
@@ -10,7 +10,7 @@ module.exports = (rootDir) => {
         const final = new Readable({});
         stream.on('data', d => buffer += d.toString());
         stream.on('end', () => {
-            const newBody = upgradeBody(rootDir, buffer, mime, stream.path, url.path);
+            const newBody = resolveNamedPath(rootDir, buffer, mime, stream.path);
             final.push(newBody);
             final.push(null);
         });

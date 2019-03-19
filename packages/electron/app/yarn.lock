@@ -34,10 +34,10 @@
   resolved "https://registry.yarnpkg.com/@kano/electron-updater/-/electron-updater-1.0.0.tgz#451f39286c70869483253f858654eb3da5603bca"
   integrity sha1-RR85KGxwhpSDJT+FhlTrPaVgO8o=
 
-"@kano/es6-resolution@^1.0.14":
-  version "1.0.14"
-  resolved "https://registry.yarnpkg.com/@kano/es6-resolution/-/es6-resolution-1.0.14.tgz#6afbba8e1f9647f311fb580789c7b7efd6d495a7"
-  integrity sha512-jqJzM2Qlti3snpYb71a7VEN7Idpl9hFLUGHYzZoj5L7heHSigVzv1KKb1G1AwkFldjusreFcKHk63bCF+cf6MQ==
+"@kano/es6-resolution@^1.0.18":
+  version "1.0.18"
+  resolved "https://registry.yarnpkg.com/@kano/es6-resolution/-/es6-resolution-1.0.18.tgz#5060e7ae55be635db5f1c69440dd857b27b45427"
+  integrity sha512-DEHPkeSnofp9nbxNsQpIghmWivNi0s3xxpqDz9a0Zu+2OZDe/gQwXLykJSJc6XMzTGtzm5fy/wISgRxzL1AMpQ==
   dependencies:
     resolve "^1.7.1"
 
