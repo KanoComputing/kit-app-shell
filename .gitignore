@@ -20,3 +20,12 @@ packages/macos/lib
 packages/web/lib
 packages/windows/lib
 packages/windows-store/lib
+
+packages/appx/lib
+packages/appx/Kash/.vs
+packages/appx/Kash/Kash/AppPackages
+packages/appx/Kash/Kash/bin
+packages/appx/Kash/Kash/bld
+packages/appx/Kash/Kash/BundleArtifacts
+packages/appx/Kash/Kash/www
+packages/appx/Kash/Kash/Kash.jsproj.user
