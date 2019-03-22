@@ -35,7 +35,7 @@ export function addRequirejs(code : string) : string {
     const document = parse5.parse(code);
     walk(document, (node) => {
         if (node.tagName === 'head') {
-            const script = parse5Util.createScript('/require.js');
+            const script = parse5Util.createScript('require.js');
             node.childNodes.push(script);
             return false;
         }

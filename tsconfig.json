@@ -26,5 +26,7 @@
         "path": "packages/windows"
     }, {
         "path": "packages/windows-store"
+    }, {
+        "path": "packages/appx"
     }]
 }
