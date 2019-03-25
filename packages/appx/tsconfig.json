@@ -7,5 +7,5 @@
     "references": [{
         "path": "../core"
     }],
-    "exclude": ["lib"]
+    "exclude": ["lib", "Kash"]
 }

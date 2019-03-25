@@ -24,7 +24,5 @@
     "@webcomponents/webcomponentsjs": "^2.2.7",
     "text-encoding": "^0.7.0"
   },
-  "devDependencies": {
-    "@types/winrt-uwp": "^0.0.19"
-  }
+  "devDependencies": {}
 }

@@ -104,7 +104,7 @@ export class Bundler {
     static bundleHtml(input : string, opts : IBundleHtmlOptions) : string {
         const contents = fs.readFileSync(input, 'utf-8');
         const stage1 = addRequirejs(contents);
-        const reg = /<!--\s?build:(.*?)\s?-->([\s\S]*)<!--\s?endbuild\s?-->/g;
+        const reg = /<!--\s?build:(.*?)\s?-->([\s\S]*?)<!--\s?endbuild\s?-->/g;
         const replacements = opts.replacements || {};
         // Replace html comment with build tag
         return stage1.replace(reg, (m, g0) => replacements[g0] || '');

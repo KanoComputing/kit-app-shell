@@ -19,6 +19,7 @@ const appxBuild : IBuild = (opts) => {
         const filename = path.basename(fullPath);
         return util.fs.copy(fullPath, path.join(wwwPath, filename)).then(() => filename);
     });
+    const baseUrl = 'ms-appx-web://kash/www/';
 
     return Promise.all(tasks)
         .then((injectNames) => {
@@ -46,6 +47,7 @@ const appxBuild : IBuild = (opts) => {
                     html: {
                         replacements: {
                             injectScript: injectNames.map((name) => `<script src="${name}"></script>`).join(''),
+                            base: `<base href="${baseUrl}">`,
                         },
                     },
                 },

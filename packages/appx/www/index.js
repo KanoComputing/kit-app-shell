@@ -36,6 +36,9 @@ Object.assign(window.KitAppShellConfig, {
     OS_PLATFORM: 'UWP',
     OS_VERSION: 'alpha',
 });
+// Object.assign(window.KitAppShellConfig, {
+//     UI_ROOT: '/www/',
+// });
 Object.assign(window.KitAppShellConfig, {
     UI_ROOT: 'ms-appx-web://kash/www/www/',
 });

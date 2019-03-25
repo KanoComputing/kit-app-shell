@@ -1,4 +1,23 @@
 import EventEmitter from '../../lib/event-emitter.js';
+
+if (!('Windows' in window)) {
+    window.Windows = {
+        Devices: {
+            Bluetooth: {
+                BluetoothLEDevice: {},
+                BluetoothConnectionStatus: {},
+                BluetoothCacheMode: {},
+                GenericAttributeProfile: {},
+                Advertisement: {
+                    BluetoothLEAdvertisementWatcherStatus: {},
+                    BluetoothLEAdvertisementWatcher: function() {},
+                    BluetoothLEScanningMode: {},
+                },
+            }
+        },
+    };
+}
+
 const { Bluetooth } = Windows.Devices;
 const {
     BluetoothLEDevice,
