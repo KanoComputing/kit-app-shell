@@ -102,7 +102,7 @@ class BLEWatcher {
             return Promise.resolve();
         }
         if (this.watcher.status === BluetoothLEAdvertisementWatcherStatus.started) {
-            return;
+            return Promise.resolve();
         }
 
         this.scanResultCallback = (e) => {
