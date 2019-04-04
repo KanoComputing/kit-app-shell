@@ -1,53 +1,60 @@
 import * as path from 'path';
+import * as fs from 'fs';
 import * as wd from 'wd';
 import * as Mocha from 'mocha';
 import { promisify } from 'util';
 import * as globCb from 'glob';
-import { Builder, TestOptions, IBuilderFactory } from './types';
+import { TestOptions, IBuilderFactory } from './types';
+import * as mkdirpCb from 'mkdirp';
 
 const glob = promisify(globCb);
+const mkdirp = promisify(mkdirpCb);
+const writeFile = promisify(fs.writeFile);
 
-class KashTestFramework {
+export function switchContexts(driver : wd.WebDriver, index : number) {
+    const asserter = new wd.Asserter<wd.Context[]>((target, cb) => {
+        driver.contexts()
+            .then((ctxs) => {
+                cb(null, ctxs.length > 1, ctxs);
+            })
+            .catch((e) => cb(e));
+    });
+    return driver.waitFor<wd.Context[]>(asserter)
+        .then((ctxs) => driver.context(ctxs[index]));
+}
+
+export interface IKashTestFrameworkOptions {
+    screenshotsPath : string|null;
+}
+
+class DefaultKashTestFramework {
     public wd : typeof wd;
     public driver? : wd.WebDriver;
-    private builder? : Builder;
-    constructor() {
+    private screenshotsPath : string|null;
+    constructor(opts : IKashTestFrameworkOptions) {
+        this.screenshotsPath = opts.screenshotsPath;
         // TODO: Add features to control API through web-bus
         this.wd = wd;
     }
-    _setBuilder(builder : Builder) {
-        this.builder = builder;
-    }
-    _switchContexts() {
-        if (!this.driver) {
-            return Promise.reject('Could not switch contexts: Driver was notinitialized');
-        }
-        const driver = this.driver;
-        const asserter = new wd.Asserter<wd.Context[]>((target, cb) => {
-            driver.contexts()
-                .then((ctxs) => {
-                    cb(null, ctxs.length > 1, ctxs);
-                })
-                .catch((e) => cb(e));
-        });
-        return driver.waitFor<wd.Context[]>(asserter)
-            .then((ctxs) => driver.context(ctxs[1]));
+    _setDriver(driver : wd.WebDriver) {
+        this.driver = driver;
     }
     _beforeEach(t? : Mocha.Test) {
         if (this.driver) {
-            return this.driver.resetApp()
-                .then(() => this._switchContexts());
+            return Promise.resolve();
         }
-        if (!this.builder) {
-            return Promise.reject('Could not initialize test: Builder is not defined');
-        }
-        return this.builder(t)
-            .then((d) => {
-                this.driver = d;
-                return this._switchContexts();
-            });
+        return Promise.reject('Could not initialize test: Driver is not defined');
     }
-    _afterEach() {
+    _afterEach(t? : Mocha.Test) {
+        // If the screenshot path is defined, wait for a bit
+        if (this.screenshotsPath) {
+            return (new Promise((resolve) => setTimeout(resolve, 1000)))
+                .then(() => this.driver.takeScreenshot())
+                .then((scr) => {
+                    return mkdirp(this.screenshotsPath)
+                    .then(() => writeFile(path.join(this.screenshotsPath, `${t.title}.png`), scr, 'base64'));
+                });
+        }
         return Promise.resolve();
     }
     dispose() {
@@ -58,8 +65,12 @@ class KashTestFramework {
     }
 }
 
-export const test = (platform : { getBuilder : IBuilderFactory }, opts : TestOptions) => {
-    const framework = new KashTestFramework();
+interface ITestPlatform {
+    getBuilder : IBuilderFactory;
+}
+
+export const test = (platform : ITestPlatform, opts : TestOptions) => {
+    const framework = new DefaultKashTestFramework({ screenshotsPath: opts.screenshots });
     // Create new mocha UI inhecting the test framework
     // @ts-ignore
     Mocha.interfaces['selenium-bdd'] = (suite : Mocha.Suite) => {
@@ -67,14 +78,6 @@ export const test = (platform : { getBuilder : IBuilderFactory }, opts : TestOpt
         suite.on('pre-require', (context) => {
             // @ts-ignore
             context.kash = framework;
-        });
-        suite.beforeEach(function beforeEach() {
-            this.timeout(120000);
-            return framework._beforeEach(this.currentTest);
-        });
-        suite.afterEach(function afterEach() {
-            this.timeout(120000);
-            return framework._afterEach();
         });
     };
     // TODO: customise mocha through command options
@@ -88,16 +91,29 @@ export const test = (platform : { getBuilder : IBuilderFactory }, opts : TestOpt
     mocha.suite.afterAll(() => framework.dispose());
     return platform.getBuilder(wd, mocha, opts)
         .then((builder) => {
-            framework._setBuilder(builder);
-            // Grab all spec files using glob
-            // TODO: research and mimic mocha's glob behaviour for consistency (e.g. minimist)
-            return Promise.all((opts.spec || []).map((s) => glob(s, { cwd: opts.app })))
+            return builder()
+                .then((driver) => {
+                    framework._setDriver(driver);
+                })
+                .then(() => {
+                     // Grab all spec files using glob
+                    // TODO: research and mimic mocha's glob behaviour for consistency (e.g. minimist)
+                    return Promise.all((opts.spec || []).map((s) => glob(s, { cwd: opts.app })));
+                })
                 .then((specFiles) => {
                     // Merge all results
                     const allFiles = specFiles.reduce<string[]>((acc, it) => acc.concat(it), []);
                     // Add all files to the mocha instance
                     allFiles.forEach((file : string) => {
                         mocha.addFile(path.join(opts.app, file));
+                    });
+                    mocha.suite.beforeEach(function beforeEach() {
+                        this.timeout(120000);
+                        return framework._beforeEach(this.currentTest);
+                    });
+                    mocha.suite.afterEach(function afterEach() {
+                        this.timeout(120000);
+                        return framework._afterEach(this.currentTest);
                     });
                     // Start mocha
                     const runner = mocha.run();
