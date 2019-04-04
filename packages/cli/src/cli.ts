@@ -370,6 +370,10 @@ class CLI {
                             required: true,
                             coerce: path.resolve,
                         });
+                        s.string('--screenshots, -s', {
+                            desc: 'Take a screenshot at the end of each test and save them in the provided folder',
+                            coerce: (v) => v ? path.resolve(v) : null,
+                        });
                         const sywacPatch = CLI.patchSywacOptions(s, {
                             group: platform.cli.group || 'Platform: ',
                         });

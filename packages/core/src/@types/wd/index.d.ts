@@ -11,6 +11,7 @@ declare module 'wd' {
         waitFor<T>(asserter : Asserter<T>) : Promise<T>;
         resetApp() : Promise<void>;
         quit() : Promise<void>;
+        takeScreenshot() : Promise<any>;
     }
     class Asserter<T> {
         constructor(asserter : AsserterOptions);
