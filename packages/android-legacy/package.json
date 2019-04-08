@@ -1,11 +1,11 @@
 {
   "name": "@kano/kit-app-shell-android-legacy",
-  "version": "0.0.3-aplha.22",
+  "version": "0.0.3-alpha.28",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@kano/kit-app-shell-android": "^0.0.3-aplha.22",
-    "@kano/kit-app-shell-cordova": "^0.0.3-aplha.22",
+    "@kano/kit-app-shell-android": "^0.0.3-alpha.28",
+    "@kano/kit-app-shell-cordova": "^0.0.3-alpha.28",
     "cordova-plugin-crosswalk-webview": "^2.4.0"
   },
   "publishConfig": {

@@ -1,11 +1,11 @@
 {
   "name": "@kano/kit-app-shell-web",
-  "version": "0.0.3-aplha.22",
+  "version": "0.0.3-alpha.28",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
     "@kano/es6-server": "^1.0.1",
-    "@kano/kit-app-shell-core": "^0.0.3-aplha.22",
+    "@kano/kit-app-shell-core": "^0.0.3-alpha.28",
     "chalk": "^2.4.1",
     "connect": "^3.6.6",
     "connect-history-api-fallback": "^1.5.0",
