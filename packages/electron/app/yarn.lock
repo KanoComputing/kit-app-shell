@@ -19,11 +19,18 @@
     mime-types "^2.1.18"
     mkdirp "^0.5.1"
 
-"@kano/devices-sdk@git+ssh://git@github.com:KanoComputing/kano-devices-sdk#^1.0.30":
-  version "1.0.1"
-  resolved "git+ssh://git@github.com:KanoComputing/kano-devices-sdk#58745442c300280875fc381c8cf45ec98361a872"
+"@kano/devices-sdk-core@^1.0.0-alpha.1":
+  version "1.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-core/-/devices-sdk-core-1.0.0-alpha.1.tgz#5a933d33b1c99718bdefba95066681cd8349eb61"
+  integrity sha512-jspuO+3ujQ30+SMTs/E0A0VhDhsR1BU6iU3ZXcYTXqHC3vR6cXdR6YhsCz3cHCiRrHoUTVPxb8L9+BbkcV8vEw==
+
+"@kano/devices-sdk-node@^1.0.0-alpha.1":
+  version "1.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-node/-/devices-sdk-node-1.0.0-alpha.1.tgz#bf14de72e896678e161d28e09a2542638a5c0454"
+  integrity sha512-Kqs21lnkKGRL2zw1KBD3ns9NTfa1kpgfgSSw+j5VpYsOA8xiDcJk8cGbUFCRGD89G/51mQ2e3VcNVHQhsqNS5w==
   dependencies:
-    "@kano/common" "^1.0.2"
+    "@kano/devices-sdk-core" "^1.0.0-alpha.1"
+    "@kano/web-bus" "^1.0.0-alpha.5"
     jszip "^3.1.5"
   optionalDependencies:
     noble-mac "https://github.com/Timeular/noble-mac.git#0.0.3"
@@ -40,6 +47,11 @@
   integrity sha512-DEHPkeSnofp9nbxNsQpIghmWivNi0s3xxpqDz9a0Zu+2OZDe/gQwXLykJSJc6XMzTGtzm5fy/wISgRxzL1AMpQ==
   dependencies:
     resolve "^1.7.1"
+
+"@kano/web-bus@^1.0.0-alpha.5", "@kano/web-bus@^1.0.0-alpha.7":
+  version "1.0.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/@kano/web-bus/-/web-bus-1.0.0-alpha.7.tgz#5cdb776cf82e8f7165b15a298157e44b50fc0cf2"
+  integrity sha512-7OxYR3k/8O0aHwzkAxsNHDfW6HNKJOljQFwP3EinG/mNGmtn9ucDpcffmKIVuaNDyWKMIsktxLYv/zJMTsgShw==
 
 "@types/node@^8.0.24":
   version "8.10.39"

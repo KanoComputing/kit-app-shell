@@ -2,6 +2,9 @@ class EventEmitter {
     constructor() {
         this.events = {};
     }
+    addListener(event, listener) {
+        this.on(event, listener);
+    }
     on(event, listener) {
         if (typeof this.events[event] !== 'object') {
             this.events[event] = [];

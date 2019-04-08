@@ -1,5 +1,5 @@
-import Devices from '@kano/devices-sdk/platforms/cordova/index.js';
-import BusAdapter from '@kano/devices-sdk/bus-adapter/bus-adapter.js';
+import Devices from '@kano/devices-sdk-cordova/index.js';
+import { DevicesServer } from '@kano/web-bus/esm/servers/index.js';
 import EventEmitter from './lib/event-emitter.js';
 import { updaterBus } from './lib/bus/updater.js';
 
@@ -12,7 +12,7 @@ const logger = {};
 Devices.setLogger(logger);
 
 const bus = new EventEmitter();
-const adapter = new BusAdapter({ bus, Devices });
+const adapter = new DevicesServer(bus, Devices);
 
 updaterBus(bus);
 
