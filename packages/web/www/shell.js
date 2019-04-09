@@ -1,5 +1,6 @@
 class FakeBus {
     on() {}
+    addListener() {}
     removeListener() {}
     emit() {}
 }
