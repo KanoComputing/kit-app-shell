@@ -5,9 +5,9 @@ const path = require('path');
 
 const CONTENT_SCHEME = 'kit-app';
 
-const Devices = require('@kano/devices-sdk/platforms/nodejs');
-const BusAdapter = require('@kano/devices-sdk/bus-adapter');
-const ElectronIpcBus = require('@kano/devices-sdk/bus-adapter/bus/electron-ipc');
+const Devices = require('@kano/devices-sdk-node');
+const { DevicesServer } = require('@kano/web-bus/cjs/servers/index');
+const { ElectronIpcMainBus } = require('@kano/web-bus/cjs');
 
 const postProcessFactory = require('./post-process');
 const getPlatformData = require('./platform');
@@ -91,18 +91,23 @@ class App {
         
         // Allows preload script to have access to the config
         global.config = this.config;
+        // Send the preload script the app's arguments
+        global.args = args;
     }
     _onReady() {
         this.shell.createWindow();
     }
     _onBeforeQuit() {
+        if (this.adapter) {
+            this.adapter.dispose();
+        }
         Devices.terminate();
     }
     _onWindowCreated() {
         if (!this.bus) {
             // First window created, setup the bus and adapters
-            this.bus = new ElectronIpcBus(ipcMain, this.shell.window);
-            this.adapter = new BusAdapter({ bus: this.bus, Devices });
+            this.bus = new ElectronIpcMainBus(ipcMain, this.shell.window);
+            this.adapter = new DevicesServer(this.bus, Devices);
             // Allow the updater to be disabled from the config
             if (!this.config.UPDATER_DISABLED) {
                 // Binds the updater events with the updater module
