@@ -39,7 +39,13 @@ function localSetup(app : string, wd, mocha, opts) : Promise<Builder> {
                         const driver = wd.promiseChainRemote('0.0.0.0', port);
                         mocha.suite.beforeEach(() => {
                             return driver.resetApp()
-                                .then(() => switchContexts(driver, 1));
+                                .then(() => switchContexts(driver, 1))
+                                // Force load the automated url
+                                .then(() => driver.url())
+                                .then((contextUrl) => {
+                                    const parsed = url.parse(contextUrl);
+                                    return driver.get(`${parsed.protocol}//${parsed.host}/index.html?__kash_automated__`);
+                                });
                         });
                         mocha.suite.afterEach(() => {
                             return switchContexts(driver, 0);
