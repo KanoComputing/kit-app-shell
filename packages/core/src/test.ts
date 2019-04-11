@@ -84,12 +84,18 @@ export const test = (platform : ITestPlatform, opts : TestOptions) => {
     const mocha = new Mocha();
     mocha.ui('selenium-bdd');
     mocha.timeout(240000);
-    mocha.grep(opts.grep);
-    mocha.fgrep(opts.fgrep);
+    if (opts.grep) {
+        mocha.grep(opts.grep);
+    }
+    if (opts.fgrep) {
+        mocha.fgrep(opts.fgrep);
+    }
     if (opts.invert) {
         mocha.invert();
     }
-    mocha.reporter(opts.reporter, opts.reporterOptions);
+    if (opts.reporter) {
+        mocha.reporter(opts.reporter, opts.reporterOptions);
+    }
     // After the main suite finished all tests, get rid of the framework
     // This needs to be registered here so that individual platforms defining their
     // builders can use the same lifecycle to stop whatever process they started after

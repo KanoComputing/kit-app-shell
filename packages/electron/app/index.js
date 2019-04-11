@@ -16,6 +16,7 @@ window.Shell = {
 
 function boot() {
     import(window.KitAppShellConfig.APP_SRC);
+    return window.KitAppShellConfig;
 }
 
 // This will be set if the app is started with the intention to be controlled externally.
