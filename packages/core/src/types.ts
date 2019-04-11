@@ -83,15 +83,8 @@ export interface IRunOptions {
     tmpdir? : string;
     [propName : string] : any;
 }
-
-export interface ICustomDriverProvider {
-    id : string;
-    host : string;
-}
-
 export declare type TestOptions = IOptions & {
     spec? : string[];
-    providers? : ICustomDriverProvider[];
 };
 
 export interface ISignOptions {
