@@ -77,7 +77,7 @@ suite('Bundler', () => {
             },
         });
         mock('rollup-plugin-minify-html-literals', { default: () => null });
-        mock('rollup-plugin-uglify-es', () => null);
+        mock('rollup-plugin-terser', { terser: () => null });
         mock('@babel', () => null);
         // Fake bable plugin. Babel always tries to resolve its plugins
         mock('rollup-plugin-babel', () => null);
