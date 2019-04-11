@@ -15,7 +15,7 @@
     "@kano/desktop-shell": "^1.0.8",
     "@kano/devices-sdk-node": "^1.0.0-alpha.1",
     "@kano/electron-updater": "^1.0.0",
-    "@kano/es6-resolution": "^1.0.18",
+    "@kano/es6-resolution": "^1.0.19",
     "@kano/web-bus": "^1.0.0-alpha.7",
     "bufferutil": "^4.0.1",
     "minimist": "^1.2.0",
