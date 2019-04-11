@@ -31,7 +31,7 @@ export default (wd, mocha, { app, config = {}, tmpdir = os.tmpdir() }) => {
                 chromeOptions: {
                     // Here is the path to the Electron binary.
                     binary: electronPath,
-                    args: [`app=${path.join(__dirname, '../../app')}`, `ui=${app}`, `config=${configPath}`],
+                    args: [`app=${path.join(__dirname, '../../app')}`, `ui=${app}`, `config=${configPath}`, 'automated=true'],
                 },
             });
         }

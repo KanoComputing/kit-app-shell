@@ -6,6 +6,7 @@ import { promisify } from 'util';
 import * as globCb from 'glob';
 import { TestOptions, IBuilderFactory } from './types';
 import * as mkdirpCb from 'mkdirp';
+import { customProvider } from './get-builder';
 
 const glob = promisify(globCb);
 const mkdirp = promisify(mkdirpCb);
@@ -84,12 +85,30 @@ export const test = (platform : ITestPlatform, opts : TestOptions) => {
     const mocha = new Mocha();
     mocha.ui('selenium-bdd');
     mocha.timeout(240000);
+    if (opts.grep) {
+        mocha.grep(opts.grep);
+    }
+    if (opts.fgrep) {
+        mocha.fgrep(opts.fgrep);
+    }
+    if (opts.invert) {
+        mocha.invert();
+    }
+    if (opts.reporter) {
+        mocha.reporter(opts.reporter, opts.reporterOptions);
+    }
     // After the main suite finished all tests, get rid of the framework
     // This needs to be registered here so that individual platforms defining their
     // builders can use the same lifecycle to stop whatever process they started after
     // the framework did its cleanup
     mocha.suite.afterAll(() => framework.dispose());
-    return platform.getBuilder(wd, mocha, opts)
+    return customProvider(wd, mocha, opts)
+        .then((builder) => {
+            if (!builder) {
+                return platform.getBuilder(wd, mocha, opts);
+            }
+            return builder;
+        })
         .then((builder) => {
             return builder()
                 .then((driver) => {
@@ -98,9 +117,9 @@ export const test = (platform : ITestPlatform, opts : TestOptions) => {
                 .then(() => {
                      // Grab all spec files using glob
                     // TODO: research and mimic mocha's glob behaviour for consistency (e.g. minimist)
-                    return Promise.all((opts.spec || []).map((s) => glob(s, { cwd: opts.app })));
+                    return Promise.all((opts.spec || []).map<Promise<string[]>>((s) => glob(s, { cwd: opts.app })));
                 })
-                .then((specFiles) => {
+                .then((specFiles : string[]) => {
                     // Merge all results
                     const allFiles = specFiles.reduce<string[]>((acc, it) => acc.concat(it), []);
                     // Add all files to the mocha instance

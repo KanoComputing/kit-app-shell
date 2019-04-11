@@ -133,7 +133,6 @@ export class Bundler {
         )));
         const defaultOptions = {
             input: [input],
-            experimentalCodeSplitting: true,
             plugins: [
                 tracker.plugin(),
                 replace({

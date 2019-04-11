@@ -16,7 +16,7 @@ const chromeProvider : IProvider = (app, wd, mocha, opts) => {
     const builder = () => {
         const driver = wd.promiseChainRemote('0.0.0.0', 9515);
         mocha.suite.beforeEach(() => {
-            return driver.get('http://localhost:2345');
+            return driver.get('http://localhost:2345?__kash_automated__');
         });
         return driver.init({ browserName: 'chrome' }).then(() => driver);
     };

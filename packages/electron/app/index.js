@@ -14,4 +14,15 @@ window.Shell = {
     },
 };
 
-import(window.KitAppShellConfig.APP_SRC);
+function boot() {
+    import(window.KitAppShellConfig.APP_SRC);
+    return window.KitAppShellConfig;
+}
+
+// This will be set if the app is started with the intention to be controlled externally.
+// This allows the automation to set localStorage and inject scripts and deciding when the app boots
+if (window.__kash_automated__) {
+    window.__kash_boot__ = boot;
+} else {
+    boot();
+}

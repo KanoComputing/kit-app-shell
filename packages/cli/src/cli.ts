@@ -75,6 +75,44 @@ class CLI {
                 },
             });
     }
+    static parseTestArgs(sywac : ISywac) : ISywac {
+        const group = 'Mocha';
+        const filters = `${group} Test Filters`;
+        const reporting = `${group} Reporting & Output`;
+        return sywac
+            .string('--reporter, -R', {
+                desc: 'Specify reporter to use',
+                defaultValue: 'spec',
+                group: reporting,
+            })
+            .string('--reporter-option, --reporter-options, -O', {
+                desc: 'Reporter-specific options (<k=v,[k1=v1,..]>)',
+                group: reporting,
+                coerce: (paramsString) => {
+                    if (!paramsString) {
+                        return {};
+                    }
+                    const pieces = paramsString.split(',');
+                    return pieces.reduce((acc, piece) => {
+                        const bits = piece.split('=');
+                        acc[bits[0]] = bits[1];
+                        return acc;
+                    }, {});
+                },
+            })
+            .string('--fgrep, -f', {
+                desc: 'Only run tests containing this string',
+                group: filters,
+            })
+            .string('--grep, -g', {
+                desc: 'Only run tests matching this string or regexp',
+                group: filters,
+            })
+            .boolean('--invert, -i', {
+                desc: 'Inverts --grep and --fgrep matches',
+                group: filters,
+            });
+    }
     static applyStyles(sywac : ISywac) : ISywac {
         return sywac.style({
             group: (s) => chalk.cyan.bold(s),
@@ -364,6 +402,7 @@ class CLI {
                         CLI.parseAppRoot(s);
                         CLI.parseEnv(s);
                         CLI.parseOverrideAppConfig(s);
+                        CLI.parseTestArgs(s);
                         s.string('--prebuilt-app', {
                             aliases: ['prebuilt-app', 'prebuiltApp'],
                             desc: 'Path to the built app to test',

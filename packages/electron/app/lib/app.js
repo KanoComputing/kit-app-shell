@@ -91,6 +91,8 @@ class App {
         
         // Allows preload script to have access to the config
         global.config = this.config;
+        // Send the preload script the app's arguments
+        global.args = args;
     }
     _onReady() {
         this.shell.createWindow();

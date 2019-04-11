@@ -39,6 +39,16 @@ document.addEventListener('deviceready', () => {
         OS_PLATFORM: device.platform,
         OS_VERSION: device.version,
     });
-    
-    import(window.KitAppShellConfig.APP_SRC);
+
+    function boot() {
+        import(window.KitAppShellConfig.APP_SRC);
+        return window.KitAppShellConfig;
+    }
+
+    // This string will be in the search part of the url when automated for tests
+    if (location.search.indexOf('__kash_automated__') !== -1) {
+        window.__kash_boot__ = boot;
+    } else {
+        boot();
+    }
 });

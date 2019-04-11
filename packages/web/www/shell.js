@@ -68,6 +68,14 @@ p
                 document.body.appendChild(app.root);
             },
         };
-        import(window.KitAppShellConfig ? window.KitAppShellConfig.APP_SRC : config.APP_SRC);
+        function boot() {
+            import(window.KitAppShellConfig ? window.KitAppShellConfig.APP_SRC : config.APP_SRC);
+            return config;
+        }
+        // This string will be in the search part of the url when automated for tests
+        if (location.search.indexOf('__kash_automated__') !== -1) {
+            window.__kash_boot__ = boot;
+        } else {
+            boot();
+        }
     });
-
