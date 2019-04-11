@@ -1,6 +1,6 @@
 {
   "name": "@kano/kit-app-shell-cli",
-  "version": "0.0.3-alpha.30",
+  "version": "0.0.3-alpha.31",
   "license": "MIT",
   "bin": {
     "kit-app-shell": "lib/cli.js",
@@ -10,7 +10,7 @@
     "lib": "lib"
   },
   "dependencies": {
-    "@kano/kit-app-shell-core": "^0.0.3-alpha.30",
+    "@kano/kit-app-shell-core": "^0.0.3-alpha.31",
     "chalk": "^2.4.1",
     "deepmerge": "^3.0.0",
     "enquirer": "^2.2.0",
