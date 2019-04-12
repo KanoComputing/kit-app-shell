@@ -1,5 +1,5 @@
 **/*.test.js
-test
+/test
 coverage
 out
 src

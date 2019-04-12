@@ -1,6 +1,6 @@
 **/*.test.js
 app/node_modules
-test
+/test
 out
 coverage
 src
