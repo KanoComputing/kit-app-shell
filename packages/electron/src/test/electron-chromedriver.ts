@@ -9,9 +9,9 @@ export class ElectronChromedriver {
         let command;
         // Try to find the chrome driver for all platforms
         try {
-            command = require.resolve('electron-chromedriver/bin/chromedriver');
+            command = require.resolve('chromedriver/bin/chromedriver');
         } catch (e) {
-            command = require.resolve('electron-chromedriver/bin/chromedriver.exe');
+            command = require.resolve('chromedriver/bin/chromedriver.exe');
         }
 
         // TODO: Subprocess managment

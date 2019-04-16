@@ -83,7 +83,6 @@ export interface IRunOptions {
     tmpdir? : string;
     [propName : string] : any;
 }
-
 export declare type TestOptions = IOptions & {
     spec? : string[];
 };

@@ -7,6 +7,12 @@ const webCli : ICli = {
             defaultValue: 4000,
         });
     },
+    test(sywac) {
+        sywac.string('--provider', {
+            defaultValue: 'chrome',
+            desc: 'Which browser provider to use',
+        });
+    },
 };
 
 export default webCli;

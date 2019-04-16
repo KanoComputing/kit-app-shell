@@ -4,12 +4,14 @@ import * as url from 'url';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import getBuilder from '@kano/kit-app-shell-cordova/lib/test/get-builder';
 import { Builder, IBuilderFactory } from '@kano/kit-app-shell-core/lib/types';
+import { switchContexts } from '@kano/kit-app-shell-core/lib/test';
 
 /**
  * Local device provider for android apps. Uses a local appium server and adb to find devices
  */
 function localSetup(app : string, wd, mocha, opts) : Promise<Builder> {
     processState.setStep('Starting appium server');
+
     // Start appium server
     return appium.main({ loglevel: 'error' })
         .then((server) => {
@@ -35,12 +37,24 @@ function localSetup(app : string, wd, mocha, opts) : Promise<Builder> {
                     const builder : Builder = () => {
                         // Create driver with required capabilities
                         const driver = wd.promiseChainRemote('0.0.0.0', port);
+                        mocha.suite.beforeEach(() => {
+                            return driver.resetApp()
+                                .then(() => switchContexts(driver, 1))
+                                // Force load the automated url
+                                .then(() => driver.url())
+                                .then((contextUrl) => {
+                                    const parsed = url.parse(contextUrl);
+                                    return driver.get(`${parsed.protocol}//${parsed.host}/index.html?__kash_automated__`);
+                                });
+                        });
+                        mocha.suite.afterEach(() => {
+                            return switchContexts(driver, 0);
+                        });
                         return driver.init({
                             platformName: 'Android',
                             // Required to be non-empty, but is irrelevant
                             deviceName: '-',
                             browserName: 'Android',
-                            // autoWebview: true,
                             // Id of the device found
                             udid: device.id,
                             // Path to the prebuilt app

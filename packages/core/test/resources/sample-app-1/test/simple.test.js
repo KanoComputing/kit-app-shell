@@ -8,7 +8,7 @@ describe('simple', () => {
             assert.include(t, `Sample App 1 v1.0.0`);
         });
     });
-    it('test1', () => {
+    it('test2', () => {
         return kash.driver.waitForElementById('click')
             .then((el) => el.click());
     });

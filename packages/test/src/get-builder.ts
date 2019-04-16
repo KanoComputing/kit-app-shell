@@ -15,6 +15,12 @@ function loadProvider(provider : string) : Promise<{ default : IProvider }> {
     case 'kobiton': {
         return import('./providers/kobiton');
     }
+    case 'chrome': {
+        return import('./providers/chrome');
+    }
+    case 'edge': {
+        return import('./providers/edge');
+    }
     default: {
         return Promise.resolve(null);
     }

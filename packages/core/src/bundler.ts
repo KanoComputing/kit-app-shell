@@ -133,7 +133,6 @@ export class Bundler {
         )));
         const defaultOptions = {
             input: [input],
-            experimentalCodeSplitting: true,
             plugins: [
                 tracker.plugin(),
                 replace({
@@ -166,7 +165,7 @@ export class Bundler {
             // Skip babel loading if it's not going to be used
             const babel = require('rollup-plugin-babel');
             const minifyHTML = require('rollup-plugin-minify-html-literals').default;
-            const uglify = require('rollup-plugin-uglify-es');
+            const { terser } = require('rollup-plugin-terser');
             // Manual resolving eable an easy mock-require,
             // otherwise babel tries to do it on its own
             const babelPluginSyntaxDynamicImport = require.resolve('@babel/plugin-syntax-dynamic-import');
@@ -186,8 +185,9 @@ export class Bundler {
                         },
                     ],
                 ],
+                compact: true,
             }));
-            defaultOptions.plugins.push(uglify());
+            defaultOptions.plugins.push(terser());
         }
         log.trace('ROLLUP OPTIONS', defaultOptions);
         return rollup.rollup(defaultOptions)

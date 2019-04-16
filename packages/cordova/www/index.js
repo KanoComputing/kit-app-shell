@@ -1,5 +1,5 @@
-import Devices from '@kano/devices-sdk/platforms/cordova/index.js';
-import BusAdapter from '@kano/devices-sdk/bus-adapter/bus-adapter.js';
+import Devices from '@kano/devices-sdk-cordova/index.js';
+import { DevicesServer } from '@kano/web-bus/esm/servers/index.js';
 import EventEmitter from './lib/event-emitter.js';
 import { updaterBus } from './lib/bus/updater.js';
 
@@ -12,7 +12,7 @@ const logger = {};
 Devices.setLogger(logger);
 
 const bus = new EventEmitter();
-const adapter = new BusAdapter({ bus, Devices });
+const adapter = new DevicesServer(bus, Devices);
 
 updaterBus(bus);
 
@@ -39,6 +39,16 @@ document.addEventListener('deviceready', () => {
         OS_PLATFORM: device.platform,
         OS_VERSION: device.version,
     });
-    
-    import(window.KitAppShellConfig.APP_SRC);
+
+    function boot() {
+        import(window.KitAppShellConfig.APP_SRC);
+        return window.KitAppShellConfig;
+    }
+
+    // This string will be in the search part of the url when automated for tests
+    if (location.search.indexOf('__kash_automated__') !== -1) {
+        window.__kash_boot__ = boot;
+    } else {
+        boot();
+    }
 });
