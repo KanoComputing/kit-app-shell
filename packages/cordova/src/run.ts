@@ -27,7 +27,7 @@ const { KASH_NET_INTERFACE_NAME } = process.env;
  * @param env Target environment.
  * @param configOverrides Config options passed through the CLI.
  */
-function serve(app : string, env : string, overrides : IConfigOverrides) : connect.Server {
+export function serve(app : string, env : string, overrides : IConfigOverrides) : connect.Server {
     return connect()
         .use(cors())
         .use((req, res, next) => {

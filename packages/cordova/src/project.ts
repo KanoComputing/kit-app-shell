@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
 import { cordova } from 'cordova-lib';
-import { ProjectCacheManager } from './cache';
+import { ProjectCacheManager } from '@kano/kit-app-shell-core/lib/cache';
 import { getModulePath } from './util';
 import { CordovaConfig } from './cordova-config';
 import { chdir } from './chdir';

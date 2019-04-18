@@ -1,5 +1,6 @@
 import * as utils from 'electron-windows-store/lib/utils';
 import * as path from 'path';
+import * as os from 'os';
 import { promisify } from 'util';
 import * as rimrafCb from 'rimraf';
 import { makeCert } from './cert';
@@ -59,6 +60,39 @@ function enquireCert(prompt, config) {
     }));
 }
 
+function enquireDevCert(prompt, config) {
+    const windowsKit = config.windowsKit || utils.getDefaultWindowsKitLocation();
+    const userInfo = os.userInfo();
+    const publisher = userInfo.username;
+    const certFilePath = path.join(appData, appDataDir, certificatesDir);
+    // Retrieve a potentially existing certificate
+    const previousCert = config.certificates && config.certificates[publisher];
+    let p = Promise.resolve();
+    // Cert already exists for this publisher, override?
+    if (previousCert) {
+        p = prompt({
+            type: 'confirm',
+            name: 'confirmed',
+            message: 'You already have a develpoment certificate. Do you want to override it?',
+        }).then((a) => {
+            // User confirmed, delete previous cert then create a new one
+            if (a.confirmed) {
+                return rimraf(previousCert);
+            }
+            // User dismissed, return empty data
+            return {};
+        });
+    }
+    // No previous cert found, continue
+    return p.then(() => makeCert(publisher, certFilePath, windowsKit))
+        .then((devCert) => ({
+            certificates: {
+                [publisher]: devCert,
+            },
+            windowsKit,
+        }));
+}
+
 export default {
     enquire(prompt, config) {
         return prompt({
@@ -67,12 +101,18 @@ export default {
             message: 'Choose an action',
             choices: [{
                 name: 'create',
-                message: 'Create a new certificate',
+                message: 'Create a new publisher certificate',
+            }, {
+                name: 'dev',
+                message: 'Create a development certificate',
             }],
         }).then((answers) => {
             switch (answers.action) {
             case 'create': {
                 return enquireCert(prompt, config);
+            }
+            case 'dev': {
+                return enquireDevCert(prompt, config);
             }
             default: {
                 return {};

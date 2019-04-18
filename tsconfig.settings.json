@@ -18,7 +18,8 @@
         // "strictNullChecks": true,
         // "noImplicitReturns": true,
         // "noImplicitThis": true,
-        // "noUnusedParameters": true
+        // "noUnusedParameters": true,
+        // "esModuleInterop": true,
     },
     "exclude": [
         "node_modules",

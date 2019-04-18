@@ -1,15 +1,23 @@
 {
     "APP_NAME": "Sample App 1",
     "APP_ID": "com.kano.sampleapp1",
+    "APP_DESCRIPTION": "A Sample app to try out the platform",
     "ICONS": {
         "ANDROID": "icons/android.png",
         "IOS": "icons/ios.png",
-        "WINDOWS_STORE": "icons/windows-store.png"
+        "WINDOWS_STORE": "icons/windows-store.png",
+        "UWP": "icons/windows-store.png"
     },
     "SPLASHSCREENS": {
         "ANDROID": "screens/android.png"
     },
     "WINDOWS_STORE": {
+        "PACKAGE_NAME": "Publisher.SampleApp",
+        "PACKAGE_DISPLAY_NAME": "Sample App",
+        "PUBLISHER": "CN=Publisher",
+        "PUBLISHER_DISPLAY_NAME": "Publisher"
+    },
+    "UWP": {
         "PACKAGE_NAME": "Publisher.SampleApp",
         "PACKAGE_DISPLAY_NAME": "Sample App",
         "PUBLISHER": "CN=Publisher",

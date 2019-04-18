@@ -1,0 +1,35 @@
+{
+  "name": "@kano/kit-app-shell-uwp",
+  "version": "0.0.3-alpha.27",
+  "description": "> TODO: description",
+  "author": "Paul Varache <paul@kano.me>",
+  "homepage": "https://github.com/KanoComputing/kit-app-shell#readme",
+  "license": "ISC",
+  "main": "lib/kit-app-shell-appx.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KanoComputing/kit-app-shell.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/KanoComputing/kit-app-shell/issues"
+  },
+  "dependencies": {
+    "@kano/devices-sdk-uwp": "^1.0.0-alpha.2",
+    "@kano/kit-app-shell-windows-store": "^0.0.3-alpha.33",
+    "@kano/web-bus": "^1.0.0-alpha.9",
+    "@webcomponents/shadycss": "^1.9.0",
+    "@webcomponents/webcomponentsjs": "^2.2.7",
+    "glob": "^7.1.3",
+    "mkdirp": "^0.5.1",
+    "pascal-case": "^2.0.1",
+    "rimraf": "^2.6.3",
+    "sharp": "^0.22.0",
+    "text-encoding": "^0.7.0"
+  }
+}
