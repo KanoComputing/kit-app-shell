@@ -16,7 +16,7 @@ export function loadPlatformKey(name : string, key : string, ignoreError? : bool
         .then((imported : { default : IPlatformPart }) => {
             return imported.default;
         })
-        .catch(() => {
+        .catch((originalError) => {
             // Sometimes we don't want a hard fail on a missing method
             if (ignoreError) {
                 return null;
@@ -24,19 +24,19 @@ export function loadPlatformKey(name : string, key : string, ignoreError? : bool
             // Could not find the specific file. Need to figure out if the platform is not installed
             // Or doesn't implement that file
             // Use require.resolve here to avoid loading the whole module
+            let modulePath;
             try {
-                const modulePath = require.resolve(`@kano/kit-app-shell-${name}/package.json`);
-                if (modulePath) {
-                    throw new Error(`Platform '${name}' does not implement '${key}'`);
-                }
-            } catch (e) {
+                modulePath = require.resolve(`@kano/kit-app-shell-${name}/package.json`);
+            } catch (e) {}
+            if (modulePath) {
+                throw new Error(`Platform '${name}' does not implement '${key}'`);
+            } else {
                 // Failed to resolve the module, it is not installed
-                if (e.code === 'MODULE_NOT_FOUND') {
+                if (originalError.code === 'MODULE_NOT_FOUND') {
                     throw new Error(`Could not load platform: '${name}' was not installed`);
                 }
-                throw e;
+                throw originalError;
             }
-            return null;
         });
 }
 

@@ -27,6 +27,6 @@
     }, {
         "path": "packages/windows-store"
     }, {
-        "path": "packages/appx"
+        "path": "packages/uwp"
     }]
 }

@@ -21,11 +21,11 @@ packages/web/lib
 packages/windows/lib
 packages/windows-store/lib
 
-packages/appx/lib
-packages/appx/Kash/.vs
-packages/appx/Kash/Kash/AppPackages
-packages/appx/Kash/Kash/bin
-packages/appx/Kash/Kash/bld
-packages/appx/Kash/Kash/BundleArtifacts
-packages/appx/Kash/Kash/www
-packages/appx/Kash/Kash/Kash.jsproj.user
+packages/uwp/lib
+packages/uwp/Kash/.vs
+packages/uwp/Kash/Kash/AppPackages
+packages/uwp/Kash/Kash/bin
+packages/uwp/Kash/Kash/bld
+packages/uwp/Kash/Kash/BundleArtifacts
+packages/uwp/Kash/Kash/www
+packages/uwp/Kash/Kash/Kash.jsproj.user
