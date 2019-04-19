@@ -1,6 +1,6 @@
 {
   "name": "@kano/kit-app-shell-web",
-  "version": "0.0.3-alpha.33",
+  "version": "0.0.3-alpha.34",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
