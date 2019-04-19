@@ -7,17 +7,31 @@ The shell will run any HTML/CSS/JS frontend. On all platforms extept _web_, it a
 The `kash` CLI tool provides an unified interface to build, run, test and sign your app across all [supported platforms](#Platforms). The usual workflow looks like this:
 
 ```sh
-yarn add @kano/kit-app-shell-cli
+yarn add --dev @kano/kit-app-shell-cli
 
 # Install the platforms you want to use
-yarn add @kano/kit-app-shell-macos
-yarn add @kano/kit-app-shell-ios
+yarn add --dev @kano/kit-app-shell-macos
+yarn add --dev @kano/kit-app-shell-ios
+```
 
+Add the kash script to your `package.json`
+
+```json
+{
+    "scripts": {
+        "kash": "kash"
+    }
+}
+```
+
+This makes your local version of cache accessible using `yarn kash`
+
+```
 # Build an *.ipa for iOS using Cordova
-kash build ios ./your-app-dir --out ./build-dir
+yarn kash build ios ./your-app-dir --out ./build-dir
 
 # Run your app using electron on macOS
-kash run macos ./your-app-dir
+yarn kash run macos ./your-app-dir
 ```
 
 ## Setup
@@ -92,9 +106,21 @@ cd kash-example
 We'll install the `kash` CLI tool and the _web_ platform.
 
 ```sh
-yarn add @kano/kit-app-shell-cli
-yarn add @kano/kit-app-shell-web
+yarn add --dev @kano/kit-app-shell-cli
+yarn add --dev @kano/kit-app-shell-web
 ```
+
+Add the kash script to your `package.json`
+
+```json
+{
+    "scripts": {
+        "kash": "kash"
+    }
+}
+```
+
+This makes your local version of cache accessible using `yarn kash`
 
 When starting up, the app shell will be looking for two files:
 
@@ -128,7 +154,7 @@ The app shell will pass to the constructor a reference to the `bus` that can be 
 With the main class in place, we can test the setup on the _web_ platform by running `kash` from the project tree as follows:
 
 ```sh
-./node_modules/.bin/kash run web .
+yarn kash run web .
 ```
 
 The _web_ platform will start a simple web server.
