@@ -9,7 +9,7 @@ export function resizeImage(
     { fit = 'cover' } = {},
 ) : Promise<void> {
     return sharp(src)
-        .resize({ width, height, fit })
+        .resize({ width, height, fit, background: { r: 0, b: 0, g: 0, alpha: 0 } })
         .toFile(out);
 }
 

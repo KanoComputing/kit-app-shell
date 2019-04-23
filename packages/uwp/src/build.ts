@@ -8,7 +8,8 @@ import * as rimrafCb from 'rimraf';
 import { promisify } from 'util';
 import { generateProject } from './project';
 import { IUWPBuildOptions } from './types';
-import { copyPolyfills } from './polyfills';
+import { copyPolyfills, generateElements } from '@kano/kit-app-shell-core/lib/util/polyfills';
+import { scripts } from './polyfills';
 import { getCertificatePath } from './options';
 import * as globCb from 'glob';
 import * as mkdirpCb from 'mkdirp';
@@ -36,7 +37,7 @@ const appxBuild : IBuild = (opts : IUWPBuildOptions) => {
             uwpDir = paths.solution;
             projectDir = paths.project;
             wwwPath = path.join(paths.project, 'www');
-            return copyPolyfills(wwwPath);
+            return copyPolyfills(scripts, wwwPath);
         })
         .then((injectNames) => {
             // Bundle the cordova shell and provided app into the www directory
@@ -62,7 +63,7 @@ const appxBuild : IBuild = (opts : IUWPBuildOptions) => {
                     },
                     html: {
                         replacements: {
-                            injectScript: injectNames.map((name) => `<script src="${name}"></script>`).join(''),
+                            injectScript: generateElements(injectNames),
                             base: `<base href="${baseUrl}"><style>html,body{ background: ${opts.config.BACKGROUND_COLOR} }</style>`,
                         },
                     },
@@ -70,16 +71,20 @@ const appxBuild : IBuild = (opts : IUWPBuildOptions) => {
             )
                 .then((bundle) => Bundler.write(bundle, wwwPath))
                 .then(() => rimraf(path.join(uwpDir, 'AppPackages')))
+                .then(() => mkdirp(opts.out))
                 .then(() => {
+                    if (opts.projectOnly) {
+                        return rename(uwpDir, path.join(opts.out, opts.config.UWP.PACKAGE_NAME)).then(() => opts.out);
+                    }
                     processState.setInfo('Building UWP app');
-                    return buildUWPApp(uwpDir, opts.release);
-                })
-                .then(() => {
-                    const dest = path.join(projectDir, 'AppPackages');
-                    return findBuiltApp('**/*.appxbundle', dest, opts.out)
-                        .then((target) => {
-                            processState.setSuccess(`Built UWP app at ${target}`);
-                            return target;
+                    return buildUWPApp(uwpDir, opts.release)
+                        .then(() => {
+                            const dest = path.join(projectDir, 'AppPackages');
+                            return findBuiltApp('**/*.appxbundle', dest, opts.out)
+                                .then((target) => {
+                                    processState.setSuccess(`Built UWP app at ${target}`);
+                                    return target;
+                                });
                         });
                 });
         });

@@ -9,7 +9,13 @@ const UWPCli : ICli = {
             type: 'boolean',
             desc: 'Builds the app in release mode',
         });
+        sywac.option('--project-only', {
+            aliases: ['project-only', 'projectOnly'],
+            type: 'boolean',
+            desc: 'Do not build the app, just create the project',
+        });
     },
+    configure: storeCli.configure,
     commands: storeCli.commands,
 };
 

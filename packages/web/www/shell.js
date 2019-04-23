@@ -69,7 +69,8 @@ p
             },
         };
         function boot() {
-            import(window.KitAppShellConfig ? window.KitAppShellConfig.APP_SRC : config.APP_SRC);
+            import(window.KitAppShellConfig ? window.KitAppShellConfig.APP_SRC : config.APP_SRC)
+                .catch(e => console.error(e));
             return config;
         }
         // This string will be in the search part of the url when automated for tests

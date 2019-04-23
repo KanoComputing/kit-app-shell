@@ -35,6 +35,13 @@ const windowsStoreCli : ICli = {
             desc: 'Path to the Windows 10 SDK binaries',
         });
     },
+    configure(sywac) {
+        sywac.option('-k, --windows-kit [windowsKit]', {
+            aliases: ['k', 'windows-kit', 'windowsKit'],
+            type: 'string',
+            desc: 'Path to the Windows 10 SDK binaries',
+        });
+    },
 };
 
 export default windowsStoreCli;

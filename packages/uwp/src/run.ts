@@ -8,7 +8,8 @@ import * as livereload from 'livereload';
 import { generateProject } from './project';
 import { buildUWPApp } from './msbuild';
 import { Bundler } from '@kano/kit-app-shell-core/lib/bundler';
-import { copyPolyfills } from './polyfills';
+import { copyPolyfills, generateElements } from '@kano/kit-app-shell-core/lib/util/polyfills';
+import { scripts } from './polyfills';
 import { getDevCertPath } from './cert';
 
 type IUWPRunOptions = IRunOptions & {
@@ -40,7 +41,7 @@ const webRun : IRun = (opts : IUWPRunOptions) => {
     return generateProject(path.join(__dirname, '../template'), opts, certPath)
         .then((paths) => {
             const wwwPath = path.join(paths.project, 'www');
-            return copyPolyfills(wwwPath)
+            return copyPolyfills(scripts, wwwPath)
                 .then((injectNames) => {
                     // Bundle the cordova shell and provided app into the www directory
                     return Bundler.bundle(
@@ -69,7 +70,7 @@ const webRun : IRun = (opts : IUWPRunOptions) => {
                             },
                             html: {
                                 replacements: {
-                                    injectScript: injectNames.map((name) => `<script src="${name}"></script>`).join(''),
+                                    injectScript: generateElements(injectNames),
                                     base: `<base href="${baseUrl}">`,
                                 },
                             },

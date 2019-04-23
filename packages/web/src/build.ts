@@ -3,6 +3,9 @@ import * as path from 'path';
 import { promisify } from 'util';
 import * as rimrafCb from 'rimraf';
 import { IBuild, IBuildOptions, IKashConfig } from '@kano/kit-app-shell-core/lib/types';
+import { copyPolyfills, generateElements } from '@kano/kit-app-shell-core/lib/util/polyfills';
+import { scripts } from './polyfills';
+
 const rimraf = promisify(rimrafCb);
 
 type WebBuildOptions = IBuildOptions;
@@ -23,7 +26,8 @@ const webBuild : IBuild = function build(opts : WebBuildOptions) {
         babelExclude = [],
     } = opts;
     return rimraf(out)
-        .then(() => Bundler.bundle(
+        .then(() => copyPolyfills(scripts, out))
+        .then((names) => Bundler.bundle(
             `${__dirname}/../www/index.html`,
             `${__dirname}/../www/shell.js`,
             path.join(app, 'index.js'),
@@ -48,7 +52,7 @@ const webBuild : IBuild = function build(opts : WebBuildOptions) {
                             html, body {
                                 background-color: ${config.BACKGROUND_COLOR || DEFAULT_BACKGROUND_COLOR};
                             }
-                        </style>`,
+                        </style>${generateElements(names)}`,
                     },
                 },
             },
