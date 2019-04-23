@@ -15,7 +15,7 @@ export function replaceIndex(html : string, js : string, code : string) : string
                 if (attr.name === 'src' && attr.value === relJs) {
                     const { childNodes } = node.parentNode;
                     const script = parse5Util.createScriptWithContent(`
-                        require.config({ timeout: 30 });
+                        require.config({ waitSeconds: 30 });
                         requirejs(['${relJs}']);
                     `);
                     // Remove the node and replace it with a simple script with src
@@ -36,6 +36,7 @@ export function addRequirejs(code : string) : string {
     walk(document, (node) => {
         if (node.tagName === 'head') {
             const script = parse5Util.createScript('require.js');
+            script.parentNode = node;
             node.childNodes.push(script);
             return false;
         }

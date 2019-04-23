@@ -25,6 +25,7 @@
     "@kano/web-bus": "^1.0.0-alpha.9",
     "@webcomponents/shadycss": "^1.9.0",
     "@webcomponents/webcomponentsjs": "^2.2.7",
+    "blueimp-canvas-to-blob": "^3.14.0",
     "glob": "^7.1.3",
     "mkdirp": "^0.5.1",
     "pascal-case": "^2.0.1",
