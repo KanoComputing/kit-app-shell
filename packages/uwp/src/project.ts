@@ -7,6 +7,8 @@ import mkdirpCb = require('mkdirp');
 import { promisify } from 'util';
 import { generateAllIcons } from './images';
 import { IKashConfig } from '@kano/kit-app-shell-core/lib/types';
+import { extensions } from './extensions';
+import { IExtensionDefinition } from './extensions/extension';
 
 const rimraf = promisify(rimrafCb);
 const mkdirp = promisify(mkdirpCb);
@@ -47,6 +49,25 @@ export function generateProject(
     data.CAPABILITIES = (options.capabilities || [])
         .filter((c) => defaultCapabilities.indexOf(c) === -1)
         .map((c) => `<DeviceCapability Name="${c}" />`);
+
+    if (config.UWP.EXTENSIONS) {
+        const exts = config.UWP.EXTENSIONS.map((definition : IExtensionDefinition) => {
+            const provider = extensions[definition.TYPE];
+            if (!provider) {
+                throw new Error(`Could not create project: Extension '${definition.TYPE}' does not exists`);
+            }
+            return provider.render(definition);
+        });
+        if (exts.length) {
+            data.EXTENSIONS = `
+            <Extensions>
+                ${exts.join('\n')}
+            </Extensions>
+            `;
+        } else {
+            data.EXTENSIONS = '';
+        }
+    }
 
     if (!config.APP_DESCRIPTION) {
         throw new Error('Cannot create UWP project: Missing APP_DESCRIPTION in config');
