@@ -11,8 +11,9 @@ interface IWebRunOptions {
     port : number;
 }
 
-const webRun : IRun = ({ app, config = {}, port = 8000 } : IWebRunOptions) => {
-    const server = serve(app, config).listen(port);
+const webRun : IRun = (opts : IWebRunOptions) => {
+    const { app, config = {}, port = 8000 } = opts;
+    const server = serve(app, opts).listen(port);
     const livereloadServer = livereload.createServer();
 
     config.LR_URL = 'http://localhost:35729';
