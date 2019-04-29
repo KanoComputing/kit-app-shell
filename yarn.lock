@@ -901,13 +901,6 @@
     "@kano/devices-sdk-core" "^1.0.0-alpha.2"
     jszip "^3.2.1"
 
-"@kano/es6-resolution@^1.0.12":
-  version "1.0.14"
-  resolved "https://registry.yarnpkg.com/@kano/es6-resolution/-/es6-resolution-1.0.14.tgz#6afbba8e1f9647f311fb580789c7b7efd6d495a7"
-  integrity sha512-jqJzM2Qlti3snpYb71a7VEN7Idpl9hFLUGHYzZoj5L7heHSigVzv1KKb1G1AwkFldjusreFcKHk63bCF+cf6MQ==
-  dependencies:
-    resolve "^1.7.1"
-
 "@kano/es6-resolution@^1.0.18":
   version "1.0.18"
   resolved "https://registry.yarnpkg.com/@kano/es6-resolution/-/es6-resolution-1.0.18.tgz#5060e7ae55be635db5f1c69440dd857b27b45427"
@@ -915,18 +908,12 @@
   dependencies:
     resolve "^1.7.1"
 
-"@kano/es6-server@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@kano/es6-server/-/es6-server-1.0.1.tgz#34985a9bfebfc1dcc2f552255451d116a5fda4f1"
-  integrity sha512-9toa1U+EzJcnUX8+feExzKAXsHaR2FzwGrKKB1tcpiXAcboIPkiJMrVt6NXbBSzho65sPbRTIv3W79qvpIAgLg==
+"@kano/es6-resolution@^1.0.20":
+  version "1.0.20"
+  resolved "https://registry.yarnpkg.com/@kano/es6-resolution/-/es6-resolution-1.0.20.tgz#5beb3cf09f9b2b29f9e0a865e7b047888680b790"
+  integrity sha512-bTKy6quIkoJifHdI1cujW3NS4oBL0AjJn14xUM7kGrhj3yT4U0fwbsISdtB3dvDiYxPCsNHk9h67EWXGHnGwGg==
   dependencies:
-    "@kano/es6-resolution" "^1.0.12"
-    colors "^1.3.2"
-    connect "^3.6.6"
-    mime "^2.3.1"
-    node-text-chunk "^0.1.1"
-    serve-static "^1.13.2"
-    yargs "^12.0.5"
+    resolve "^1.7.1"
 
 "@kano/es6-server@^1.0.2":
   version "1.0.2"
@@ -934,6 +921,19 @@
   integrity sha512-3mO4pAbaMGJWM03tyVTSdtRrRjYaWtObU5xUe9AAcY0DN7tySqL0lDnOFw/w7YBAgfnOpjGUJpGAQoCjxp6JYw==
   dependencies:
     "@kano/es6-resolution" "^1.0.18"
+    chalk "^2.4.2"
+    connect "^3.6.6"
+    mime "^2.3.1"
+    node-text-chunk "^0.1.1"
+    serve-static "^1.13.2"
+    sywac "^1.2.1"
+
+"@kano/es6-server@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@kano/es6-server/-/es6-server-1.0.3.tgz#3d3e32758b918f41d241f531f1edad84a1b967e0"
+  integrity sha512-Sh0jzuMpGe1NI91Yu0HiXeThcKSIfi4SH63d04a7rJr8PMCxiRau+F50MxYF/CBoK1Iml760RFrKOo8R2saNmA==
+  dependencies:
+    "@kano/es6-resolution" "^1.0.20"
     chalk "^2.4.2"
     connect "^3.6.6"
     mime "^2.3.1"
@@ -3654,7 +3654,7 @@ colornames@^1.1.1:
   resolved "https://registry.yarnpkg.com/colornames/-/colornames-1.1.1.tgz#f8889030685c7c4ff9e2a559f5077eb76a816f96"
   integrity sha1-+IiQMGhcfE/54qVZ9Qd+t2qBb5Y=
 
-colors@^1.1.2, colors@^1.2.1, colors@^1.3.2:
+colors@^1.1.2, colors@^1.2.1:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.3.3.tgz#39e005d546afe01e01f9c4ca8fa50f686a01205d"
   integrity sha512-mmGt/1pZqYRjMxB1axhTo16/snVZ5krrKkcmMeVKxzECMMXoCgnvTPp10QgHfcbQZw8Dq2jMNG6je4JlWU0gWg==
@@ -12565,7 +12565,7 @@ yargs@11.1.0:
     y18n "^3.2.1"
     yargs-parser "^9.0.2"
 
-yargs@^12.0.1, yargs@^12.0.2, yargs@^12.0.5:
+yargs@^12.0.1, yargs@^12.0.2:
   version "12.0.5"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-12.0.5.tgz#05f5997b609647b64f66b81e3b4b10a368e7ad13"
   integrity sha512-Lhz8TLaYnxq/2ObqHDql8dX8CJi97oHxrjUcYtzKbbykPtVW9WB+poxI+NM2UIzsMgNCZTIf0AQwsjK5yMAqZw==
