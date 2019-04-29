@@ -25,6 +25,7 @@
         </uap:DefaultTile>
         <uap:SplashScreen Image="images\splashscreen.png" BackgroundColor="${BACKGROUND_COLOR}"/>
       </uap:VisualElements>
+    ${EXTENSIONS}
     </Application>
   </Applications>
   <Capabilities>
