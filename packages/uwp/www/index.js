@@ -1,5 +1,5 @@
 ﻿import EventEmitter from './lib/event-emitter.js';
-import { DevicesServer } from '@kano/web-bus/esm/servers/index';
+import { DevicesServer } from '@kano/web-bus/esm/servers/index.js';
 import Devices from '@kano/devices-sdk-uwp/index.js';
 import { UpdaterServer } from './lib/updater.js';
 import { applyTitleBarCustomisations } from './lib/titlebar.js';
@@ -52,7 +52,7 @@ function boot(launchActivatedEventArgs) {
 }
 
 if (window.launchActivatedEventArgs) {
-    boot(window.launchActivatedEventArgs)
+    boot(window.launchActivatedEventArgs);
 } else {
     window.addEventListener('activated', (e) => boot(e), false);
 }
