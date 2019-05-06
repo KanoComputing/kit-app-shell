@@ -5,6 +5,11 @@ const UWPCli : ICli = {
     group: 'UWP: ',
     build(sywac) {
         storeCli.build(sywac);
+        sywac.option('--msbuild-path', {
+            aliases: ['msbuild-path', 'msbuildPath'],
+            type: 'string',
+            desc: 'Path to the MSBuild.exe binary',
+        });
         sywac.option('--release', {
             type: 'boolean',
             desc: 'Builds the app in release mode',

@@ -77,7 +77,7 @@ const appxBuild : IBuild = (opts : IUWPBuildOptions) => {
                         return rename(uwpDir, path.join(opts.out, opts.config.UWP.PACKAGE_NAME)).then(() => opts.out);
                     }
                     processState.setInfo('Building UWP app');
-                    return buildUWPApp(uwpDir, opts.release)
+                    return buildUWPApp(uwpDir, { release: opts.release, msbuildPath: opts.msbuildPath })
                         .then(() => {
                             const dest = path.join(projectDir, 'AppPackages');
                             return findBuiltApp('**/*.appxbundle', dest, opts.out)
