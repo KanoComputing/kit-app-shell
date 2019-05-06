@@ -133,6 +133,7 @@ export class Bundler {
         )));
         const defaultOptions = {
             input: [input],
+            external: [`./www/${appSrcName}`],
             plugins: [
                 tracker.plugin(),
                 replace({
