@@ -20,12 +20,4 @@ packages/macos/lib
 packages/web/lib
 packages/windows/lib
 packages/windows-store/lib
-
 packages/uwp/lib
-packages/uwp/Kash/.vs
-packages/uwp/Kash/Kash/AppPackages
-packages/uwp/Kash/Kash/bin
-packages/uwp/Kash/Kash/bld
-packages/uwp/Kash/Kash/BundleArtifacts
-packages/uwp/Kash/Kash/www
-packages/uwp/Kash/Kash/Kash.jsproj.user
