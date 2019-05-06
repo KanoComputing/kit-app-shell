@@ -1,11 +1,11 @@
 {
   "name": "@kano/kit-app-shell-macos",
-  "version": "0.0.3-alpha.35",
+  "version": "0.0.3-alpha.36",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@kano/kit-app-shell-core": "^0.0.3-alpha.35",
-    "@kano/kit-app-shell-electron": "^0.0.3-alpha.35",
+    "@kano/kit-app-shell-core": "^0.0.3-alpha.36",
+    "@kano/kit-app-shell-electron": "^0.0.3-alpha.36",
     "electron-osx-sign": "^0.4.11",
     "electron-packager": "^13.0.0",
     "mkdirp": "^0.5.1",

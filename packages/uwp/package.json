@@ -1,6 +1,6 @@
 {
   "name": "@kano/kit-app-shell-uwp",
-  "version": "0.0.3-alpha.35",
+  "version": "0.0.3-alpha.36",
   "description": "> TODO: description",
   "author": "Paul Varache <paul@kano.me>",
   "homepage": "https://github.com/KanoComputing/kit-app-shell#readme",
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@kano/devices-sdk-uwp": "^1.0.0-alpha.2",
-    "@kano/kit-app-shell-windows-store": "^0.0.3-alpha.35",
+    "@kano/kit-app-shell-windows-store": "^0.0.3-alpha.36",
     "@kano/web-bus": "^1.0.0-alpha.9",
     "@webcomponents/shadycss": "^1.9.0",
     "@webcomponents/webcomponentsjs": "^2.2.7",
