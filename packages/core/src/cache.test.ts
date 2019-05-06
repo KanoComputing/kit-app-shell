@@ -13,8 +13,8 @@ const MOCK_DEFAULTS = { createCwd: false, createTmp: false };
 
 function applyMockFs() {
     mockFs({
-        '/test-homedir/.kit-app-shell-cordova/cache/test-1': JSON.stringify({ id: 'test-1' }),
-        '/test-homedir/.kit-app-shell-cordova/cache/test-2': JSON.stringify({ id: 'test-2' }),
+        '/test-homedir/.kash/cache/test-1': JSON.stringify({ id: 'test-1' }),
+        '/test-homedir/.kash/cache/test-2': JSON.stringify({ id: 'test-2' }),
     }, MOCK_DEFAULTS);
 }
 
@@ -32,7 +32,7 @@ suite('ProjectCacheManager', () => {
 
         const cache = new ProjectCacheManager('test-id');
 
-        assert.equal(cache.dbPath, path.join('/test-homedir', '.kit-app-shell-cordova/cache', 'test-id'));
+        assert.equal(cache.dbPath, path.join('/test-homedir', '.kash/cache', 'test-id'));
     });
     test('load', () => {
         const { ProjectCacheManager } = mock.reRequire('./cache');
@@ -56,7 +56,7 @@ suite('ProjectCacheManager', () => {
 
         return cache.save()
             .then(() => {
-                assert.fileContent('/test-homedir/.kit-app-shell-cordova/cache/test-save', JSON.stringify(cache.cache));
+                assert.fileContent('/test-homedir/.kash/cache/test-save', JSON.stringify(cache.cache));
             });
     });
     teardown(() => {

@@ -901,32 +901,12 @@
     "@kano/devices-sdk-core" "^1.0.0-alpha.2"
     jszip "^3.2.1"
 
-"@kano/es6-resolution@^1.0.18":
-  version "1.0.18"
-  resolved "https://registry.yarnpkg.com/@kano/es6-resolution/-/es6-resolution-1.0.18.tgz#5060e7ae55be635db5f1c69440dd857b27b45427"
-  integrity sha512-DEHPkeSnofp9nbxNsQpIghmWivNi0s3xxpqDz9a0Zu+2OZDe/gQwXLykJSJc6XMzTGtzm5fy/wISgRxzL1AMpQ==
-  dependencies:
-    resolve "^1.7.1"
-
 "@kano/es6-resolution@^1.0.20":
   version "1.0.20"
   resolved "https://registry.yarnpkg.com/@kano/es6-resolution/-/es6-resolution-1.0.20.tgz#5beb3cf09f9b2b29f9e0a865e7b047888680b790"
   integrity sha512-bTKy6quIkoJifHdI1cujW3NS4oBL0AjJn14xUM7kGrhj3yT4U0fwbsISdtB3dvDiYxPCsNHk9h67EWXGHnGwGg==
   dependencies:
     resolve "^1.7.1"
-
-"@kano/es6-server@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@kano/es6-server/-/es6-server-1.0.2.tgz#76df203dfd0557d4f481178f7c6ce989cf797dd3"
-  integrity sha512-3mO4pAbaMGJWM03tyVTSdtRrRjYaWtObU5xUe9AAcY0DN7tySqL0lDnOFw/w7YBAgfnOpjGUJpGAQoCjxp6JYw==
-  dependencies:
-    "@kano/es6-resolution" "^1.0.18"
-    chalk "^2.4.2"
-    connect "^3.6.6"
-    mime "^2.3.1"
-    node-text-chunk "^0.1.1"
-    serve-static "^1.13.2"
-    sywac "^1.2.1"
 
 "@kano/es6-server@^1.0.3":
   version "1.0.3"

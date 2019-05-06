@@ -59,7 +59,7 @@ suite('project', () => {
                     },
                 },
             });
-            mock('./cache', CacheMock);
+            mock('@kano/kit-app-shell-core/lib/cache', CacheMock);
             const { getProject } = mock.reRequire('./project');
             mockFs({
                 '/project': mockFs.directory({ items: {} }),
@@ -148,7 +148,7 @@ suite('project', () => {
                     },
                 },
             });
-            mock('./cache', CacheMock);
+            mock('@kano/kit-app-shell-core/lib/cache', CacheMock);
             mock('./cordova-config', MockCordovaConfig);
             const { getProject } = mock.reRequire('./project');
             mockFs({

@@ -23,7 +23,7 @@ suite('Bundler', () => {
         );
         assert.equal(
             transformed,
-            '<html lang="en"><div>Test</div><head><script src="/require.js"></script></head><body></body></html>',
+            '<html lang="en"><div>Test</div><head><script src="require.js"></script></head><body></body></html>',
         );
     });
     test('write', () => {

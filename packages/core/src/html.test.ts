@@ -8,7 +8,7 @@ suite('html.js', () => {
     test('addRequirejs', () => {
         const result = addRequirejs('<html><head></head></html>');
         assert.equal(
-            '<html><head><script src="/require.js"></script></head><body></body></html>',
+            '<html><head><script src="require.js"></script></head><body></body></html>',
             result,
         );
     });
