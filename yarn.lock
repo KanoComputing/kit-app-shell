@@ -862,16 +862,6 @@
   resolved "https://registry.yarnpkg.com/@kano/common/-/common-1.0.3.tgz#80a24574ff6016e11a61ced62c14d2c18c8978a1"
   integrity sha512-bHgKx+jWj03wfNG4mX7/rZv6Ne2UuVzYM/v+4nUmniRzBU1eSbWYoHjq3wkZqQoJqzHqLSp4L5OuXIqvlsKRTg==
 
-"@kano/devices-sdk-cordova@^1.0.0-alpha.1":
-  version "1.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-cordova/-/devices-sdk-cordova-1.0.0-alpha.1.tgz#3756479d0d69aa5349a286f16c72b9fe182edd6b"
-  integrity sha512-F1b+o9M/cbo3asHo4Nk8z8Xy1tS17qRIYd49HLdP9ATEUBJD4YEp3OA4zGx+t0mgRkKsqWaYbrylSG3EjBx5rg==
-  dependencies:
-    "@kano/common" "^1.0.2"
-    "@kano/devices-sdk-core" "^1.0.0-alpha.1"
-    "@kano/web-bus" "^1.0.0-alpha.5"
-    jszip "^3.1.5"
-
 "@kano/devices-sdk-cordova@^1.0.0-alpha.2":
   version "1.0.0-alpha.2"
   resolved "https://registry.yarnpkg.com/@kano/devices-sdk-cordova/-/devices-sdk-cordova-1.0.0-alpha.2.tgz#28840bc3a90d00b8bab77ade8ec1f72c1e34e14f"
@@ -882,15 +872,25 @@
     "@kano/web-bus" "^1.0.0-alpha.5"
     jszip "^3.1.5"
 
-"@kano/devices-sdk-core@^1.0.0-alpha.1":
-  version "1.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-core/-/devices-sdk-core-1.0.0-alpha.1.tgz#5a933d33b1c99718bdefba95066681cd8349eb61"
-  integrity sha512-jspuO+3ujQ30+SMTs/E0A0VhDhsR1BU6iU3ZXcYTXqHC3vR6cXdR6YhsCz3cHCiRrHoUTVPxb8L9+BbkcV8vEw==
+"@kano/devices-sdk-cordova@^1.0.0-alpha.4":
+  version "1.0.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-cordova/-/devices-sdk-cordova-1.0.0-alpha.4.tgz#f1d3d7f1d9c1012e8fbc18d86ead6c44220c991a"
+  integrity sha512-cBbB4CJ+Hb2eEblo57Uu3Ud+Mu53Bwd4QJNSUTONQtcv9SsoB5egyKQYQeomidERC2xSJ+vfTiF1QHqDt5oUGw==
+  dependencies:
+    "@kano/common" "^1.0.2"
+    "@kano/devices-sdk-core" "^1.0.0-alpha.3"
+    "@kano/web-bus" "^1.0.0-alpha.10"
+    jszip "^3.1.5"
 
 "@kano/devices-sdk-core@^1.0.0-alpha.2":
   version "1.0.0-alpha.2"
   resolved "https://registry.yarnpkg.com/@kano/devices-sdk-core/-/devices-sdk-core-1.0.0-alpha.2.tgz#3de81738b08057202c5927962a92719fa6e7155c"
   integrity sha512-Q/cRMeE5s7wFfXYatEvsdxphzqu3mtlb3UhKUsY/xZxiU7ONBwG0gLFgdkGH/pAP13knkETymePg0TU9Le+tDg==
+
+"@kano/devices-sdk-core@^1.0.0-alpha.3":
+  version "1.0.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-core/-/devices-sdk-core-1.0.0-alpha.3.tgz#ac8da942509c9cabb5e6d871defe4f4eb25d7a81"
+  integrity sha512-ZxM4mHI5/VR6YKYHAeWBStYGiyep8xJhQDousEJOv4QTnd7vpWr7QkcUZFVD723+lN1jMVkNvbITpEwKXlsO3w==
 
 "@kano/devices-sdk-uwp@^1.0.0-alpha.2":
   version "1.0.0-alpha.2"
@@ -931,7 +931,12 @@
     eslint-plugin-html "^4.0.2"
     eslint-plugin-import "^2.8.0"
 
-"@kano/web-bus@^1.0.0-alpha.5", "@kano/web-bus@^1.0.0-alpha.7":
+"@kano/web-bus@^1.0.0-alpha.10":
+  version "1.0.0-alpha.10"
+  resolved "https://registry.yarnpkg.com/@kano/web-bus/-/web-bus-1.0.0-alpha.10.tgz#d51e3daff6fb8a015fd68b1131fedc06f9b12cae"
+  integrity sha512-piAHYuxb2LIxv1VmPBopfJm5hzr8yjVAtdEN1uXTvoZYQLH3S9t/lfiL54NXstECJ7DVCive5ir8cg99W+fdKw==
+
+"@kano/web-bus@^1.0.0-alpha.5":
   version "1.0.0-alpha.7"
   resolved "https://registry.yarnpkg.com/@kano/web-bus/-/web-bus-1.0.0-alpha.7.tgz#5cdb776cf82e8f7165b15a298157e44b50fc0cf2"
   integrity sha512-7OxYR3k/8O0aHwzkAxsNHDfW6HNKJOljQFwP3EinG/mNGmtn9ucDpcffmKIVuaNDyWKMIsktxLYv/zJMTsgShw==

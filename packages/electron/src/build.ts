@@ -76,7 +76,11 @@ const DEFAULT_PATTERNS = [
     'package.json',
     'preload.js',
     'node_modules/electron/**/*',
+    'node_modules/@kano/desktop-shell/**/*',
+    'node_modules/@kano/web-bus/**/*',
 ];
+
+const DEFAULT_IGNORE = [];
 
 /**
  * Copies the electron app from the `app` directory as a template
@@ -152,6 +156,7 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
     } = opts;
     processState.setStep(`Creating electron app '${config.APP_NAME}'`);
     const patterns = bundle.patterns || [];
+    const ignore = bundle.ignore ? bundle.ignore.concat(DEFAULT_IGNORE) : DEFAULT_IGNORE;
     if (opts.disableV8Snapshot) {
         patterns.push(
             'node_modules/**/*',
@@ -189,7 +194,7 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
             processState.setStep('Generating V8 snapshot');
             return generateSnapshot(results[2], results[2], {
                 forcePlatform: bundle.forcePlatform,
-                ignore: bundle.ignore,
+                ignore,
             }).then(() => {
                 processState.setSuccess('V8 snapshot generated');
                 return results[2];
