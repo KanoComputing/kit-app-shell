@@ -19,17 +19,17 @@
     mime-types "^2.1.18"
     mkdirp "^0.5.1"
 
-"@kano/devices-sdk-core@^1.0.0-alpha.3":
-  version "1.0.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-core/-/devices-sdk-core-1.0.0-alpha.3.tgz#ac8da942509c9cabb5e6d871defe4f4eb25d7a81"
-  integrity sha512-ZxM4mHI5/VR6YKYHAeWBStYGiyep8xJhQDousEJOv4QTnd7vpWr7QkcUZFVD723+lN1jMVkNvbITpEwKXlsO3w==
+"@kano/devices-sdk-core@^1.0.0-alpha.5":
+  version "1.0.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-core/-/devices-sdk-core-1.0.0-alpha.5.tgz#39c6c86828256cecbfa6f188aa81550bb20f7531"
+  integrity sha512-vO+DHEnIYfYKPEQohOHH/qvmdyGiXhoEzW7JI60IxRb+Sia1wF/lFpK8bDM5s37tZuPjjrk9DvyLwaZ5/EGLXA==
 
-"@kano/devices-sdk-node@^1.0.0-alpha.4":
-  version "1.0.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-node/-/devices-sdk-node-1.0.0-alpha.4.tgz#0f40a73bcc12ee5d482ce84ce83f75b38ab5a061"
-  integrity sha512-2MH6yKEH6sYoWOcI1UATAyzMcEBp6jrz/lqh23KMu+wMCnTElm8Fc6KIg0hMkgsAj/lNpkIa0bYy3LeyIymxbg==
+"@kano/devices-sdk-node@^1.0.0-alpha.5":
+  version "1.0.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-node/-/devices-sdk-node-1.0.0-alpha.5.tgz#fc8141269fa00ad70401d7058e419eeca4dce7c5"
+  integrity sha512-uiwFp9UdfC0x7nXWQFhtXIz/7h196iG0ZW4cVH2nwdPcaVa+d9g21ILAv658RUi8SIkm1Dcc5iOMXx7oqSdkuQ==
   dependencies:
-    "@kano/devices-sdk-core" "^1.0.0-alpha.3"
+    "@kano/devices-sdk-core" "^1.0.0-alpha.5"
     "@kano/web-bus" "^1.0.0-alpha.10"
     jszip "^3.1.5"
   optionalDependencies:
@@ -48,10 +48,10 @@
   dependencies:
     resolve "^1.7.1"
 
-"@kano/web-bus@^1.0.0-alpha.10":
-  version "1.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/@kano/web-bus/-/web-bus-1.0.0-alpha.10.tgz#d51e3daff6fb8a015fd68b1131fedc06f9b12cae"
-  integrity sha512-piAHYuxb2LIxv1VmPBopfJm5hzr8yjVAtdEN1uXTvoZYQLH3S9t/lfiL54NXstECJ7DVCive5ir8cg99W+fdKw==
+"@kano/web-bus@^1.0.0-alpha.10", "@kano/web-bus@^1.0.0-alpha.11":
+  version "1.0.0-alpha.11"
+  resolved "https://registry.yarnpkg.com/@kano/web-bus/-/web-bus-1.0.0-alpha.11.tgz#e5e166c5ca8e2a811c74a60c387ad88fda9a490e"
+  integrity sha512-7vf7gDYF9ZXfCfpyN7fPnC7QuaOHGT15csIxn6Z0rSWILNpysHcSI2gjMDy9Nhp5A6v3QXo9cblh2Hcqso6Cow==
 
 "@types/node@^8.0.24":
   version "8.10.39"

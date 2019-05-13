@@ -17,9 +17,9 @@
     "url": "https://github.com/KanoComputing/kit-app-shell/issues"
   },
   "dependencies": {
-    "@kano/devices-sdk-uwp": "^1.0.0-alpha.2",
+    "@kano/devices-sdk-uwp": "^1.0.0-alpha.5",
     "@kano/kit-app-shell-windows-store": "^0.0.3-alpha.39",
-    "@kano/web-bus": "^1.0.0-alpha.9",
+    "@kano/web-bus": "^1.0.0-alpha.11",
     "@webcomponents/shadycss": "^1.9.0",
     "@webcomponents/webcomponentsjs": "^2.2.7",
     "blueimp-canvas-to-blob": "^3.14.0",
