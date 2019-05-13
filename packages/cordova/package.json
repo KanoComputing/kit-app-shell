@@ -1,6 +1,6 @@
 {
   "name": "@kano/kit-app-shell-cordova",
-  "version": "0.0.3-alpha.38",
+  "version": "0.0.3-alpha.40",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
