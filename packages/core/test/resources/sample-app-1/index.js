@@ -17,7 +17,8 @@ class App {
                 }
             </style>
             <div class="container">
-                <div id="main">Sample App 1 v${config.UI_VERSION}</div>
+                <div id="main">Name: ${config.APP_NAME}</div>
+                <div id="main">Version: ${config.UI_VERSION}</div>
                 <div>UI root: ${config.UI_ROOT}</div>
                 <button id="click">Click me</button>
             </div>
