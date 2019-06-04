@@ -8,4 +8,5 @@ export interface ISywac {
     string(flags : string, opts : any);
     style(opts : any);
     array(flags : any, opts? : any);
+    check(flags : any, opts? : any);
 }
