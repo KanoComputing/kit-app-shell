@@ -81,12 +81,7 @@ class CLI {
             .array('-R, --require-config <path>', {
                 desc: 'Require app configuration file',
                 coerce: (strings: string[]) => {
-                    const reqConf = [];
-                    strings.map((s) => {
-                        reqConf.push(path.resolve(s));
-                    });
-                    
-                    return reqConf;
+                    return strings.map((s) => path.resolve(s));
                 },
             });
     }
