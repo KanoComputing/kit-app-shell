@@ -19,18 +19,18 @@
     mime-types "^2.1.18"
     mkdirp "^0.5.1"
 
-"@kano/devices-sdk-core@^1.0.0-alpha.5":
-  version "1.0.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-core/-/devices-sdk-core-1.0.0-alpha.5.tgz#39c6c86828256cecbfa6f188aa81550bb20f7531"
-  integrity sha512-vO+DHEnIYfYKPEQohOHH/qvmdyGiXhoEzW7JI60IxRb+Sia1wF/lFpK8bDM5s37tZuPjjrk9DvyLwaZ5/EGLXA==
+"@kano/devices-sdk-core@^1.0.0-alpha.8":
+  version "1.0.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-core/-/devices-sdk-core-1.0.0-alpha.8.tgz#be0001b636d5cb96590dd31b88e7a14dad1a5d5a"
+  integrity sha512-Tt1ZP2QucMyxYLShoD9W4xj5XbGvjZA9IyvftNsG/kyhoMSoR8Qs29Y0KVt3rjVUcwqydNzcd7kaD2VOpWOQuQ==
 
-"@kano/devices-sdk-node@^1.0.0-alpha.5":
-  version "1.0.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-node/-/devices-sdk-node-1.0.0-alpha.5.tgz#fc8141269fa00ad70401d7058e419eeca4dce7c5"
-  integrity sha512-uiwFp9UdfC0x7nXWQFhtXIz/7h196iG0ZW4cVH2nwdPcaVa+d9g21ILAv658RUi8SIkm1Dcc5iOMXx7oqSdkuQ==
+"@kano/devices-sdk-node@^1.0.0-alpha.8":
+  version "1.0.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-node/-/devices-sdk-node-1.0.0-alpha.8.tgz#27f4093f95b1ff5563e62e819425eb0a863a6113"
+  integrity sha512-5eEFfr39eFHmejKUUG/tFDnJtDnM9qyfucrOVQKKf9P7diwKjJoUfVfh2IkHLJtHw8VpAX/vd9/AQq0HKdpS9Q==
   dependencies:
-    "@kano/devices-sdk-core" "^1.0.0-alpha.5"
-    "@kano/web-bus" "^1.0.0-alpha.10"
+    "@kano/devices-sdk-core" "^1.0.0-alpha.8"
+    "@kano/web-bus" "^1.0.0-alpha.14"
     jszip "^3.1.5"
   optionalDependencies:
     noble-mac "https://github.com/Timeular/noble-mac.git#0.0.3"
@@ -48,10 +48,10 @@
   dependencies:
     resolve "^1.7.1"
 
-"@kano/web-bus@^1.0.0-alpha.10", "@kano/web-bus@^1.0.0-alpha.11":
-  version "1.0.0-alpha.11"
-  resolved "https://registry.yarnpkg.com/@kano/web-bus/-/web-bus-1.0.0-alpha.11.tgz#e5e166c5ca8e2a811c74a60c387ad88fda9a490e"
-  integrity sha512-7vf7gDYF9ZXfCfpyN7fPnC7QuaOHGT15csIxn6Z0rSWILNpysHcSI2gjMDy9Nhp5A6v3QXo9cblh2Hcqso6Cow==
+"@kano/web-bus@^1.0.0-alpha.14":
+  version "1.0.0-alpha.14"
+  resolved "https://registry.yarnpkg.com/@kano/web-bus/-/web-bus-1.0.0-alpha.14.tgz#59db14a2295fcc0d6012a5a884b01f359793ce22"
+  integrity sha512-Rq5voO3VFxeMoIWGPYz2ftS6KdWKVjQEAXvXDUKdKar6MPox/VICVNc2rFr826uWRTdo6J3hjBXHsJEJaJ/3kw==
 
 "@types/node@^8.0.24":
   version "8.10.39"
