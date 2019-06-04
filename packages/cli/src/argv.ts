@@ -71,7 +71,7 @@ export function agregateArgv(argv : IArgv, platformId : string, command : string
 }
 
 export function addConfig(opts : any) : IOptions {
-    const config = ConfigLoader.load(opts.app, opts.env, opts['override-app-config']);
+    const config = ConfigLoader.load(opts.app, opts.env, opts['override-app-config'], opts['require-config']);
     config.BUILD_NUMBER = process.env.BUILD_NUMBER ? parseInt(process.env.BUILD_NUMBER, 10) : opts.buildNumber;
     opts.config = config;
     return opts;

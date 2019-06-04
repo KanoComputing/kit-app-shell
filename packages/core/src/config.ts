@@ -24,7 +24,7 @@ function softRequire(moduleId : string, fallback = {}) : any {
 }
 
 export class ConfigLoader {
-    static load(appDir : string, env : string = 'development', overrides : IConfigOverrides = {}) : IKashConfig {
+    static load(appDir : string, env : string = 'development', overrides : IConfigOverrides = {}, reqConfPaths : string[] = []) : IKashConfig {
         const configDir = path.join(appDir, 'config');
         const defaultConfig = softRequire(path.join(configDir, 'default.json'));
         const envConfig = softRequire(path.join(configDir, `${env}.json`));
@@ -41,6 +41,16 @@ export class ConfigLoader {
 
         const merged = deepMerge<IKashConfig>(DEFAULTS, config);
 
-        return deepMerge<IKashConfig>(merged, overrides);
+        // Check if required configs have been passed
+        let reqConfsOverride = {};
+        if (reqConfPaths.length > 0) {
+            reqConfPaths.forEach((path) => {
+                const reqConfJson = softRequire(path);
+                reqConfsOverride = deepMerge<IKashConfig>(reqConfsOverride, reqConfJson);
+            });
+        }
+        const requiredConfigurationMerged = deepMerge<IKashConfig>(merged, reqConfsOverride);
+
+        return deepMerge<IKashConfig>(requiredConfigurationMerged, overrides);
     }
 }

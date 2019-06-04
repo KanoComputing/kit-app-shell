@@ -6,6 +6,7 @@ import * as Api from 'sywac/api';
 // This saves a lot of time as the big modules for building are not loaded is not needed
 import * as platformUtils from '@kano/kit-app-shell-core/lib/util/platform';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
+import { RcLoader } from '@kano/kit-app-shell-core/lib/rc';
 import { runChecks, ICheck, ICheckResult, CheckResultSatus } from '@kano/kit-app-shell-core/lib/check';
 import { IDisposable, ICli, ICommand } from '@kano/kit-app-shell-core/lib/types';
 import * as tmp from '@kano/kit-app-shell-core/lib/tmp';
@@ -19,14 +20,14 @@ type ProcessState = typeof processState;
  * Parses inputs, runs the commands and report to the user
  */
 class CLI {
-    static parseEnv(sywac : ISywac) : ISywac {
+    static parseEnv(sywac: ISywac): ISywac {
         return sywac
             .string('--env, -e', {
                 desc: 'Target environment',
                 defaultValue: 'development',
             });
     }
-    static parseAppRoot(sywac : ISywac) : ISywac {
+    static parseAppRoot(sywac: ISywac): ISywac {
         return sywac
             .positional('<app=./>', {
                 params: [{
@@ -36,7 +37,7 @@ class CLI {
                 }],
             });
     }
-    static parseAppBuild(sywac : ISywac) : ISywac {
+    static parseAppBuild(sywac: ISywac): ISywac {
         return sywac
             .positional('<build>', {
                 params: [{
@@ -46,7 +47,7 @@ class CLI {
                 }],
             });
     }
-    static parseOverrideAppConfig(sywac : ISywac) : ISywac {
+    static parseOverrideAppConfig(sywac: ISywac): ISywac {
         return sywac
             .array('-C, --override-app-config <values..>', {
                 desc: 'Override app configuration (syntax key.subkey=value)',
@@ -54,10 +55,10 @@ class CLI {
                  * Transforms an array of key.subkey=value pairs into an object
                  * structure with those resolved:  { key: { subkey: value } }
                  */
-                coerce: (strings : string[]) => {
+                coerce: (strings: string[]) => {
                     const overrides = {};
                     strings.forEach((s) => {
-                        const [ key, value ] = s.split('=');
+                        const [key, value] = s.split('=');
                         const keyComponents = key.split('.');
 
                         let currentLevel = overrides;
@@ -75,7 +76,37 @@ class CLI {
                 },
             });
     }
-    static parseTestArgs(sywac : ISywac) : ISywac {
+    static parseRequireAppConfig(sywac: ISywac): ISywac {
+        return sywac
+            .array('-R, --require-config <path>', {
+                desc: 'Require app configuration file',
+                coerce: (strings: string[]) => {
+                    const reqConf = [];
+                    strings.map((s) => {
+                        reqConf.push(path.resolve(s));
+                    });
+                    
+                    return reqConf;
+                },
+            });
+    }
+    static checkRequireAppConfig(sywac : ISywac) : ISywac {
+        return sywac
+            .check((argv) => {
+                if (!argv.R) return;
+                // async validation
+                return argv.R.reduce((p : Promise<boolean>, path : string) => {
+                    return p.then(() => {
+                        return RcLoader.check(path).then((exists) => {
+                            if (!exists) {
+                                throw new Error(`-R: App config file does not exist: ${path}`);
+                            }
+                        });
+                    });
+                }, Promise.resolve(true));
+            });
+    }
+    static parseTestArgs(sywac: ISywac): ISywac {
         const group = 'Mocha';
         const filters = `${group} Test Filters`;
         const reporting = `${group} Reporting & Output`;
@@ -113,7 +144,7 @@ class CLI {
                 group: filters,
             });
     }
-    static applyStyles(sywac : ISywac) : ISywac {
+    static applyStyles(sywac: ISywac): ISywac {
         return sywac.style({
             group: (s) => chalk.cyan.bold(s),
             desc: (s) => chalk.white(s),
@@ -121,7 +152,7 @@ class CLI {
             flagsError: (s) => chalk.red(s),
         });
     }
-    static patchSywacOptions(sywac : ISywac, forcedOptions : any) : IDisposable {
+    static patchSywacOptions(sywac: ISywac, forcedOptions: any): IDisposable {
         const originalOptions = sywac._addOptionType.bind(sywac);
         sywac._addOptionType = (flags, opts, type) => originalOptions(
             flags,
@@ -134,15 +165,15 @@ class CLI {
             },
         };
     }
-    processArgv : string[];
-    startedAt : number;
-    duration : number;
-    reporter : import('./reporters/reporter').IReporter;
-    processState : ProcessState = processState;
+    processArgv: string[];
+    startedAt: number;
+    duration: number;
+    reporter: import('./reporters/reporter').IReporter;
+    processState: ProcessState = processState;
     constructor(processArgv) {
         this.processArgv = processArgv;
     }
-    start() : Promise<void> {
+    start(): Promise<void> {
         this.startedAt = Date.now();
         // Parse the output once to deal with command discovery and help
         return this.firstPass()
@@ -158,7 +189,7 @@ class CLI {
                 return this.end(result.code);
             });
     }
-    end(code : number) : void {
+    end(code: number): void {
         this.duration = Date.now() - this.startedAt;
         const totalTime = this.duration / 1000;
         const totalMinutes = Math.floor(totalTime / 60);
@@ -173,7 +204,7 @@ class CLI {
      * Catches errors from the current task and notify the process state
      * @param {Promise} task current long running task
      */
-    setTask(task : Promise<any>) {
+    setTask(task: Promise<any>) {
         if (!this.processState) {
             return;
         }
@@ -185,11 +216,11 @@ class CLI {
             return this.end(1);
         });
     }
-    mountReporter(argv : IArgv) : Promise<void> {
+    mountReporter(argv: IArgv): Promise<void> {
         if (argv.quiet) {
             return Promise.resolve();
         }
-        let p : Promise<any>;
+        let p: Promise<any>;
         // Avoid wasting people's time by loading only the necessary code
         if (process.stdout.isTTY) {
             // Use spinner UI for humans
@@ -199,7 +230,7 @@ class CLI {
             p = import('./reporters/console');
         }
         return p
-            .then((ReporterModule : { default : any }) => {
+            .then((ReporterModule: { default: any }) => {
                 this.reporter = (new ReporterModule.default()) as import('./reporters/reporter').IReporter;
                 this.processState.on('step', ({ message = '' }) => this.reporter.onStep(message));
                 this.processState.on('success', ({ message = '' }) => this.reporter.onSuccess(message));
@@ -210,17 +241,17 @@ class CLI {
     }
     runDoctor() {
         return import('@kano/kit-app-shell-core/lib/checks/index')
-            .then((checkModule : { default : ICheck[] }) => {
+            .then((checkModule: { default: ICheck[] }) => {
                 return runChecks(checkModule.default);
             });
     }
-    displayDoctorResults(results : ICheckResult[]) : void {
+    displayDoctorResults(results: ICheckResult[]): void {
         const DOCTOR_SUCCESS_DEFAULT = 'All good';
         const DOCTOR_WARNING_DEFAULT = 'Warning';
         const DOCTOR_FAILURE_DEFAULT = 'Error';
         let failed = false;
         results.forEach((result) => {
-            const message : string|null = result.message ? result.message.replace(/\n/g, '\n  ') : null;
+            const message: string | null = result.message ? result.message.replace(/\n/g, '\n  ') : null;
             if (result.status === CheckResultSatus.Success) {
                 processState.setSuccess(`${result.title}: ${message || DOCTOR_SUCCESS_DEFAULT}`);
             } else if (result.status === CheckResultSatus.Warning) {
@@ -232,7 +263,7 @@ class CLI {
         });
         this.end(failed ? 1 : 0);
     }
-    firstPass() : Promise<any> {
+    firstPass(): Promise<any> {
         // Create local sywac
         const sywac = new Api();
 
@@ -328,10 +359,10 @@ class CLI {
 
         return sywac.parse(this.processArgv);
     }
-    secondPass(platformId : string) : Promise<any> {
+    secondPass(platformId: string): Promise<any> {
         const sywac = new Api();
         return platformUtils.loadPlatformKey(platformId, 'cli')
-            .then((platformCli : ICli) => {
+            .then((platformCli: ICli) => {
                 const platform = {
                     cli: platformCli || {} as ICli,
                 };
@@ -342,6 +373,8 @@ class CLI {
                         CLI.parseAppRoot(s);
                         CLI.parseEnv(s);
                         CLI.parseOverrideAppConfig(s);
+                        CLI.parseRequireAppConfig(s);
+                        CLI.checkRequireAppConfig(s);
                         s.array('--resources')
                             .string('--out, -o', {
                                 desc: 'Output directory',
@@ -379,6 +412,8 @@ class CLI {
                         CLI.parseAppRoot(s);
                         CLI.parseEnv(s);
                         CLI.parseOverrideAppConfig(s);
+                        CLI.parseRequireAppConfig(s);
+                        CLI.checkRequireAppConfig(s);
                         const sywacPatch = CLI.patchSywacOptions(s, {
                             group: platform.cli.group || 'Platform: ',
                         });
@@ -402,6 +437,8 @@ class CLI {
                         CLI.parseAppRoot(s);
                         CLI.parseEnv(s);
                         CLI.parseOverrideAppConfig(s);
+                        CLI.parseRequireAppConfig(s);
+                        CLI.checkRequireAppConfig(s);
                         CLI.parseTestArgs(s);
                         s.string('--prebuilt-app', {
                             aliases: ['prebuilt-app', 'prebuiltApp'],
