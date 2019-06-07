@@ -5,8 +5,8 @@ import { getCachePath } from '@kano/kit-app-shell-core/lib/tmp';
 import * as rimrafCb from 'rimraf';
 import mkdirpCb = require('mkdirp');
 import { promisify } from 'util';
-import { generateAllIcons } from './images';
 import { IKashConfig } from '@kano/kit-app-shell-core/lib/types';
+import { generateIconsWithScale } from '@kano/kit-app-shell-windows-store/lib/icons';
 import { extensions } from './extensions';
 import { IExtensionDefinition } from './extensions/extension';
 
@@ -49,6 +49,8 @@ export function generateProject(
     data.CAPABILITIES = (options.capabilities || [])
         .filter((c) => defaultCapabilities.indexOf(c) === -1)
         .map((c) => `<DeviceCapability Name="${c}" />`);
+
+    data.TILE_BACKGROUND = data.TILE_BACKGROUND || 'transparent';
 
     if (config.UWP.EXTENSIONS) {
         const exts = config.UWP.EXTENSIONS.map((definition : IExtensionDefinition) => {
@@ -97,7 +99,7 @@ export function generateProject(
             if (typeof def !== 'string') {
                 return;
             }
-            return generateAllIcons(path.join(options.app, def), imagesDir);
+            return generateIconsWithScale(path.join(projectDir, 'images'), options.app, def, config.UWP);
         })
         .then(() => {
             return {

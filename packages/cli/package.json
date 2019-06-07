@@ -12,7 +12,7 @@
   "dependencies": {
     "@kano/kit-app-shell-core": "^0.0.3-alpha.42",
     "chalk": "^2.4.1",
-    "deepmerge": "^3.0.0",
+    "deepmerge": "^3.2.0",
     "enquirer": "^2.2.0",
     "open-file-explorer": "^1.0.2",
     "ora": "^3.0.0",

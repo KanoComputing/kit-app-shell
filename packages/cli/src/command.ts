@@ -6,9 +6,9 @@ import { IBuild, IRun, ISign } from '@kano/kit-app-shell-core/lib/types';
 
 type IcommandFunction = IBuild | IRun | ISign;
 
-export default function runCommand(command: string, platformId: string, argv: IArgv): Promise<void> {
+export default function runCommand(command : string, platformId : string, argv : IArgv) : Promise<void> {
     return util.platform.loadPlatformKey(platformId, command)
-        .then((platformCommand: IcommandFunction) => {
+        .then((platformCommand : IcommandFunction) => {
             // Collect all the options
             return agregateArgv(argv, platformId, command)
                 .then((opts) => {

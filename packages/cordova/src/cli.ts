@@ -12,6 +12,10 @@ const cordovaCli : ICli = {
             defaultValue: false,
             desc: 'Runs the app after building on an available connected device',
         });
+        sywac.boolean('--release', {
+            defaultValue: false,
+            desc: 'Builds the application for distribution',
+        });
     },
     test(sywac) {
         sywac.string('--provider', {

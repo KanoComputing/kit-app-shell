@@ -70,6 +70,7 @@ const windowsBuild : IBuild = (opts : WindowsBuildOptions) => {
         config,
         out,
         skipInstaller = false,
+        disableV8Snapshot = false,
     } = opts;
     const TMP_DIR = path.join(getBuildPath(), 'windows');
     const BUILD_DIR = path.join(TMP_DIR, 'build');
@@ -83,6 +84,7 @@ const windowsBuild : IBuild = (opts : WindowsBuildOptions) => {
             app,
             config,
             out: BUILD_DIR,
+            disableV8Snapshot,
             bundle: {
                 // Add noble-uwp to the mix
                 patterns: [
@@ -121,14 +123,17 @@ const windowsBuild : IBuild = (opts : WindowsBuildOptions) => {
             const resourcesDir = path.join(appDir, 'resources/app');
             const SNAPSHOT_BLOB = 'snapshot_blob.bin';
             const V8_CONTEXT_SNAPSHOT = 'v8_context_snapshot.bin';
-            // Move the snapshot files to the root of the generated app
-            return rename(path.join(resourcesDir, SNAPSHOT_BLOB), path.join(appDir, SNAPSHOT_BLOB))
-                .then(() => rename(
-                    path.join(resourcesDir, V8_CONTEXT_SNAPSHOT),
-                    path.join(appDir,  V8_CONTEXT_SNAPSHOT),
-                ))
-                // Add the vccorlib dll to the generated electron app
-                .then(() => copy(
+            let p : Promise<void> = Promise.resolve();
+            if (!disableV8Snapshot) {
+                // Move the snapshot files to the root of the generated app
+                p = rename(path.join(resourcesDir, SNAPSHOT_BLOB), path.join(appDir, SNAPSHOT_BLOB))
+                    .then(() => rename(
+                        path.join(resourcesDir, V8_CONTEXT_SNAPSHOT),
+                        path.join(appDir,  V8_CONTEXT_SNAPSHOT),
+                    ));
+            }
+            // Add the vccorlib dll to the generated electron app
+            return p.then(() => copy(
                     path.join(__dirname, '../vccorlib140.dll'),
                     path.join(appDir, 'vccorlib140.dll'),
                 ))
