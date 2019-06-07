@@ -54,6 +54,16 @@ export class AppXManifest {
             el.append(cap);
         });
     }
+    createSplashScreen(app : string) : void {
+        const query = `./Applications/Application/[@Id="${app}"]/uap:VisualElements`;
+        const visualElements : et.Element = this.root.find(query);
+        et.SubElement(visualElements, 'uap:SplashScreen');
+    }
+    setSplashScreenAttribute(app : string, key : string, value : string) : void {
+        const query = `./Applications/Application/[@Id="${app}"]/uap:VisualElements/uap:SplashScreen`;
+        const visualElements : et.Element = this.root.find(query);
+        visualElements.attrib[key] = value;
+    }
     setMainLogo(logo : string) : void {
         const el = this.root.find('./Properties/Logo');
         el.text = logo;

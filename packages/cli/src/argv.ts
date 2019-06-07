@@ -65,6 +65,12 @@ export function agregateArgv(argv : IArgv, platformId : string, command : string
                 rcPlatformCommandOpts,
                 argv,
             ];
+            // Remove all undefined value that the CLI might have defined to avoid overriding the user values
+            Object.keys(argv).forEach((key) => {
+                if (typeof argv[key] === 'undefined' || argv[key] === null) {
+                    delete argv[key];
+                }
+            });
             const opts = allOpts.reduce((acc, item) => deepMerge(acc, item), {});
             return opts;
         });

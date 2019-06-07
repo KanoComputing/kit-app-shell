@@ -20,7 +20,7 @@
         <uap:Rule Match="https://*.*" Type="include" WindowsRuntimeAccess="none" />
         <uap:Rule Match="http://*.*" Type="include" WindowsRuntimeAccess="none" />
       </uap:ApplicationContentUriRules>
-      <uap:VisualElements DisplayName="${PACKAGE_DISPLAY_NAME}" Description="${APP_DESCRIPTION}" BackgroundColor="transparent" Square150x150Logo="images\Square150x150Logo.png" Square44x44Logo="images\Square44x44Logo.png">
+      <uap:VisualElements DisplayName="${PACKAGE_DISPLAY_NAME}" Description="${APP_DESCRIPTION}" BackgroundColor="${TILE_BACKGROUND}" Square150x150Logo="images\Square150x150Logo.png" Square44x44Logo="images\Square44x44Logo.png">
         <uap:DefaultTile Wide310x150Logo="images\Wide310x150Logo.png" Square310x310Logo="images\LargeTile.png" Square71x71Logo="images\SmallTile.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="images\splashscreen.png" BackgroundColor="${BACKGROUND_COLOR}"/>

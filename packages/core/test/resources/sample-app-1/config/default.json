@@ -15,9 +15,12 @@
         "PACKAGE_NAME": "Publisher.SampleApp",
         "PACKAGE_DISPLAY_NAME": "Sample App",
         "PUBLISHER": "CN=Publisher",
-        "PUBLISHER_DISPLAY_NAME": "Publisher"
+        "PUBLISHER_DISPLAY_NAME": "Publisher",
+        "TILE_BACKGROUND": "#ff0000",
+        "SPLASH_SCREEN_BACKGROUND": "#00ff00"
     },
     "UWP": {
+        "TILE_BACKGROUND": "#ff0000",
         "PACKAGE_NAME": "Publisher.SampleApp",
         "PACKAGE_DISPLAY_NAME": "Sample App",
         "PUBLISHER": "CN=Publisher",
