@@ -9,7 +9,8 @@
         "UWP": "icons/windows-store.png"
     },
     "SPLASHSCREENS": {
-        "ANDROID": "screens/android.png"
+        "ANDROID": "screens/android.png",
+        "IOS": "screens/android.png"
     },
     "WINDOWS_STORE": {
         "PACKAGE_NAME": "Publisher.SampleApp",

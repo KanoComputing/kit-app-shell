@@ -1,6 +1,7 @@
 import { resizeImage } from '@kano/kit-app-shell-cordova/lib/util';
 import * as path from 'path';
 import { CordovaConfig } from '@kano/kit-app-shell-cordova/lib/cordova-config';
+import * as sharp from 'sharp';
 // tslint:disable-next-line:no-var-requires
 const icons = require('../../data/icons');
 // tslint:disable-next-line:no-var-requires
@@ -11,11 +12,10 @@ function getIconPath(key, projectPath) {
 }
 
 function generateIcons(src, projectPath) {
-    const tasks = icons.map((icon) => {
+    return icons.reduce((acc, icon) => {
         const { width } = icon;
-        return resizeImage(src, getIconPath(icon.name, projectPath), width, width);
-    });
-    return Promise.all(tasks);
+        return acc.then(() => resizeImage(src, getIconPath(icon.name, projectPath), width, width));
+    }, Promise.resolve());
 }
 
 function getScreenPath(key, projectPath) {
@@ -29,6 +29,13 @@ function generateScreens(src, projectPath) {
         return resizeImage(src, filePath, width, height);
     });
     return Promise.all(tasks);
+}
+
+function generateStoreIcon(src : string, projectPath : string) {
+    return sharp(src)
+        .resize({ width: 1024, height: 1024})
+        .removeAlpha()
+        .toFile(getIconPath('store-icon.png', projectPath));
 }
 
 export = (context) => {
@@ -47,11 +54,13 @@ export = (context) => {
     if (shell.config.ICONS && shell.config.ICONS.IOS) {
         const iconSrc = path.join(shell.app, shell.config.ICONS.IOS);
         tasks.push(generateIcons(iconSrc, projectRoot)
+            .then(() => generateStoreIcon(iconSrc, projectRoot))
             .then(() => {
                 icons.forEach((icon) => {
                     const src = getIconPath(icon.name, '');
                     cfg.addIcon({ width: icon.width, height: icon.width, src });
                 });
+                cfg.addIcon({ width: 1024, height: 1024, src: getIconPath('store-icon.png', '') });
             }));
     } else {
         warnings.push('No iOS icon defined in the config');
