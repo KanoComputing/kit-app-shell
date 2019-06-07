@@ -10,17 +10,17 @@ export = (context) => {
         return null;
     }
     const cfg = new CordovaConfig(path.join(projectRoot, 'config.xml'));
-    cfg.selectPlatform('ios');
 
     if (shell.config.APP_DESCRIPTION) {
         cfg.setDescription(shell.config.APP_DESCRIPTION);
     }
     if (shell.config.UI_VERSION) {
         cfg.setVersion(shell.config.UI_VERSION);
-        if (shell.config.BUILD_NUMBER) {
-            cfg.setIOSBundleVersion(shell.config.BUILD_NUMBER);
+        if (typeof shell.config.BUILD_NUMBER !== 'undefined') {
+            cfg.setIOSBundleVersion(shell.config.BUILD_NUMBER || 1);
         }
     }
+    cfg.selectPlatform('ios');
 
     const scheme = shell.opts.preferences.Scheme;
 
@@ -57,8 +57,6 @@ export = (context) => {
     }
 
     const { developmentTeam, codeSignIdentity } = opts;
-
-    // TODO: Integrate more complex debug build vs release build
 
     fs.writeFileSync(path.join(projectRoot, 'build.json'), JSON.stringify({
         ios: {
