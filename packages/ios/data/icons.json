@@ -66,5 +66,9 @@
     {
         "name": "icon-50@2x.png",
         "width": 100
+    },
+    {
+        "name": "store-icon.png",
+        "width": 1024
     }
 ]
