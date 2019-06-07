@@ -1,11 +1,11 @@
 {
   "name": "@kano/kit-app-shell-android",
-  "version": "0.0.3-alpha.44",
+  "version": "0.0.3-alpha.48",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@kano/kit-app-shell-cordova": "^0.0.3-alpha.44",
-    "@kano/kit-app-shell-core": "^0.0.3-alpha.43",
+    "@kano/kit-app-shell-cordova": "^0.0.3-alpha.48",
+    "@kano/kit-app-shell-core": "^0.0.3-alpha.48",
     "adbkit": "^2.11.0",
     "appium": "^1.10.0",
     "cordova-android": "^7.1.4",
