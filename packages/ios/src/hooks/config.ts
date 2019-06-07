@@ -77,6 +77,19 @@ export = (context) => {
                     '-quiet',
                 ],
             },
+            release: {
+                codeSignIdentity,
+                developmentTeam,
+                automaticProvisioning: true,
+                packageType: 'app-store',
+                buildFlag: [
+                    '-UseModernBuildSystem=0',
+                    '-allowProvisioningUpdates',
+                    'SWIFT_VERSION = 3.0',
+                    'EMBEDDED_CONTENT_CONTAINS_SWIFT = YES',
+                    '-quiet',
+                ],
+            },
         },
     }));
 
