@@ -86,8 +86,10 @@ const build : IBuild = (opts : ICordovaBuildOptions) => {
             const platformIds = opts.platforms.map((platform) => path.basename(platform).replace('cordova-', ''));
             // if the run flag is passed, run the built app on device
             const command = opts.run ? 'run' : 'build';
+            const buildOptions = Object.assign(
+                {}, opts.buildOpts ? opts.buildOpts.options : {}, { release: opts.release });
             const options = Object.assign(opts.buildOpts || {}, {
-                platforms: platformIds, options: { release: opts.release },
+                platforms: platformIds, options: buildOptions,
             });
             processState.setInfo('Building cordova app');
             return cordova[command](options)

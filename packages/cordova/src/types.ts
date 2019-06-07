@@ -104,7 +104,7 @@ export interface ICordovaOptions {
 export interface ICordovaBuildOptions extends ICordovaOptions, IBuildOptions {
     clean? : string[];
     run : boolean;
-    buildOpts : {};
+    buildOpts : { [K : string] : any };
 }
 
 export type CordovaRunOptions = ICordovaOptions & IRunOptions;
