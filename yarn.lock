@@ -862,43 +862,28 @@
   resolved "https://registry.yarnpkg.com/@kano/common/-/common-1.0.3.tgz#80a24574ff6016e11a61ced62c14d2c18c8978a1"
   integrity sha512-bHgKx+jWj03wfNG4mX7/rZv6Ne2UuVzYM/v+4nUmniRzBU1eSbWYoHjq3wkZqQoJqzHqLSp4L5OuXIqvlsKRTg==
 
-"@kano/devices-sdk-cordova@^1.0.0-alpha.8":
-  version "1.0.0-alpha.8"
-  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-cordova/-/devices-sdk-cordova-1.0.0-alpha.8.tgz#3c9d3fac72a2d4e244ae94bd7b49f0c21d7e9580"
-  integrity sha512-IYUsfMDZadCHs3igTb81/XitdQTHAHVxVwpltLt7NoPCqh7cZCnlxDvPda8zm7qKipI6wHGpmDcCXAB3yNtQKA==
+"@kano/devices-sdk-cordova@^1.0.0-alpha.11":
+  version "1.0.0-alpha.11"
+  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-cordova/-/devices-sdk-cordova-1.0.0-alpha.11.tgz#a2af1ed5947e6620aa46f674778a996a4b4cd293"
+  integrity sha512-I63odJ8VhgSmlPIS/4jWeQ4LBRyA5mcgYVrKqNQFOYFJXojSob1h81iN3I+fvpOvGrmI9nmueh/hbTg7QeiONQ==
   dependencies:
     "@kano/common" "^1.0.2"
-    "@kano/devices-sdk-core" "^1.0.0-alpha.8"
+    "@kano/devices-sdk-core" "^1.0.0-alpha.11"
     "@kano/web-bus" "^1.0.0-alpha.14"
     jszip "^3.1.5"
 
-"@kano/devices-sdk-cordova@^1.0.0-alpha.9":
-  version "1.0.0-alpha.9"
-  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-cordova/-/devices-sdk-cordova-1.0.0-alpha.9.tgz#3f80b116c77bcf7c1564a92f584ea210737f7d46"
-  integrity sha512-rSpA+tSS7Ef+bFDj0su/RMHRduyLkCKcRwo+0+B6GNLedLZ1RzzDi7DlIAvZVpckXWuDbQAnn37yU1JOLBwWZg==
+"@kano/devices-sdk-core@^1.0.0-alpha.11":
+  version "1.0.0-alpha.11"
+  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-core/-/devices-sdk-core-1.0.0-alpha.11.tgz#9a35025bd6dd2815b6f1c9668ae6aa9c084428af"
+  integrity sha512-OPhOEPKIx4dXooD/uTujBj1C4SaY0i1kfy1Y+Wb4PTPOR7KVyEYFmi3nBje9OrrDm0VUEj3w0eZ8uTCECbA6Og==
+
+"@kano/devices-sdk-uwp@^1.0.0-alpha.11":
+  version "1.0.0-alpha.11"
+  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-uwp/-/devices-sdk-uwp-1.0.0-alpha.11.tgz#836d1394559d8b8b9fd3c88f02bc2b7554bc4143"
+  integrity sha512-/RDnnf/lHH4SRz9kL6+85bb0NIyBW8maZmVRgL1XP1eY/wVq8MO9Ww8dTidrGpE2DOGS8xbuMoYDAbjkDa5Bdg==
   dependencies:
-    "@kano/common" "^1.0.2"
-    "@kano/devices-sdk-core" "^1.0.0-alpha.9"
-    "@kano/web-bus" "^1.0.0-alpha.14"
-    jszip "^3.1.5"
-
-"@kano/devices-sdk-core@^1.0.0-alpha.8":
-  version "1.0.0-alpha.8"
-  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-core/-/devices-sdk-core-1.0.0-alpha.8.tgz#be0001b636d5cb96590dd31b88e7a14dad1a5d5a"
-  integrity sha512-Tt1ZP2QucMyxYLShoD9W4xj5XbGvjZA9IyvftNsG/kyhoMSoR8Qs29Y0KVt3rjVUcwqydNzcd7kaD2VOpWOQuQ==
-
-"@kano/devices-sdk-core@^1.0.0-alpha.9":
-  version "1.0.0-alpha.9"
-  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-core/-/devices-sdk-core-1.0.0-alpha.9.tgz#076215a73c3040a32070ff8d0fdf7f788d0ed5a3"
-  integrity sha512-wwzaCXIkbov36X4VuKDwEKjqXc18EDoUoxvtx9/P7gj18QYYGV00INax/7f22NJYCzEc20Rm6Qlb0DnhRdcmFw==
-
-"@kano/devices-sdk-uwp@^1.0.0-alpha.8":
-  version "1.0.0-alpha.8"
-  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-uwp/-/devices-sdk-uwp-1.0.0-alpha.8.tgz#fdb677644d913ce14930b92829f5a4a1bb1d0077"
-  integrity sha512-BihEVQ9XIjCV3yd8dIotGMrfOVONupUJUy6px9LM7gGjAv0KMzXe9CmLOYtFDuqOCdszuzglA+i6jCzvCRYhuA==
-  dependencies:
-    "@kano/devices-sdk-cordova" "^1.0.0-alpha.8"
-    "@kano/devices-sdk-core" "^1.0.0-alpha.8"
+    "@kano/devices-sdk-cordova" "^1.0.0-alpha.11"
+    "@kano/devices-sdk-core" "^1.0.0-alpha.11"
     jszip "^3.2.1"
 
 "@kano/es6-resolution@^1.0.20":

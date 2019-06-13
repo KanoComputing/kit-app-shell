@@ -17,7 +17,7 @@
     "url": "https://github.com/KanoComputing/kit-app-shell/issues"
   },
   "dependencies": {
-    "@kano/devices-sdk-uwp": "^1.0.0-alpha.8",
+    "@kano/devices-sdk-uwp": "^1.0.0-alpha.11",
     "@kano/kit-app-shell-windows-store": "^0.0.3-alpha.49",
     "@kano/web-bus": "^1.0.0-alpha.14",
     "@webcomponents/shadycss": "^1.9.0",
