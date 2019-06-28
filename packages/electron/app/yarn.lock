@@ -19,17 +19,17 @@
     mime-types "^2.1.18"
     mkdirp "^0.5.1"
 
-"@kano/devices-sdk-core@^1.0.0-alpha.11":
-  version "1.0.0-alpha.11"
-  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-core/-/devices-sdk-core-1.0.0-alpha.11.tgz#9a35025bd6dd2815b6f1c9668ae6aa9c084428af"
-  integrity sha512-OPhOEPKIx4dXooD/uTujBj1C4SaY0i1kfy1Y+Wb4PTPOR7KVyEYFmi3nBje9OrrDm0VUEj3w0eZ8uTCECbA6Og==
+"@kano/devices-sdk-core@^1.0.0-alpha.12":
+  version "1.0.0-alpha.12"
+  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-core/-/devices-sdk-core-1.0.0-alpha.12.tgz#6595a3a10e0a34e3a1583588351e5043922fd1a6"
+  integrity sha512-NI1Ym6Domwqh9hVKWXa7NS6ZWoPQoQeKnBM7fkLcKKbLehCIwBtfSyxmsLsL3GZ1u14F1uDpO70OaC0Z3+ZGXw==
 
-"@kano/devices-sdk-node@^1.0.0-alpha.11":
-  version "1.0.0-alpha.11"
-  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-node/-/devices-sdk-node-1.0.0-alpha.11.tgz#188eb3c84974335a2ffd57223b8e2adaffeddda6"
-  integrity sha512-EQzZgGegB9XhLoMEMYvM5oa3i+THLG+HnvWyg5ADO6NPSIvwIhcdv0wQVYMEnvJ9SpxdLkGbqMSNEM9NxmkPVQ==
+"@kano/devices-sdk-node@^1.0.0-alpha.12":
+  version "1.0.0-alpha.12"
+  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-node/-/devices-sdk-node-1.0.0-alpha.12.tgz#255d90738a58ee36665f801a86e6cecead592edc"
+  integrity sha512-IiMYCgB3UcYqsSKNOIVzL0L+2aJU6/qQWStE8KF9vZmbw95BRpuEh3jydKEddLuqGAqnjsob4bAPUSDZkCHR+Q==
   dependencies:
-    "@kano/devices-sdk-core" "^1.0.0-alpha.11"
+    "@kano/devices-sdk-core" "^1.0.0-alpha.12"
     "@kano/web-bus" "^1.0.0-alpha.14"
     jszip "^3.1.5"
   optionalDependencies:

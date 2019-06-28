@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@kano/devices-sdk-cordova": "^1.0.0-alpha.11",
+    "@kano/devices-sdk-cordova": "^1.0.0-alpha.12",
     "@kano/es6-server": "^1.0.3",
     "@kano/kit-app-shell-core": "^0.0.3-alpha.48",
     "@kano/web-bus": "^1.0.0-alpha.14",

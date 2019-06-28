@@ -13,7 +13,7 @@
   "dependencies": {
     "@kano/common": "^1.0.2",
     "@kano/desktop-shell": "^1.0.8",
-    "@kano/devices-sdk-node": "^1.0.0-alpha.11",
+    "@kano/devices-sdk-node": "^1.0.0-alpha.12",
     "@kano/electron-updater": "^1.0.0",
     "@kano/es6-resolution": "^1.0.19",
     "@kano/web-bus": "^1.0.0-alpha.14",
