@@ -1,6 +1,7 @@
 const { app, ipcMain } = require('electron');
 const { Shell } = require('@kano/desktop-shell');
 const updaterBusAdapter = require('./bus/updater');
+const authBusAdapter = require('./bus/auth');
 const path = require('path');
 
 const CONTENT_SCHEME = 'kit-app';
@@ -113,6 +114,7 @@ class App {
                 // Binds the updater events with the updater module
                 updaterBusAdapter(this.bus, this.shell.log);
             }
+            authBusAdapter(this.bus, this.shell.window);
             Devices.setLogger(this.shell.log);
         } else {
             // Subsequent windows, just update the window reference in the bus
