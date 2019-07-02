@@ -1,3 +1,5 @@
+// import { AuthServer } from './lib/auth.js';
+
 class FakeBus {
     on() {}
     addListener() {}
@@ -6,6 +8,9 @@ class FakeBus {
 }
 
 window.NativeBus = new FakeBus();
+
+// TODO: Turn this on once this platform builds its shell before serving
+// const auth = new AuthServer(window.NativeBus);
 
 function getJSON(url) {
     return fetch(url)

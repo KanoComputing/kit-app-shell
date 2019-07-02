@@ -1,6 +1,8 @@
 const { ipcRenderer, remote } = require('electron');
 const { ElectronIpcBusRenderer } = require('@kano/web-bus');
 
+require('./lib/bus/auth-preload');
+
 const config = remote.getGlobal('config');
 const preload = remote.getGlobal('preload');
 const args = remote.getGlobal('args');
