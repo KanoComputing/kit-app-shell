@@ -20,9 +20,12 @@ pipeline {
         stage('install dependencies') {
             steps {
                 script {
-                    sshagent(['read-only-github']) {
-                        sh "yarn"
-                        sh "yarn tsc -b"
+                    withCredentials([string(credentialsId: 'npm-read-only', variable: 'NPM_TOKEN')]) {
+                        sh "echo \"//registry.npmjs.org/:_authToken=${NPM_TOKEN}\" > .npmrc"
+                        sshagent(['read-only-github']) {
+                            sh "yarn"
+                            sh "yarn tsc -b"
+                        }
                     }
                 }
             }
