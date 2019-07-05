@@ -1,0 +1,10 @@
+{
+  "name": "iap",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@kano/web-bus": "^1.0.0-alpha.14",
+    "lit-html": "^1.1.0"
+  }
+}

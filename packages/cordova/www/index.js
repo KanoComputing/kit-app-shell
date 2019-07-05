@@ -2,6 +2,7 @@ import Devices from '@kano/devices-sdk-cordova/index.js';
 import { DevicesServer } from '@kano/web-bus/esm/servers/index.js';
 import EventEmitter from './lib/event-emitter.js';
 import { updaterBus } from './lib/bus/updater.js';
+import { IAPServer } from './lib/bus/iap.js';
 
 const logger = {};
 
@@ -13,8 +14,10 @@ Devices.setLogger(logger);
 
 const bus = new EventEmitter();
 const adapter = new DevicesServer(bus, Devices);
+const iapServer = new IAPServer(bus);
 
 updaterBus(bus);
+
 
 window.NativeBus = bus;
 
