@@ -70,7 +70,7 @@ export = (context) => {
                     // TODO: Get xcodebuild version and add this dynamicallly
                     '-UseModernBuildSystem=0',
                     '-allowProvisioningUpdates',
-                    'SWIFT_VERSION = 3.0',
+                    'SWIFT_VERSION = 4.0',
                     'EMBEDDED_CONTENT_CONTAINS_SWIFT = YES',
                     '-quiet',
                 ],

@@ -14,6 +14,7 @@
     "cordova-lib": "^8.1.1",
     "cordova-plugin-bluetoothle": "^4.4.4",
     "cordova-plugin-device": "^2.0.2",
+    "cordova-plugin-inapppurchase": "^1.2.0",
     "cordova-plugin-ionic-webview": "^2.3.1",
     "cordova-plugin-splashscreen": "^5.0.2",
     "cors": "^2.8.5",
@@ -24,7 +25,7 @@
     "ngrok": "^3.1.0",
     "rimraf": "^2.6.2",
     "serve-static": "^1.13.2",
-    "sharp": "^0.21.0"
+    "sharp": "^0.22.1"
   },
   "devDependencies": {
     "@types/connect": "^3.4.32",
