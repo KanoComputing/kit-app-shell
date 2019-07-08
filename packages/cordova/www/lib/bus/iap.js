@@ -65,5 +65,10 @@ export class IAPServer extends ChannelServer {
                     }).filter(t => !!t);
                 });
         });
+
+        this.listen(IAPMethods.CONSUME, (req) => {
+            const [product, transaction] = req.params;
+            return inAppPurchase.consume(product.info.appStore, transaction.receipt, transaction.signature);
+        });
     }
 }

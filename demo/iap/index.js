@@ -22,13 +22,13 @@ class IAPApp {
         this.iap.restore()
             .then((t) => {
                 this.transactions = t;
-            });
-
-        this.iap.getProducts(['5_gold', 'ch_pack_1'])
+                return this.iap.getProducts(['5_gold', 'ch_pack_1']);
+            })
             .then((ps) => {
                 this.products = ps;
                 this._render();
             });
+
         window.app = this;
     }
 
@@ -44,7 +44,7 @@ class IAPApp {
     }
 
     renderProducts() {
-        const purchased = this.transactions.map(t => t.productId);
+        const purchased = this.transactions.map(t => t.data.productId);
         return html`
             <div>
                 ${this.products.map(p => html`
