@@ -1,16 +1,9 @@
-// import { AuthServer } from './lib/auth.js';
+import { AuthServer } from './lib/auth.js';
+import { EventEmitter } from './lib/event-emitter.js';
 
-class FakeBus {
-    on() {}
-    addListener() {}
-    removeListener() {}
-    emit() {}
-}
+window.NativeBus = new EventEmitter();
 
-window.NativeBus = new FakeBus();
-
-// TODO: Turn this on once this platform builds its shell before serving
-// const auth = new AuthServer(window.NativeBus);
+const auth = new AuthServer(window.NativeBus);
 
 function getJSON(url) {
     return fetch(url)
