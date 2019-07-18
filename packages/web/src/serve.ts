@@ -1,4 +1,3 @@
-import * as path from 'path';
 import * as connect from 'connect';
 import * as serveStatic from 'serve-static';
 import * as history from 'connect-history-api-fallback';
@@ -21,10 +20,11 @@ function escapeRegExp(s : string) {
     return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
   }
 
-export const serve = (root, opts : IWebRunOptions) => {
+export const serve = (root, shellRoot, opts : IWebRunOptions) => {
     const { config, replaces = [] } = opts;
     const serverReplacements = replaces.reduce((accumulator, o) => {
-        const all = o.include.reduce((acc, src) => {
+        const include = Array.isArray(o.include) ? o.include : [];
+        const all = include.reduce((acc, src) => {
             const values : IServerReplacement[] = Object.keys(o.values)
                 .map((from) => {
                     return {
@@ -51,6 +51,6 @@ export const serve = (root, opts : IWebRunOptions) => {
         .use(cors())
         .use(history())
         .use('/www', namedResolutionMiddleware({ root, replacements: serverReplacements }))
-        .use(serveStatic(path.join(__dirname, '../www')))
+        .use(serveStatic(shellRoot))
         .use('/www', serveStatic(root));
 };

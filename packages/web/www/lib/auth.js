@@ -30,6 +30,7 @@ export class AuthServer extends ChannelServer {
         super(bus, 2345);
 
         this.listen(0, (req) => {
+            console.log('haha');
             return this.requestSignup(req.params[0]);
         });
     }
