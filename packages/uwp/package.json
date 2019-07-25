@@ -27,7 +27,7 @@
     "mkdirp": "^0.5.1",
     "pascal-case": "^2.0.1",
     "rimraf": "^2.6.3",
-    "sharp": "^0.22.0",
+    "sharp": "^0.22.1",
     "text-encoding": "^0.7.0"
   }
 }
