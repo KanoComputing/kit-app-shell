@@ -10,6 +10,7 @@ import * as path from 'path';
 import { getCachePath } from '@kano/kit-app-shell-core/lib/tmp';
 
 import { promisify } from 'util';
+import { copyResources } from './copy-resources';
 
 const rimraf = promisify(rimrafCb);
 
@@ -17,17 +18,24 @@ interface IWebRunOptions {
     app : string;
     config : any;
     port : number;
+    additionalResources? : string[];
 }
 
 const DEFAULT_BACKGROUND_COLOR = '#ffffff';
 
 const webRun : IRun = (opts : IWebRunOptions) => {
-    const { app, config = {}, port = 8000 } = opts;
+    const {
+        app,
+        config = {},
+        port = 8000,
+        additionalResources = [],
+    } = opts;
 
     const tmp = path.join(getCachePath(), 'web');
 
     // Build the shell in a tmp directory. This is required to get all native APIs working
     return rimraf(tmp)
+        .then(() => copyResources(additionalResources, tmp, app))
         .then(() => Bundler.bundle(
             `${__dirname}/../www/index.html`,
             `${__dirname}/../www/shell.js`,

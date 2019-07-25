@@ -5,6 +5,7 @@ import * as rimrafCb from 'rimraf';
 import { IBuild, IBuildOptions, IKashConfig } from '@kano/kit-app-shell-core/lib/types';
 import { copyPolyfills, generateElements } from '@kano/kit-app-shell-core/lib/util/polyfills';
 import { scripts } from './polyfills';
+import { copyResources } from './copy-resources';
 
 const rimraf = promisify(rimrafCb);
 
@@ -24,8 +25,10 @@ const webBuild : IBuild = function build(opts : WebBuildOptions) {
         replaces = [],
         targets = {},
         babelExclude = [],
+        additionalResources = [],
     } = opts;
     return rimraf(out)
+        .then(() => copyResources(additionalResources, out, app))
         .then(() => copyPolyfills(scripts, out))
         .then((names) => Bundler.bundle(
             `${__dirname}/../www/index.html`,
