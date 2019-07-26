@@ -5,14 +5,17 @@ import * as rimrafCb from 'rimraf';
 import { IBuild, IBuildOptions, IKashConfig } from '@kano/kit-app-shell-core/lib/types';
 import { copyPolyfills, generateElements } from '@kano/kit-app-shell-core/lib/util/polyfills';
 import { scripts } from './polyfills';
+import { copyResources, IResources } from './copy-resources';
 
 const rimraf = promisify(rimrafCb);
 
-type WebBuildOptions = IBuildOptions;
+interface IWebBuildOptions extends IBuildOptions {
+    additionalResources? : IResources;
+}
 
 const DEFAULT_BACKGROUND_COLOR = '#ffffff';
 
-const webBuild : IBuild = function build(opts : WebBuildOptions) {
+const webBuild : IBuild = function build(opts : IWebBuildOptions) {
     const {
         app,
         config = {} as IKashConfig,
@@ -24,8 +27,10 @@ const webBuild : IBuild = function build(opts : WebBuildOptions) {
         replaces = [],
         targets = {},
         babelExclude = [],
+        additionalResources = [],
     } = opts;
     return rimraf(out)
+        .then(() => copyResources(additionalResources, out, app))
         .then(() => copyPolyfills(scripts, out))
         .then((names) => Bundler.bundle(
             `${__dirname}/../www/index.html`,
