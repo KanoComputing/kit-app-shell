@@ -5,15 +5,17 @@ import * as rimrafCb from 'rimraf';
 import { IBuild, IBuildOptions, IKashConfig } from '@kano/kit-app-shell-core/lib/types';
 import { copyPolyfills, generateElements } from '@kano/kit-app-shell-core/lib/util/polyfills';
 import { scripts } from './polyfills';
-import { copyResources } from './copy-resources';
+import { copyResources, IResources } from './copy-resources';
 
 const rimraf = promisify(rimrafCb);
 
-type WebBuildOptions = IBuildOptions;
+interface IWebBuildOptions extends IBuildOptions {
+    additionalResources? : IResources;
+}
 
 const DEFAULT_BACKGROUND_COLOR = '#ffffff';
 
-const webBuild : IBuild = function build(opts : WebBuildOptions) {
+const webBuild : IBuild = function build(opts : IWebBuildOptions) {
     const {
         app,
         config = {} as IKashConfig,

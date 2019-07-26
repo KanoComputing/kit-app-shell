@@ -10,7 +10,7 @@ import * as path from 'path';
 import { getCachePath } from '@kano/kit-app-shell-core/lib/tmp';
 
 import { promisify } from 'util';
-import { copyResources } from './copy-resources';
+import { copyResources, IResources } from './copy-resources';
 
 const rimraf = promisify(rimrafCb);
 
@@ -18,7 +18,7 @@ interface IWebRunOptions {
     app : string;
     config : any;
     port : number;
-    additionalResources? : string[];
+    additionalResources? : IResources;
 }
 
 const DEFAULT_BACKGROUND_COLOR = '#ffffff';
