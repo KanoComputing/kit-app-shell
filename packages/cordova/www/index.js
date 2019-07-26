@@ -2,6 +2,7 @@ import Devices from '@kano/devices-sdk-cordova/index.js';
 import { DevicesServer } from '@kano/web-bus/esm/servers/index.js';
 import EventEmitter from './lib/event-emitter.js';
 import { updaterBus } from './lib/bus/updater.js';
+import { AuthServer } from './lib/bus/auth.js';
 
 const logger = {};
 
@@ -15,6 +16,7 @@ const bus = new EventEmitter();
 const adapter = new DevicesServer(bus, Devices);
 
 updaterBus(bus);
+const auth = new AuthServer(bus);
 
 window.NativeBus = bus;
 
