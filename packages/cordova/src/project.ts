@@ -28,6 +28,7 @@ const DEFAULT_PLUGINS = [
     'cordova-plugin-bluetoothle',
     'cordova-plugin-device',
     'cordova-plugin-splashscreen',
+    'cordova-plugin-inappbrowser',
 ];
 
 const STEP_PREFIX = 'Setting up cordova';
