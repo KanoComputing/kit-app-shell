@@ -6,3 +6,8 @@
   version "1.0.0-alpha.14"
   resolved "https://registry.yarnpkg.com/@kano/web-bus/-/web-bus-1.0.0-alpha.14.tgz#59db14a2295fcc0d6012a5a884b01f359793ce22"
   integrity sha512-Rq5voO3VFxeMoIWGPYz2ftS6KdWKVjQEAXvXDUKdKar6MPox/VICVNc2rFr826uWRTdo6J3hjBXHsJEJaJ/3kw==
+
+lit-html@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/lit-html/-/lit-html-1.1.1.tgz#186ed6abcc70c0d24e1132b37411c3b2645ed1aa"
+  integrity sha512-1WqhkPpj+CKwLRXCCbyRGnWkcFKE4ft2+j8C2zaXwFUK9I2vYDzTuDGPh0H9hZcDBEwoe6YpPC8AO5734EPORQ==

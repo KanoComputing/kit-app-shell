@@ -1,4 +1,5 @@
 import { Channel } from '@kano/web-bus/esm/bus.js';
+import { html, render } from 'lit-html/lit-html.js';
 
 class Auth {
     constructor(bus) {
@@ -12,18 +13,40 @@ class Auth {
 
 class App {
     constructor(bus, config) {
-        const auth = new Auth(bus);
-
+        this.auth = new Auth(bus);
         this.root = document.createElement('div');
 
-        this.root.innerHTML = `
-            <button>Signup</button>
-        `;
+        this._render();
+    }
+    _render() {
+        render(this.render(), this.root);
+    }
+    render() {
+        return html`
+            <h1>Welcome to the auth demo. Click on one of the following option to authenticate</h1>
+            <button @click=${() => this.login()}>Login</button>
+            <button @click=${() => this.signup()}>Signup</button>
 
-        this.button = this.root.querySelector('button');
-        this.button.addEventListener('click', () => {
-            auth.signup('https://app.auth.kano.me?env=staging');
-        });
+            ${this.session ? html`
+                <div>
+                    <div>Your are authenticated as ${this.session.username}</div>
+                    <div>You used the ${this.session.method} method to authenticate</div>
+                </div>
+            ` : ''}
+
+        `;
+    }
+    login() {
+        this.auth.signup('https://app.auth.kano.me?env=staging#login')
+            .then((s) => this.afterSuccess(s));
+    }
+    signup() {
+        this.auth.signup('https://app.auth.kano.me?env=staging#signup')
+            .then((s) => this.afterSuccess(s))
+    }
+    afterSuccess(session) {
+        this.session = session;
+        this._render();
     }
 }
 
