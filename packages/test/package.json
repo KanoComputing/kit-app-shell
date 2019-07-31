@@ -5,7 +5,7 @@
   "author": "Paul Varache <perso@paulvarache.ninja>",
   "homepage": "https://github.com/KanoComputing/kit-app-shell#readme",
   "license": "ISC",
-  "main": "lib/kit-app-shell-test.js",
+  "main": "lib/index.js",
   "publishConfig": {
     "access": "public"
   },

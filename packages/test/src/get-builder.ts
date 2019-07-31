@@ -33,13 +33,13 @@ function loadProvider(provider : string) : Promise<{ default : IProvider }> {
  * This allows this module and its dependencies to not be installed until users need
  * to run more advanced tests
  */
-const getBuilder : IBuilderFactory = (wd, mocha, opts) => {
+const getBuilder : IBuilderFactory = (wd, ctx, opts) => {
     return loadProvider(opts.provider)
         .then((provider) => {
             if (!provider) {
                 return null;
             }
-            return provider.default(opts.prebuiltApp, wd, mocha, opts);
+            return provider.default(opts.prebuiltApp, wd, ctx, opts);
         });
 };
 

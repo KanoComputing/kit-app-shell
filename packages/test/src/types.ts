@@ -1,4 +1,4 @@
-import { IOptions, Builder } from '@kano/kit-app-shell-core/lib/types';
+import { IOptions, Builder, ITestContext } from '@kano/kit-app-shell-core/lib/types';
 
 export interface ISaucelabsOptions {
     user : string;
@@ -29,6 +29,6 @@ export type TestOptions = IOptions & {
 export type IProvider = (
     app : string,
     wd : typeof import('wd'),
-    mocha : import('mocha'),
+    ctx : ITestContext,
     opts : TestOptions,
 )  => Promise<Builder>;

@@ -54,9 +54,8 @@ const bitbarProvider : IProvider = (app, wd, _, opts) => {
                 testdroid_apiKey: key,
                 // Create custom build name using the options from the config
                 build: `${opts.config.APP_NAME} v${opts.config.UI_VERSION} Android`,
-                // Set the test name to be the mocha test name
-                name: test.fullTitle(),
-                testdroid_testrun: test.fullTitle(),
+                name: '',
+                testdroid_testrun: '',
                 testdroid_app: file,
                 testdroid_findDevice: true,
                 platformName: 'Android',

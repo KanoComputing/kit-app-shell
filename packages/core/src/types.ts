@@ -99,9 +99,16 @@ export type WD = any;
 export type WebDriver = any;
 export type Sywac = any;
 
-export type Builder = (test? : Mocha.Test) => Promise<WebDriver>;
+export type Builder = () => Promise<WebDriver>;
 
-export type IBuilderFactory = (wd : WD, mocha : import('mocha'), opts : any) => Promise<Builder>;
+export interface ITestContext {
+    beforeEach : (cb : () => any) => void;
+    beforeAll : (cb : () => any) => void;
+    afterEach : (cb : () => any) => void;
+    afterAll : (cb : () => any) => void;
+}
+
+export type IBuilderFactory = (wd : WD, ctx : ITestContext, opts : any) => Promise<Builder>;
 
 export type IBuild = (opts : IBuildOptions)  => Promise<string>;
 

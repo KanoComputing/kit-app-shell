@@ -1,4 +1,4 @@
-export const customProvider = (wd, mocha, opts) => {
+export const customProvider = (wd, ctx, opts) => {
     if (!opts.providers) {
         return Promise.resolve(null);
     }
@@ -6,7 +6,7 @@ export const customProvider = (wd, mocha, opts) => {
     if (!c || !c.getBuilder) {
         return Promise.resolve(null);
     }
-    return c.getBuilder(wd, mocha, opts);
+    return c.getBuilder(wd, ctx, opts);
 };
 
 export default customProvider;
