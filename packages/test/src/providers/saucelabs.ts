@@ -23,7 +23,7 @@ function uploadForEmulator(app, { user, key } : ISaucelabsOptions) {
     }).then((response) => JSON.parse(response.body));
 }
 
-const saucelabsProvider : IProvider = function saucelabsSetup(app, wd, mocha, opts) {
+const saucelabsProvider : IProvider = function saucelabsSetup(app, wd, ctx, opts) {
     // Retrieve saucelabs options
     const { saucelabs } = opts;
     // Authentication options are required, throw an error
@@ -42,8 +42,7 @@ const saucelabsProvider : IProvider = function saucelabsSetup(app, wd, mocha, op
             const caps = {
                 // Create custom build name using the options from the config
                 build: `${opts.config.APP_NAME} v${opts.config.UI_VERSION} Android`,
-                // Set the test name to be the mocha test name
-                name: test.fullTitle(),
+                name: '',
                 appiumVersion: '1.9.1',
                 deviceName: 'Samsung Galaxy Tab S3 GoogleAPI Emulator',
                 deviceOrientation: 'portrait',

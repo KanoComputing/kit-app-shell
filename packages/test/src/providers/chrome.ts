@@ -1,22 +1,21 @@
 import { IProvider } from '../types';
 import * as chromedriver from 'chromedriver';
-import { serve } from '../serve';
+import * as wdjs from 'wd';
 
-const chromeProvider : IProvider = (app, wd, mocha, opts) => {
+const chromeProvider : IProvider = (app, wd : wdjs, ctx, opts) => {
     chromedriver.start(['--url-base=wd/hub', '--port=9515']);
 
-    const server = serve(app);
-
-    server.listen(2345);
-
-    mocha.suite.afterAll(() => {
+    ctx.afterAll(() => {
         chromedriver.stop();
     });
 
     const builder = () => {
-        const driver = wd.promiseChainRemote('0.0.0.0', 9515);
-        mocha.suite.beforeEach(() => {
-            return driver.get('http://localhost:2345?__kash_automated__');
+        const driver : wdjs.Driver = wd.promiseChainRemote('0.0.0.0', 9515);
+        ctx.beforeEach(() => {
+            return driver.get(`${app}?__kash_automated__`)
+                .then(() => {
+                    return driver.waitForConditionInBrowser('!!window.__kash_boot__');
+                });
         });
         return driver.init({ browserName: 'chrome' }).then(() => driver);
     };

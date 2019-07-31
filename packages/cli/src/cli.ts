@@ -101,44 +101,6 @@ class CLI {
                 }, Promise.resolve(true));
             });
     }
-    static parseTestArgs(sywac: ISywac): ISywac {
-        const group = 'Mocha';
-        const filters = `${group} Test Filters`;
-        const reporting = `${group} Reporting & Output`;
-        return sywac
-            .string('--reporter, -R', {
-                desc: 'Specify reporter to use',
-                defaultValue: 'spec',
-                group: reporting,
-            })
-            .string('--reporter-option, --reporter-options, -O', {
-                desc: 'Reporter-specific options (<k=v,[k1=v1,..]>)',
-                group: reporting,
-                coerce: (paramsString) => {
-                    if (!paramsString) {
-                        return {};
-                    }
-                    const pieces = paramsString.split(',');
-                    return pieces.reduce((acc, piece) => {
-                        const bits = piece.split('=');
-                        acc[bits[0]] = bits[1];
-                        return acc;
-                    }, {});
-                },
-            })
-            .string('--fgrep, -f', {
-                desc: 'Only run tests containing this string',
-                group: filters,
-            })
-            .string('--grep, -g', {
-                desc: 'Only run tests matching this string or regexp',
-                group: filters,
-            })
-            .boolean('--invert, -i', {
-                desc: 'Inverts --grep and --fgrep matches',
-                group: filters,
-            });
-    }
     static applyStyles(sywac: ISywac): ISywac {
         return sywac.style({
             group: (s) => chalk.cyan.bold(s),
@@ -263,7 +225,7 @@ class CLI {
         const sywac = new Api();
 
         // All commands available
-        const commands = ['run', 'build', 'test', 'sign', 'configure'];
+        const commands = ['run', 'build', 'sign', 'configure'];
 
         sywac.configure({ name: 'kash' });
 
@@ -420,42 +382,6 @@ class CLI {
                         return import('./command')
                             .then((runCommand) => {
                                 const task = runCommand.default('run', platformId, argv);
-                                this.setTask(task);
-                                return task;
-                            });
-                    },
-                });
-
-                sywac.command('test <platform>', {
-                    desc: 'test the application',
-                    setup: (s) => {
-                        CLI.parseAppRoot(s);
-                        CLI.parseEnv(s);
-                        CLI.parseOverrideAppConfig(s);
-                        CLI.parseRequireAppConfig(s);
-                        CLI.checkRequireAppConfig(s);
-                        CLI.parseTestArgs(s);
-                        s.string('--prebuilt-app', {
-                            aliases: ['prebuilt-app', 'prebuiltApp'],
-                            desc: 'Path to the built app to test',
-                            required: true,
-                            coerce: path.resolve,
-                        });
-                        s.string('--screenshots, -s', {
-                            desc: 'Take a screenshot at the end of each test and save them in the provided folder',
-                            coerce: (v) => v ? path.resolve(v) : null,
-                        });
-                        const sywacPatch = CLI.patchSywacOptions(s, {
-                            group: platform.cli.group || 'Platform: ',
-                        });
-                        platformUtils.registerOptions(s, platform, ICommand.Test);
-                        sywacPatch.dispose();
-                    },
-                    run: (argv) => {
-                        this.mountReporter(argv);
-                        return import('./test')
-                            .then((runTest) => {
-                                const task = runTest.default(argv, platformId, 'test');
                                 this.setTask(task);
                                 return task;
                             });

@@ -58,7 +58,7 @@ function getConfig(opts, key) {
     return value;
 }
 
-const kobitonProvider : IProvider = function kobitonSetup(app, wd, mocha, opts) {
+const kobitonProvider : IProvider = function kobitonSetup(app, wd, ctx, opts) {
     // Retrieve saucelabs options
     const kobiton = getConfig(opts, 'kobiton');
     const { user, key } = kobiton;

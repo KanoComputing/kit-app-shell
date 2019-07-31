@@ -6,11 +6,11 @@ import { IBuilderFactory } from '@kano/kit-app-shell-core/lib/types';
 /**
  * Create a local provider for iOS devices. Uses an appium server and libimobiledevice
  */
-function localSetup(app, wd, mocha, opts) {
+function localSetup(app, wd, ctx, opts) {
     // Start appium server
     return appium.main({ loglevel: 'error' })
         .then((server) => {
-            mocha.suite.afterAll(() => {
+            ctx.afterAll(() => {
                 server.close();
             });
             // Retrieve appium port
@@ -50,14 +50,14 @@ function localSetup(app, wd, mocha, opts) {
 /**
  * Create a builder to create a driver for each test
  */
-const getIosBuilder : IBuilderFactory = (wd, mocha, opts) => {
+const getIosBuilder : IBuilderFactory = (wd, ctx, opts) => {
     // Use local provider
     if (opts.provider === 'local') {
-        return localSetup(opts.prebuiltApp, wd, mocha, opts);
+        return localSetup(opts.prebuiltApp, wd, ctx, opts);
     }
     // Remote device providers are configured in the cordova platform to be shared between iOS
     // and Android
-    const builder = getBuilder(wd, mocha, opts);
+    const builder = getBuilder(wd, ctx, opts);
     if (!builder) {
         throw new Error(`Could not run tests: '${opts.provider}' is not a valid device provider`);
     }

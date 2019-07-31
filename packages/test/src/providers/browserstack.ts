@@ -33,7 +33,7 @@ function upload(app, { user, key } : IBrowserstackOptions) {
     }).then((response) => JSON.parse(response.body));
 }
 
-const browserstackProvider : IProvider = (app, wd, mocha, opts) => {
+const browserstackProvider : IProvider = (app, wd, ctx, opts) => {
     // Retrieve browserstack options
     const { browserstack } = opts;
     // Authentication options are required, throw an error
@@ -48,7 +48,7 @@ const browserstackProvider : IProvider = (app, wd, mocha, opts) => {
         user,
         key,
     }).then(({ app_url }) => {
-        const builder = (test) => {
+        const builder = () => {
             const driver = wd.promiseChainRemote(HUB_URL);
             return driver.init({
                 // TODO: parametrize this
@@ -58,8 +58,7 @@ const browserstackProvider : IProvider = (app, wd, mocha, opts) => {
                 'browserstack.key': key,
                 // Create custom build name using the options from the config
                 'build': `${opts.config.APP_NAME} v${opts.config.UI_VERSION} Android`,
-                // Set the test name to be the mocha test name
-                'name': test.fullTitle(),
+                'name': '',
                 // Use the browserstack app URL (bs://<hash>)
                 'app': app_url,
                 // Let appium switch to the webview context for us

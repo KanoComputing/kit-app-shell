@@ -7,20 +7,20 @@ import * as chromedriver from 'chromedriver';
 /**
  * Create a builder to create a driver for each test
  */
-export default (wd, mocha, { app, config = {}, tmpdir = os.tmpdir() }) => {
+export default (wd, ctx, { app, config = {}, tmpdir = os.tmpdir() }) => {
     chromedriver.start(['--url-base=wd/hub', '--port=9515']);
 
     const configPath = path.join(tmpdir, '.kash-electron.config.json');
     fs.writeFileSync(configPath, JSON.stringify(config));
 
-    mocha.suite.afterAll(() => {
+    ctx.afterAll(() => {
         chromedriver.stop();
     });
 
     const builder = () => {
         const driver = wd.promiseChainRemote('0.0.0.0', 9515);
 
-        mocha.suite.beforeEach(() => {
+        ctx.beforeEach(() => {
             return driver.clearLocalStorage()
                 .then(() => restartApp());
         });
