@@ -2,6 +2,7 @@ node_modules
 yarn-error.log
 out
 *.tgz
+*.log
 .nyc_output
 coverage
 .DS_Store
