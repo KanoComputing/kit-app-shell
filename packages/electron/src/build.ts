@@ -75,6 +75,7 @@ const babelTargets = {
 const DEFAULT_PATTERNS = [
     'package.json',
     'preload.js',
+    'lib/bus/auth-preload.js',
     'node_modules/electron/**/*',
     'node_modules/@kano/desktop-shell/**/*',
     'node_modules/@kano/web-bus/**/*',
