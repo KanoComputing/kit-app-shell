@@ -1,5 +1,6 @@
 import { IReplaceOptions } from './plugins/replace';
 import { ICheck } from './check';
+import * as rollup from 'rollup';
 
 export interface IBundleHtmlOptions {
     replacements? : {
@@ -47,6 +48,7 @@ export interface IBundleSourceOptions {
     babelExclude? : string[];
     bundleOnly? : boolean;
     appSrcName? : string;
+    outputFormat? : rollup.OutputOptions;
 }
 
 export interface IKashConfig {

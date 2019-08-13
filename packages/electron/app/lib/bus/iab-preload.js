@@ -13,24 +13,19 @@ function createIAB(src) {
     document.body.appendChild(w);
     w.setAttribute('src', src);
     window.addEventListener('message', (e) => {
-        switch(e.data.m) {
-            case 'auth-callback':
-                ipcRenderer.send('auth-token-callback', e.data.a);
-                break;
-            case 'quit':
-                ipcRenderer.send('quit');
-                break;
-        }
+        ipcRenderer.send('iab-message', e.data);
     });
     window.iabIFrame = w;
     w.addEventListener('load', () => {
         w.style.opacity = 1;
+        ipcRenderer.send('iab-load');
     });
 }
 
 function removeIAB() {
     if (window.iabIFrame) {
         window.iabIFrame.remove();
+        window.iabIFrame = null;
     }
 }
 
@@ -42,3 +37,9 @@ ipcRenderer.on('close-iab', () => {
     removeIAB();
 });
 
+ipcRenderer.on('iab-message', (e, args) => {
+    if (!window.iabIFrame) {
+        return;
+    }
+    window.iabIFrame.contentWindow.postMessage(args, '*');
+});

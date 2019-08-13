@@ -81,11 +81,11 @@ const macosBuild : IBuild = (opts : MacosBuildOptions) => {
         })
         .then((pkgDirs) => {
             const [pkgDir] = pkgDirs;
-            return pkgDir;
+            // return pkgDir;
             // Code to copy the v8 snapshot files into the app dir
             // Use when v8 snapshot issue is solved
-            // const appDir = path.resolve(pkgDir, `${name}.app`);
-            // const resourcesDir = path.join(appDir, 'Contents/Resources/app');
+            const appDir = path.resolve(pkgDir, `${name}.app`);
+            const resourcesDir = path.join(appDir, 'Contents/Resources/app');
             // const targetDir = path.join(appDir, 'Contents/Frameworks/Electron Framework.framework/Resources');
             // const SNAPSHOT_BLOB = 'snapshot_blob.bin';
             // const V8_CONTEXT_SNAPSHOT = 'v8_context_snapshot.bin';
@@ -95,9 +95,8 @@ const macosBuild : IBuild = (opts : MacosBuildOptions) => {
             //         path.join(resourcesDir, V8_CONTEXT_SNAPSHOT),
             //         path.join(targetDir,  V8_CONTEXT_SNAPSHOT),
             //     ))
-            //     // Delete the electron directory, it was needed during packaaging, but must not be shipped
-            //     .then(() => rimraf(path.join(resourcesDir, 'node_modules/electron')))
-            //     .then(() => pkgDir);
+            // Delete the electron directory, it was needed during packaging, but must not be shipped
+            return rimraf(path.join(resourcesDir, 'node_modules/electron')).then(() => pkgDir);
         })
         .then((pkgDir) => {
             warnings.forEach((w) => processState.setWarning(w));

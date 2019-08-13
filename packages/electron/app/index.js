@@ -6,7 +6,8 @@ window.Shell = {
         }
         this.defined = true;
         this.UIClass = UIClass;
-        const app = new window.Shell.UIClass(window.NativeBus, window.KitAppShellConfig);
+        const context = new window.KashAPIs.Context(window.NativeBus, window.KitAppShellConfig);
+        const app = new window.Shell.UIClass(context);
         if (!(app.root instanceof HTMLElement)) {
             throw new Error('Could not run app: the property \'root\' in your App class is not of type HTMLElement');
         }

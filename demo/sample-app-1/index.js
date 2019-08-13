@@ -6,7 +6,7 @@ function html(strings, ...values) {
 }
 
 class App {
-    constructor(bus, config) {
+    constructor(context) {
         this.root = document.createElement('div');
 
         const tpl = html`
@@ -17,9 +17,9 @@ class App {
                 }
             </style>
             <div class="container">
-                <div id="main">Name: ${config.APP_NAME}</div>
-                <div id="main">Version: ${config.UI_VERSION}</div>
-                <div>UI root: ${config.UI_ROOT}</div>
+                <div id="main">Name: ${context.config.APP_NAME}</div>
+                <div id="main">Version: ${context.config.UI_VERSION}</div>
+                <div>UI root: ${context.config.UI_ROOT}</div>
                 <button id="click">Click me</button>
             </div>
         `;
