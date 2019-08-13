@@ -77,6 +77,9 @@ const build : IBuild = (opts : ICordovaBuildOptions) => {
                     .then(() => projectPath);
             }))
         .then((projectPath) => {
+            if (opts.skipCordovaBuild) {
+                return projectPath;
+            }
             // A platform path can be provided to use as a local module,
             // this resolves the name of a potential path
             // to its package name. We then strip the 'cordova-' prefix to extract the platform id

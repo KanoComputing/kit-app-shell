@@ -7,6 +7,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
 import { IRun, IRunOptions } from '@kano/kit-app-shell-core/lib/types';
+import { prepareApp } from './prepare';
 
 const electronRun : IRun = ({ app, config, tmpdir = os.tmpdir() } : IRunOptions) => {
     processState.setStep('Launching electron app');
@@ -20,7 +21,9 @@ const electronRun : IRun = ({ app, config, tmpdir = os.tmpdir() } : IRunOptions)
 
     server.watch(app);
 
-    return fromTemplate(runTplPath, runPath, { LR_URL: 'http://localhost:35729' })
+    // Move the apis from core into the app folder. This directory won't be versioned
+    return prepareApp(path.join(__dirname, '../app'), config)
+        .then(() => fromTemplate(runTplPath, runPath, { LR_URL: 'http://localhost:35729' }))
         .then(() => {
             // Start the electron for the app provided with the config provided
             const p = spawn(electronPath, [

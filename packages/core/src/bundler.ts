@@ -118,6 +118,7 @@ export class Bundler {
             babelExclude = [],
             bundleOnly = false,
             appSrcName = 'index.js',
+            outputFormat = { format: 'amd' } as rollup.OutputOptions,
         } = opts;
         const tracker = new ProgressTracker();
         tracker.on('progress', (e) => {
@@ -192,7 +193,7 @@ export class Bundler {
         }
         log.trace('ROLLUP OPTIONS', defaultOptions);
         return rollup.rollup(defaultOptions)
-            .then((bundle) => bundle.generate({ format: 'amd' }))
+            .then((bundle) => bundle.generate(outputFormat))
             .then(({ output }) => Object.keys(output).map((id) => {
                 // Rollup reports incorrect typings ¯\_(ツ)_/¯
                 return ({

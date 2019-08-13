@@ -15,6 +15,7 @@ packages/android/lib
 packages/android-legacy/lib
 packages/test/lib
 packages/electron/lib
+packages/electron/app/apis
 packages/ios/lib
 packages/kano/lib
 packages/macos/lib

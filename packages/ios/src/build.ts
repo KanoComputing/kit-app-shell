@@ -10,6 +10,7 @@ import * as mkdirpCb from 'mkdirp';
 import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 import { PREFERENCE_MAPPING, DEFAULT_PREFERENCES } from './preferences';
 import { ICordovaBuildOptions } from '@kano/kit-app-shell-cordova/lib/types';
+import { openXcodeProject } from './open-xcode';
 
 const glob = promisify(globCb);
 const mkdirp = promisify(mkdirpCb);
@@ -31,8 +32,15 @@ const iosBuild : IBuild = (opts : ICordovaBuildOptions) => {
                 device: true,
             },
         },
+        skipCordovaBuild: opts.skipXcodebuild,
     })
         .then((projectPath) => {
+            if (opts.skipXcodebuild) {
+                if (opts.openXcode) {
+                    openXcodeProject(projectPath, opts.config.APP_NAME);
+                }
+                return projectPath;
+            }
             const dest = path.join(projectPath, 'platforms/ios/build/device');
             return glob('*.ipa', { cwd: dest })
                 .then((results) => {

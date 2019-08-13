@@ -1,9 +1,10 @@
-import { AuthServer } from './lib/auth.js';
+import { IABServer } from './lib/iab.js';
 import { EventEmitter } from './lib/event-emitter.js';
+import { Context } from '@kano/kit-app-shell-core/www/index.js';
 
 window.NativeBus = new EventEmitter();
 
-const auth = new AuthServer(window.NativeBus);
+const iab = new IABServer(window.NativeBus);
 
 function getJSON(url) {
     return fetch(url)
@@ -59,7 +60,8 @@ p
                 }
                 this.defined = true;
                 this.UIClass = UIClass;
-                const app = new window.Shell.UIClass(window.NativeBus, config);
+                const context = new Context(window.NativeBus, config);
+                const app = new window.Shell.UIClass(context);
                 if (!(app.root instanceof HTMLElement)) {
                     throw new Error('Could not run app: the property \'root\' in your App class is not of type HTMLElement');
                 }

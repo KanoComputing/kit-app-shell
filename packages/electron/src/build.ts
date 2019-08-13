@@ -9,6 +9,7 @@ import { Bundler } from '@kano/kit-app-shell-core/lib/bundler';
 import { ElectronBuildOptions } from './types';
 import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 import { snap } from './snapshot/snap';
+import { prepareApp } from './prepare';
 
 const writeFile = promisify(fs.writeFile);
 const glob = promisify(globCb);
@@ -186,6 +187,7 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
             },
         )
             .then((b) => Bundler.write(b, out)),
+        prepareApp(out, config),
     ];
     return Promise.all(tasks as Array<Promise<string>>)
         .then((results) => {
