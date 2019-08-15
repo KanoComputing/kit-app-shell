@@ -1,6 +1,6 @@
 {
   "name": "@kano/kit-app-shell-core",
-  "version": "0.0.3-alpha.58",
+  "version": "0.0.3-alpha.60",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
