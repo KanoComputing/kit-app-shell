@@ -77,6 +77,7 @@ const DEFAULT_PATTERNS = [
     'package.json',
     'preload.js',
     'lib/bus/auth-preload.js',
+    'lib/bus/iab-preload.js',
     'node_modules/electron/**/*',
     'node_modules/@kano/desktop-shell/**/*',
     'node_modules/@kano/web-bus/**/*',
