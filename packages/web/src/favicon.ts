@@ -1,4 +1,6 @@
 import * as path from 'path';
+import { processState } from '@kano/kit-app-shell-core/lib/process-state';
+import { IKashConfig } from '@kano/kit-app-shell-core/lib/types';
 import { resizeImage } from './util';
 
 export const faviconTemplate = `
@@ -21,17 +23,21 @@ export const faviconTemplate = `
 `;
 
 /**
- * Uses sharp to resize a provided image into a fitted rectangle
- * @param {String} src Path to the source image
+ * Generates the various favicon image assets based of a single png
+ * @param {Object} config The app config object
  * @param {String} out Path to the destination image
- * @param {Number} width Width of the destination image
- * @param {Number} height Height of the destination image
- * @param {{ fit: 'cover'|'contain'|'fill'|'inside'|'outside' }} opts Fitting options
  */
 export function generateFavicons(
-    src : string,
+    config : IKashConfig,
     out : string,
 ) : Promise<void[]> {
+    if (!('FAVICON' in config.ICONS)) {
+        console.log('test');
+        processState.setWarning('No favicon provided in app config');
+        return Promise.all([]);
+    }
+
+    const src = config.ICONS.FAVICON;
     const sizes = [32, 57, 76, 96, 120, 128, 152, 180, 192, 196, 228];
     const tasks = sizes.map((size) => {
         return resizeImage(src, path.join(out, `favicon-${size}.png`), size, size);

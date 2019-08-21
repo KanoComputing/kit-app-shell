@@ -31,11 +31,27 @@ const webBuild : IBuild = function build(opts : IWebBuildOptions) {
         babelExclude = [],
         additionalResources = [],
     } = opts;
+
+    let buildtime = {
+        polyfills: [] as any,
+        favicons: [] as any,
+    };
+
     return rimraf(out)
         .then(() => copyResources(additionalResources, out, app))
-        .then(() => copyPolyfills(scripts, out))
-        .then(() => generateFavicons(config.ICONS.FAVICON, out))
-        .then((names) => Bundler.bundle(
+        .then(() => {
+            return generateFavicons(config, out).then((favicons) => {
+                buildtime.favicons = favicons;
+                return;
+            });
+        })
+        .then(() => {
+            return copyPolyfills(scripts, out).then((polyfills) => {
+                buildtime.polyfills = polyfills;
+                return;
+            });
+        })
+        .then(() => Bundler.bundle(
             `${__dirname}/../www/index.html`,
             `${__dirname}/../www/shell.js`,
             path.join(app, 'index.js'),
@@ -58,12 +74,12 @@ const webBuild : IBuild = function build(opts : IWebBuildOptions) {
                     replacements: {
                         head: `
                         <title>${config.APP_NAME || DEFAULT_PAGE_TITLE}</title>
-                        ${faviconTemplate}
+                        ${buildtime.favicons.length > 0 ? faviconTemplate : ''}
                         <style>
                             html, body {
                                 background-color: ${config.BACKGROUND_COLOR || DEFAULT_BACKGROUND_COLOR};
                             }
-                        </style>${generateElements(names)}`,
+                        </style>${generateElements(buildtime.polyfills)}`,
                     },
                 },
             },
