@@ -39,18 +39,12 @@ const webBuild : IBuild = function build(opts : IWebBuildOptions) {
 
     return rimraf(out)
         .then(() => copyResources(additionalResources, out, app))
-        .then(() => {
-            return generateFavicons(config, out).then((favicons) => {
-                buildtime.favicons = favicons;
-                return;
-            });
-        })
-        .then(() => {
-            return copyPolyfills(scripts, out).then((polyfills) => {
-                buildtime.polyfills = polyfills;
-                return;
-            });
-        })
+        .then(() => copyPolyfills(scripts, out).then((polyfills) => {
+            buildtime.polyfills = polyfills;
+        }))
+        .then(() => generateFavicons(config, out, app).then((favicons) => {
+            buildtime.favicons = favicons;
+        }))
         .then(() => Bundler.bundle(
             `${__dirname}/../www/index.html`,
             `${__dirname}/../www/shell.js`,

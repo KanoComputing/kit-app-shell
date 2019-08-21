@@ -30,13 +30,14 @@ export const faviconTemplate = `
 export function generateFavicons(
     config : IKashConfig,
     out : string,
+    basePath: string,
 ) : Promise<void[]> {
     if (!('FAVICON' in config.ICONS)) {
         processState.setWarning('Favicon path not provided in app config');
         return Promise.all([]);
     }
 
-    const src = config.ICONS.FAVICON;
+    const src = path.join(basePath, config.ICONS.FAVICON);
     const sizes = [32, 57, 76, 96, 120, 128, 152, 180, 192, 196, 228];
     const tasks = sizes.map((size) => {
         return resizeImage(src, path.join(out, `favicon-${size}.png`), size, size);
