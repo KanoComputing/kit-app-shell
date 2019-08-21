@@ -32,7 +32,6 @@ export function generateFavicons(
     out : string,
 ) : Promise<void[]> {
     if (!('FAVICON' in config.ICONS)) {
-        console.log('test');
         processState.setWarning('No favicon provided in app config');
         return Promise.all([]);
     }
