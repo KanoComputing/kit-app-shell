@@ -30,5 +30,9 @@
     "sharp": "^0.22.1",
     "text-encoding": "^0.7.0"
   },
-  "gitHead": "30c75d422a0e29fa5fb4c4ca1fc9e7533678f490"
+  "gitHead": "30c75d422a0e29fa5fb4c4ca1fc9e7533678f490",
+  "devDependencies": {
+    "@types/node": "^12.7.2",
+    "@types/request": "^2.48.2"
+  }
 }

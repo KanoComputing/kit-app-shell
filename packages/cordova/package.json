@@ -29,6 +29,8 @@
   },
   "devDependencies": {
     "@types/connect": "^3.4.32",
+    "@types/node": "^12.7.2",
+    "@types/request": "^2.48.2",
     "chai": "^4.2.0",
     "chai-fs": "^2.0.0",
     "cross-env": "^5.2.0",

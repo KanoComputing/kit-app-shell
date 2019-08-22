@@ -21,7 +21,9 @@
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
+    "@types/node": "^12.7.2",
     "@types/ora": "^3.0.0",
+    "@types/request": "^2.48.2",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "mock-require": "^3.0.2",

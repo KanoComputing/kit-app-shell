@@ -4,7 +4,7 @@ import { createReadStream } from 'fs';
 import chalk from 'chalk';
 import { IBrowserstackOptions, IProvider } from '../types';
 
-const post = promisify(postCb);
+const post = promisify(postCb) as (f : any) => Promise<any>;
 
 const BS_UPLOAD_URL = 'https://api-cloud.browserstack.com/app-automate/upload';
 const HUB_URL = 'http://hub-cloud.browserstack.com/wd/hub';

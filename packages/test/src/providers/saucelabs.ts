@@ -5,7 +5,7 @@ import { promisify } from 'util';
 import { post as postCb } from 'request';
 import { IProvider, ISaucelabsOptions } from '../types';
 
-const post = promisify(postCb);
+const post = promisify(postCb) as (f : any) => Promise<any>;
 
 function uploadForEmulator(app, { user, key } : ISaucelabsOptions) {
     const filename = basename(app);
@@ -37,7 +37,7 @@ const saucelabsProvider : IProvider = function saucelabsSetup(app, wd, ctx, opts
         user,
         key,
     }).then(({ filename }) => {
-        const builder = (test) => {
+        const builder = () => {
             const driver = wd.promiseChainRemote('ondemand.saucelabs.com', 80, user, key);
             const caps = {
                 // Create custom build name using the options from the config

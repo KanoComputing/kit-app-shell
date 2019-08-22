@@ -29,6 +29,8 @@
   },
   "gitHead": "30c75d422a0e29fa5fb4c4ca1fc9e7533678f490",
   "devDependencies": {
+    "@types/node": "^12.7.2",
+    "@types/request": "^2.48.2",
     "chai": "^4.2.0",
     "chai-fs": "^2.0.0",
     "chai-json-schema": "^1.5.0",

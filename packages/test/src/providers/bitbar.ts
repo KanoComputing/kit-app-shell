@@ -4,7 +4,7 @@ import { post as postCb } from 'request';
 import chalk from 'chalk';
 import { IBitBarOptions, IProvider } from '../types';
 
-const post = promisify(postCb);
+const post = promisify(postCb) as (f : any) => Promise<any>;
 
 const BITBAR_HUB = 'https://appium.bitbar.com/wd/hub';
 const BITBAR_UPLOAD = 'https://appium.bitbar.com/upload';
@@ -45,7 +45,7 @@ const bitbarProvider : IProvider = (app, wd, _, opts) => {
     }).then(({ value }) => {
         const { uploads } = value;
         const { file } = uploads;
-        const builder = (test) => {
+        const builder = () => {
             const driver = wd.promiseChainRemote(BITBAR_HUB);
             const caps = {
                 testdroid_project: `${opts.config.APP_NAME} Android`,
