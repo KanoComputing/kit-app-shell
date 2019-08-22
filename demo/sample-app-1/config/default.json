@@ -6,7 +6,8 @@
         "ANDROID": "icons/android.png",
         "IOS": "icons/ios.png",
         "WINDOWS_STORE": "icons/windows-store.png",
-        "UWP": "icons/windows-store.png"
+        "UWP": "icons/windows-store.png",
+        "FAVICON": "icons/favicon.png"
     },
     "SPLASHSCREENS": {
         "ANDROID": "screens/android.png",
