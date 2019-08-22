@@ -6,8 +6,8 @@ import { promisify } from 'util';
 import { post as postCb, put as putCb } from 'request';
 import { IKobitonOptions, IProvider } from '../types';
 
-const post = promisify(postCb);
-const put = promisify(putCb);
+const post = promisify(postCb) as (f : any) => Promise<any>;
+const put = promisify(putCb) as (f : any) => Promise<any>;
 
 function upload(app, { user, key } : IKobitonOptions) {
     const stat = statSync(app);
@@ -67,7 +67,7 @@ const kobitonProvider : IProvider = function kobitonSetup(app, wd, ctx, opts) {
         user,
         key,
     }).then(({ appId }) => {
-        const builder = (test) => {
+        const builder = () => {
             const browser = wd.promiseChainRemote({
                 protocol: 'https',
                 host: 'api.kobiton.com',
@@ -76,7 +76,6 @@ const kobitonProvider : IProvider = function kobitonSetup(app, wd, ctx, opts) {
             const caps = {
                 'app': `kobiton-store:${appId}`,
                 'sessionName': `${opts.config.APP_NAME} v${opts.config.UI_VERSION} Android`,
-                'sessionDescription': test.fullTitle(),
                 'deviceOrientation': 'portrait',
                 'captureScreenshots': true,
                 'browserName': 'chrome',

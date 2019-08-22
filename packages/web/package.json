@@ -22,8 +22,10 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "30c75d422a0e29fa5fb4c4ca1fc9e7533678f490",
+  "gitHead": "89fee50c7b6dbd1b141ea1b27b3d8c715ccb3c16",
   "devDependencies": {
+    "@types/node": "^12.7.2",
+    "@types/request": "^2.48.2",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "nyc": "^13.1.0",
