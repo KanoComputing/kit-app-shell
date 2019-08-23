@@ -11,5 +11,5 @@ export function copyPolyfills(scripts : string[], dest : string) {
 }
 
 export function generateElements(names : string[]) {
-    return names.map((name) => `<script src="${name}"></script>`).join('');
+    return names.map((name) => `<script src="/${name}"></script>`).join('');
 }
