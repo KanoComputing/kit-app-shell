@@ -20,7 +20,7 @@
     "test": "mocha",
     "test-ci": "JUNIT_REPORT_PATH=./test-results.xml yarn run --silent test --reporter mocha-jenkins-reporter"
   },
-  "gitHead": "30c75d422a0e29fa5fb4c4ca1fc9e7533678f490",
+  "gitHead": "285f3d6c085905a2351aee3a93f650883ca6dfcf",
   "devDependencies": {
     "@types/node": "^12.7.2",
     "@types/request": "^2.48.2",

@@ -22,7 +22,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "30c75d422a0e29fa5fb4c4ca1fc9e7533678f490",
+  "gitHead": "285f3d6c085905a2351aee3a93f650883ca6dfcf",
   "optionalDependencies": {
     "ios-deploy": "^1.9.4"
   },

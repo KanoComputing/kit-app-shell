@@ -22,7 +22,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "89fee50c7b6dbd1b141ea1b27b3d8c715ccb3c16",
+  "gitHead": "285f3d6c085905a2351aee3a93f650883ca6dfcf",
   "devDependencies": {
     "@types/node": "^12.7.2",
     "@types/request": "^2.48.2",
