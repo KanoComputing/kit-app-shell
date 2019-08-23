@@ -1,11 +1,11 @@
 {
   "name": "@kano/kit-app-shell-windows-store",
-  "version": "0.0.3-alpha.64",
+  "version": "0.0.3-alpha.65",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@kano/kit-app-shell-core": "^0.0.3-alpha.64",
-    "@kano/kit-app-shell-windows": "^0.0.3-alpha.64",
+    "@kano/kit-app-shell-core": "^0.0.3-alpha.65",
+    "@kano/kit-app-shell-windows": "^0.0.3-alpha.65",
     "chalk": "^2.4.1",
     "electron-windows-store": "^2.1.0",
     "elementtree": "^0.1.7",
@@ -20,7 +20,7 @@
     "test": "mocha",
     "test-ci": "JUNIT_REPORT_PATH=./test-results.xml yarn run --silent test --reporter mocha-jenkins-reporter"
   },
-  "gitHead": "30c75d422a0e29fa5fb4c4ca1fc9e7533678f490",
+  "gitHead": "285f3d6c085905a2351aee3a93f650883ca6dfcf",
   "devDependencies": {
     "@types/node": "^12.7.2",
     "@types/request": "^2.48.2",

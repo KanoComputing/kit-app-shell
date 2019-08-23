@@ -1,12 +1,12 @@
 {
   "name": "@kano/kit-app-shell-cordova",
-  "version": "0.0.3-alpha.64",
+  "version": "0.0.3-alpha.65",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
     "@kano/devices-sdk-cordova": "^1.0.0-alpha.12",
     "@kano/es6-server": "^1.0.3",
-    "@kano/kit-app-shell-core": "^0.0.3-alpha.64",
+    "@kano/kit-app-shell-core": "^0.0.3-alpha.65",
     "@kano/web-bus": "^1.0.0-alpha.14",
     "@webcomponents/webcomponentsjs": "^2.2.1",
     "connect": "^3.6.6",
@@ -49,5 +49,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "30c75d422a0e29fa5fb4c4ca1fc9e7533678f490"
+  "gitHead": "285f3d6c085905a2351aee3a93f650883ca6dfcf"
 }

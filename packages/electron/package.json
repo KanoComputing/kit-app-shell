@@ -1,6 +1,6 @@
 {
   "name": "@kano/kit-app-shell-electron",
-  "version": "0.0.3-alpha.64",
+  "version": "0.0.3-alpha.65",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -10,7 +10,7 @@
     "coverage": "nyc --reporter=html mocha"
   },
   "dependencies": {
-    "@kano/kit-app-shell-core": "^0.0.3-alpha.64",
+    "@kano/kit-app-shell-core": "^0.0.3-alpha.65",
     "chromedriver": "2.37",
     "electron": "3.1.0",
     "electron-link": "^0.3.2",
@@ -27,7 +27,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "30c75d422a0e29fa5fb4c4ca1fc9e7533678f490",
+  "gitHead": "285f3d6c085905a2351aee3a93f650883ca6dfcf",
   "devDependencies": {
     "@types/node": "^12.7.2",
     "@types/request": "^2.48.2",
