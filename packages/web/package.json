@@ -1,11 +1,11 @@
 {
   "name": "@kano/kit-app-shell-web",
-  "version": "0.0.3-alpha.65",
+  "version": "0.0.3-alpha.66",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
     "@kano/es6-server": "^1.0.3",
-    "@kano/kit-app-shell-core": "^0.0.3-alpha.65",
+    "@kano/kit-app-shell-core": "^0.0.3-alpha.66",
     "@kano/web-bus": "^1.0.0-alpha.14",
     "@webcomponents/shadycss": "^1.9.1",
     "@webcomponents/webcomponentsjs": "^2.2.9",
