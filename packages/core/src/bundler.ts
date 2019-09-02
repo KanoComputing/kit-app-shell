@@ -117,6 +117,9 @@ export class Bundler {
             targets = {},
             babelExclude = [],
             bundleOnly = false,
+            skipMinifyHtml = false,
+            skipBabel = false,
+            skipTerser = false,
             appSrcName = 'index.js',
             outputFormat = { format: 'amd' } as rollup.OutputOptions,
         } = opts;
@@ -164,32 +167,40 @@ export class Bundler {
             onwarn: () => null,
         };
         if (!bundleOnly) {
-            // Skip babel loading if it's not going to be used
-            const babel = require('rollup-plugin-babel');
-            const minifyHTML = require('rollup-plugin-minify-html-literals').default;
-            const { terser } = require('rollup-plugin-terser');
-            // Manual resolving eable an easy mock-require,
-            // otherwise babel tries to do it on its own
-            const babelPluginSyntaxDynamicImport = require.resolve('@babel/plugin-syntax-dynamic-import');
-            const babelPresetEnv = require.resolve('@babel/preset-env');
+            if (!skipMinifyHtml) {
+                const minifyHTML = require('rollup-plugin-minify-html-literals').default;
+                defaultOptions.plugins.push(minifyHTML());
+            };
 
-            defaultOptions.plugins.push(minifyHTML());
-            defaultOptions.plugins.push(babel({
-                exclude: babelExclude,
-                plugins: [
-                    babelPluginSyntaxDynamicImport,
-                ],
-                presets: [
-                    [
-                        babelPresetEnv,
-                        {
-                            targets,
-                        },
+            if (!skipBabel) {
+                // Skip babel loading if it's not going to be used
+                const babel = require('rollup-plugin-babel');
+                // Manual resolving eable an easy mock-require,
+                // otherwise babel tries to do it on its own
+                const babelPluginSyntaxDynamicImport = require.resolve('@babel/plugin-syntax-dynamic-import');
+                const babelPresetEnv = require.resolve('@babel/preset-env');
+    
+                defaultOptions.plugins.push(babel({
+                    exclude: babelExclude,
+                    plugins: [
+                        babelPluginSyntaxDynamicImport,
                     ],
-                ],
-                compact: true,
-            }));
-            defaultOptions.plugins.push(terser());
+                    presets: [
+                        [
+                            babelPresetEnv,
+                            {
+                                targets,
+                            },
+                        ],
+                    ],
+                    compact: true,
+                }));
+            };
+
+            if (!skipTerser) {
+                const { terser } = require('rollup-plugin-terser');
+                defaultOptions.plugins.push(terser());
+            };
         }
         log.trace('ROLLUP OPTIONS', defaultOptions);
         return rollup.rollup(defaultOptions)

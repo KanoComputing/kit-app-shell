@@ -47,6 +47,9 @@ export interface IBundleSourceOptions {
     targets? : {};
     babelExclude? : string[];
     bundleOnly? : boolean;
+    skipMinifyHtml?: boolean;
+    skipBabel?: boolean;
+    skipTerser?: boolean;
     appSrcName? : string;
     outputFormat? : rollup.OutputOptions;
 }
