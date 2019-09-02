@@ -23,6 +23,9 @@ const webBuild : IBuild = function build(opts : IWebBuildOptions) {
         config = {} as IKashConfig,
         out,
         bundleOnly,
+        skipMinifyHtml,
+        skipBabel,
+        skipTerser,
         resources = [],
         polyfills = [],
         moduleContext = {},
@@ -53,10 +56,16 @@ const webBuild : IBuild = function build(opts : IWebBuildOptions) {
             {
                 js: {
                     bundleOnly,
+                    skipMinifyHtml,
+                    skipBabel,
+                    skipTerser,
                     targets,
                 },
                 appJs: {
                     bundleOnly,
+                    skipMinifyHtml,
+                    skipBabel,
+                    skipTerser,
                     resources,
                     polyfills,
                     moduleContext,

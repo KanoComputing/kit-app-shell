@@ -345,7 +345,19 @@ class CLI {
                             .boolean('--bundle-only', {
                                 aliases: ['bundle-only', 'bundleOnly'],
                                 defaultValue: false,
-                            });
+                            })
+                            .boolean('--skip-minify-html', {
+                                aliases: ['skip-minify-html', 'skipMinifyHtml'],
+                                defaultValue: false,
+                            })
+                            .boolean('--skip-babel', {
+                                aliases: ['skip-babel', 'skipBabel'],
+                                defaultValue: false,
+                            })
+                            .boolean('--skip-terser', {
+                                aliases: ['skip-terser', 'skipTerser'],
+                                defaultValue: false,
+                            })
                         const sywacPatch = CLI.patchSywacOptions(s, {
                             group: platform.cli.group || 'Platform: ',
                         });
