@@ -2,24 +2,6 @@ import { CordovaConfig } from '@kano/kit-app-shell-cordova/lib/cordova-config';
 import * as path from 'path';
 import * as fs from 'fs';
 import chalk from 'chalk';
-import { execSync } from 'child_process';
-
-function getSwiftVersion() {
-    let stdout : string;
-
-    try {
-        stdout = execSync('xcrun swift -version', { timeout: 10000 }).toString();
-    } catch (error) {
-        throw new Error(`Unable to get swift version (command failed): ${error}`);
-    }
-
-    const match = stdout.match(/Apple Swift version\s+([\w\.-_]+)/);
-    if (!match) {
-        throw new Error('Unable to parse swift version');
-    }
-
-    return match[1];
-}
 
 export = (context) => {
     const { projectRoot, shell } = context.opts;
@@ -38,9 +20,6 @@ export = (context) => {
             cfg.setIOSBundleVersion(shell.config.BUILD_NUMBER || 1);
         }
     }
-    cfg.selectPlatform('ios');
-
-    const scheme = shell.opts.preferences.Scheme;
 
     cfg.addRawXML(`
 <config-file parent="ITSAppUsesNonExemptEncryption" target="*-Info.plist">
@@ -58,12 +37,6 @@ export = (context) => {
 </config-file>
     `);
 
-    cfg.addAllowNavigation(`${scheme}://*`);
-
-    cfg.setElement('content', '', {
-        src: `${scheme}:///index.html`,
-    });
-
     const { opts } = shell;
 
     // TODO: merge using a error util
@@ -75,7 +48,6 @@ export = (context) => {
     }
 
     const { developmentTeam, codeSignIdentity } = opts;
-    const swiftVersion = getSwiftVersion();
 
     fs.writeFileSync(path.join(projectRoot, 'build.json'), JSON.stringify({
         ios: {
@@ -86,11 +58,8 @@ export = (context) => {
                 automaticProvisioning: true,
                 packageType: 'development',
                 buildFlag: [
-                    // TODO: Get xcodebuild version and add this dynamicallly
                     '-UseModernBuildSystem=0',
                     '-allowProvisioningUpdates',
-                    `SWIFT_VERSION = ${swiftVersion}`,
-                    'EMBEDDED_CONTENT_CONTAINS_SWIFT = YES',
                     '-quiet',
                 ],
             },
@@ -102,8 +71,6 @@ export = (context) => {
                 buildFlag: [
                     '-UseModernBuildSystem=0',
                     '-allowProvisioningUpdates',
-                    `SWIFT_VERSION = ${swiftVersion}`,
-                    'EMBEDDED_CONTENT_CONTAINS_SWIFT = YES',
                     '-quiet',
                 ],
             },
