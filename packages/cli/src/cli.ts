@@ -68,8 +68,18 @@ class CLI {
                             currentLevel = currentLevel[keyComponent];
                         }
 
+                        /* Parse booleans and numbers and convert them */
+                        let v : string | boolean | number = value;
+                        if (value === 'true') {
+                            v = true;
+                        } else if (value === 'false') {
+                            v = false;
+                        } else if (value.match(/^[0-9]+$/)) {
+                            v = parseInt(value, 10);
+                        }
+
                         const topLevelKey = keyComponents[0];
-                        currentLevel[topLevelKey] = value;
+                        currentLevel[topLevelKey] = v;
                     });
 
                     return overrides;
