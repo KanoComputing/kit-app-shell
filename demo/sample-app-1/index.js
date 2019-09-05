@@ -21,6 +21,7 @@ class App {
                 <div id="main">Version: ${context.config.UI_VERSION}</div>
                 <div>UI root: ${context.config.UI_ROOT}</div>
                 <button id="click">Click me</button>
+                <video controls src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"></video>
             </div>
         `;
 

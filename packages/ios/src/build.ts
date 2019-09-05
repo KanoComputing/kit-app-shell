@@ -18,6 +18,7 @@ const rename = promisify(fs.rename);
 
 const iosBuild : IBuild = (opts : ICordovaBuildOptions) => {
     collectPreferences(opts, PREFERENCE_MAPPING, DEFAULT_PREFERENCES);
+    opts.config.UI_ROOT = 'http://localhost:8080/www/';
     return build({
         ...opts,
         cacheId: 'ios',
