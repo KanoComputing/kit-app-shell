@@ -69,13 +69,15 @@ class CLI {
                         }
 
                         /* Parse booleans and numbers and convert them */
-                        let v : string | boolean | number = value;
+                        let v : string | boolean | number;
                         if (value === 'true') {
                             v = true;
                         } else if (value === 'false') {
                             v = false;
                         } else if (value.match(/^[0-9]+$/)) {
                             v = parseInt(value, 10);
+                        } else {
+                            v = value;
                         }
 
                         const topLevelKey = keyComponents[0];
