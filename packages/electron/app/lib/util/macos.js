@@ -6,6 +6,8 @@ function moveToApplicationsFolderIfNecessary(window, force = false) {
         return;
     }
     if (!app.isInApplicationsFolder()) {
+        // Wrap in a timeout. The whole windowing system of macos
+        // breaks if you don't do that
         setTimeout(() => {
             const button = dialog.showMessageBox(window, {
                 type: 'question',
