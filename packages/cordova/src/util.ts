@@ -1,5 +1,9 @@
 import * as path from 'path';
 import * as  sharp from 'sharp';
+import * as mkdirpCb from 'mkdirp';
+import { promisify } from 'util';
+
+const mkdirp = promisify(mkdirpCb);
 
 /**
  * Resolve the location of a module by resolving its package.json
@@ -23,7 +27,10 @@ export function resizeImage(
     height : number,
     { fit = 'cover' } = {},
 ) : Promise<void> {
-    return sharp(src)
-        .resize({ width, height, fit })
-        .toFile(out);
+    return mkdirp(path.dirname(out))
+        .then(() => {
+            return sharp(src)
+                .resize({ width, height, fit })
+                .toFile(out);
+        });
 }
