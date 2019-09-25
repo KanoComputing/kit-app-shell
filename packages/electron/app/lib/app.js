@@ -1,3 +1,4 @@
+const { moveToApplicationsFolderIfNecessary } = require('./util/macos');
 const { app, ipcMain } = require('electron');
 const { Shell } = require('@kano/desktop-shell');
 const updaterBusAdapter = require('./bus/updater');
@@ -122,6 +123,7 @@ class App {
             // Subsequent windows, just update the window reference in the bus
             this.bus.setWindow(shell.window);
         }
+        moveToApplicationsFolderIfNecessary(this.shell.window, this.config.FORCE_MOVE_TO_APPLICATIONS_PROMPT);
     }
 }
 
