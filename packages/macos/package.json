@@ -6,8 +6,8 @@
   "dependencies": {
     "@kano/kit-app-shell-core": "^0.0.3-alpha.67",
     "@kano/kit-app-shell-electron": "^0.0.3-alpha.71",
-    "electron-osx-sign": "^0.4.11",
-    "electron-packager": "^13.0.0",
+    "electron-osx-sign": "^0.4.13",
+    "electron-packager": "^14.0.6",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.2"
   },
