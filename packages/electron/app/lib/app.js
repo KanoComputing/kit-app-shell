@@ -1,4 +1,4 @@
-const { moveToApplicationsFolderIfNecessary } = require('./util/macos');
+const { moveToApplicationsFolderIfNecessary, shouldMoveToApplicationsFolder } = require('./util/macos');
 const { app, ipcMain } = require('electron');
 const { Shell } = require('@kano/desktop-shell');
 const updaterBusAdapter = require('./bus/updater');
@@ -107,6 +107,10 @@ class App {
         Devices.terminate();
     }
     _onWindowCreated() {
+        // Disable updater if the app should be moved to the applications folder
+        if (shouldMoveToApplicationsFolder(this.config.FORCE_MOVE_TO_APPLICATIONS_PROMPT)) {
+            this.config.UPDATER_DISABLED = true;
+        }
         if (!this.bus) {
             // First window created, setup the bus and adapters
             this.bus = new ElectronIpcMainBus(ipcMain, this.shell.window);
