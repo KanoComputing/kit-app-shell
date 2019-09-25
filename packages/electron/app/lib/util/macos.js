@@ -2,7 +2,7 @@ const os = require('os');
 const { app, dialog } = require('electron');
 
 function shouldMoveToApplicationsFolder(force) {
-    return !(!force && (os.platform() !== 'darwin' || !app.isPackaged) && !app.isInApplicationsFolder());
+    return force || (os.platform() === 'darwin' && app.isPackaged && !app.isInApplicationsFolder());
 }
 
 function moveToApplicationsFolderIfNecessary(window, force = false) {
