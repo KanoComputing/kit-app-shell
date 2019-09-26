@@ -44,8 +44,10 @@ export = (context) => {
     }
 
     cfg.setElement('content', '', {
-        src: 'http://localhost:8080/index.html',
+        src: 'https://kit-app/index.html',
     });
+
+    cfg.addAllowNavigation('https://kit-app/*');
 
     const { supportsScreens } = shell.opts;
 
