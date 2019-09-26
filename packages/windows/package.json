@@ -1,11 +1,11 @@
 {
   "name": "@kano/kit-app-shell-windows",
-  "version": "0.0.3-alpha.76",
+  "version": "0.0.3-alpha.78",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
     "@kano/kit-app-shell-core": "^0.0.3-alpha.67",
-    "@kano/kit-app-shell-electron": "^0.0.3-alpha.76",
+    "@kano/kit-app-shell-electron": "^0.0.3-alpha.78",
     "electron-packager": "^12.2.0",
     "innosetup-compiler": "^5.5.9",
     "mkdirp": "^0.5.1",
