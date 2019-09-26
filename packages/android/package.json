@@ -1,6 +1,6 @@
 {
   "name": "@kano/kit-app-shell-android",
-  "version": "0.0.3-alpha.73",
+  "version": "0.0.3-alpha.77",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
