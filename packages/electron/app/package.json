@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@kano/common": "^1.0.2",
-    "@kano/desktop-shell": "^1.0.9",
+    "@kano/desktop-shell": "^1.0.11",
     "@kano/devices-sdk-node": "^1.0.0-alpha.13",
     "@kano/electron-updater": "^1.0.0",
     "@kano/es6-resolution": "^1.0.19",
