@@ -6,7 +6,7 @@ const authBusAdapter = require('./bus/auth');
 const iabBusAdapter = require('./bus/iab');
 const path = require('path');
 
-const CONTENT_SCHEME = 'kit-app';
+const DEFAULT_CONTENT_SCHEME = 'kit-app';
 
 const Devices = require('@kano/devices-sdk-node');
 const { DevicesServer } = require('@kano/web-bus/cjs/servers/index');
@@ -35,8 +35,10 @@ class App {
             this.config.PROFILE = args.profile;
         }
 
-        this.config.APP_SRC = 'kit-app://app/index.js';
-        this.config.UI_ROOT = 'kit-app://app/';
+        const scheme = this.config.CONTENT_SCHEME || DEFAULT_CONTENT_SCHEME;
+
+        this.config.APP_SRC = `${scheme}://app/index.js`;
+        this.config.UI_ROOT = `${scheme}://app/`;
 
         Object.assign(this.config, getPlatformData());
 
@@ -48,7 +50,7 @@ class App {
             name: this.config.APP_NAME,
             version: this.config.UI_VERSION,
             root,
-            scheme: CONTENT_SCHEME,
+            scheme,
             width: 1440,
             height: 900,
             preload: path.join(root, 'preload.js'),
@@ -87,11 +89,11 @@ class App {
         });
 
         app.on('before-quit', this._onBeforeQuit.bind(this));
-        
+
         app.on('ready', this._onReady.bind(this));
-        
+
         this.shell.on('window-created', this._onWindowCreated.bind(this));
-        
+
         // Allows preload script to have access to the config
         global.config = this.config;
         // Send the preload script the app's arguments
