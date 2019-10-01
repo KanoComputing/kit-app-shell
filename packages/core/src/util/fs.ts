@@ -47,6 +47,21 @@ export function copy(src : string, dest : string, opts? : ICopyOptions) : Promis
         .then(() => _copy(src, dest, opts));
 }
 
+/**
+ * Promisify fs.readFile and return file data on success
+ */
+export function read(path : string) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(path, function(err, data) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data);
+            }
+        })
+    });
+}
+
 export function fromTemplate(
     tmpPath : string,
     dest : string,

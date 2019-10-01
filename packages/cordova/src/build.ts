@@ -41,9 +41,20 @@ const build : IBuild = (opts : ICordovaBuildOptions) => {
                 const wwwPath = path.join(projectPath, 'www');
                 // TODO move this to core and make it an optional plugin
                 const wcPath = require.resolve('@webcomponents/webcomponentsjs/webcomponents-bundle.js');
-                const wcFilename = 'webcomponents-bundle.js';
+                let wcScriptData = '';
                 // Copy webcomponents bundle
-                return util.fs.copy(wcPath, path.join(wwwPath, wcFilename))
+                return util.fs.read(wcPath)
+                    .then((wcFileData) => {
+                        const fileString = wcFileData.toString();
+
+                        // iOS specific bug fix to support the ionic:// protocol within the webcomponents bundle
+                        if (opts.platform === 'ios') {
+                            var regex = /l\.wss=443;/g;
+                            wcScriptData = fileString.replace(regex, 'l.wss=443;l.ionic=443;');
+                        } else {
+                            wcScriptData = fileString;
+                        }
+                    })
                     .then(() =>
                     // Bundle the cordova shell and provided app into the www directory
                         Bundler.bundle(
@@ -68,7 +79,7 @@ const build : IBuild = (opts : ICordovaBuildOptions) => {
                                 },
                                 html: {
                                     replacements: {
-                                        injectScript: `<script src="/${wcFilename}"></script>`,
+                                        injectScript: `<script>${wcScriptData}</script>`,
                                     },
                                 },
                             },
