@@ -5,6 +5,8 @@ import * as mkdirpCb from 'mkdirp';
 import { promisify } from 'util';
 
 const mkdirp = promisify(mkdirpCb);
+export const readFile = promisify(fs.readFile);
+export const writeFile = promisify(fs.writeFile);
 
 interface ICopyOptions {
     transform? : NodeJS.ReadWriteStream;
@@ -50,7 +52,7 @@ export function copy(src : string, dest : string, opts? : ICopyOptions) : Promis
 /**
  * Promisify fs.readFile and return file data on success
  */
-export function read(path : string) {
+/*export function read(path : string) {
     return new Promise((resolve, reject) => {
         fs.readFile(path, function(err, data) {
             if (err) {
@@ -60,7 +62,7 @@ export function read(path : string) {
             }
         })
     });
-}
+}*/
 
 export function fromTemplate(
     tmpPath : string,
