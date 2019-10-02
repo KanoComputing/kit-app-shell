@@ -5,6 +5,8 @@ import * as mkdirpCb from 'mkdirp';
 import { promisify } from 'util';
 
 const mkdirp = promisify(mkdirpCb);
+export const readFile = promisify(fs.readFile);
+export const writeFile = promisify(fs.writeFile);
 
 interface ICopyOptions {
     transform? : NodeJS.ReadWriteStream;
