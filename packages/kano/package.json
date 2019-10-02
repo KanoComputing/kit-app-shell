@@ -1,11 +1,11 @@
 {
   "name": "@kano/kit-app-shell-kano",
-  "version": "0.0.3-alpha.79",
+  "version": "0.0.3-alpha.80",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@kano/kit-app-shell-core": "^0.0.3-alpha.67",
-    "@kano/kit-app-shell-electron": "^0.0.3-alpha.79",
+    "@kano/kit-app-shell-core": "^0.0.3-alpha.80",
+    "@kano/kit-app-shell-electron": "^0.0.3-alpha.80",
     "command-exists": "^1.2.8",
     "dashify": "^2.0.0",
     "debian-packaging": "^0.1.5",
