@@ -36,6 +36,11 @@ export = (context) => {
     <false />
 </config-file>
     `);
+    cfg.addRawXML(`
+<config-file parent="NSBluetoothAlwaysUsageDescription" platform="ios" target="*-Info.plist">
+    <string>This app requires access to your bluetooth to allow you to connect with devices included with this product</string>
+</config-file>
+    `);
 
     const { opts } = shell;
 
