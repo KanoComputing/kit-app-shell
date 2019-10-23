@@ -6,8 +6,6 @@ const authBusAdapter = require('./bus/auth');
 const iabBusAdapter = require('./bus/iab');
 const path = require('path');
 
-const DEFAULT_CONTENT_SCHEME = 'kit-app';
-
 const Devices = require('@kano/devices-sdk-node');
 const { DevicesServer } = require('@kano/web-bus/cjs/servers/index');
 const { ElectronIpcMainBus } = require('@kano/web-bus/cjs');
@@ -20,9 +18,10 @@ const DEFAULTS = {
 };
 
 const DEFAULT_BACKGROUND_COLOR = '#ffffff';
+const DEFAULT_APP_SLUG = 'kit-app';
 
 class App {
-    static getIcon(config) {
+    static getIcon(config, appDir) {
         if (process.platform !== 'darwin' || !config.ICONS || !config.ICONS.WINDOWS) {
             return null;
         }
@@ -35,7 +34,8 @@ class App {
             this.config.PROFILE = args.profile;
         }
 
-        const scheme = this.config.CONTENT_SCHEME || DEFAULT_CONTENT_SCHEME;
+        const scheme = this.config.APP_SLUG || DEFAULT_APP_SLUG;
+        const userDataDirName = this.config.APP_SLUG || DEFAULT_APP_SLUG;
 
         this.config.APP_SRC = `${scheme}://app/index.js`;
         this.config.UI_ROOT = `${scheme}://app/`;
@@ -44,13 +44,14 @@ class App {
 
         const postProcess = this.config.BUNDLED ? null : postProcessFactory(appDir);
 
-        const icon = App.getIcon(config);
+        const icon = App.getIcon(config, appDir);
 
         this.shell = new Shell({
             name: this.config.APP_NAME,
             version: this.config.UI_VERSION,
             root,
             scheme,
+            userDataDirName,
             width: 1440,
             height: 900,
             preload: path.join(root, 'preload.js'),
@@ -127,7 +128,7 @@ class App {
             Devices.setLogger(this.shell.log);
         } else {
             // Subsequent windows, just update the window reference in the bus
-            this.bus.setWindow(shell.window);
+            this.bus.setWindow(this.shell.window);
         }
         moveToApplicationsFolderIfNecessary(this.shell.window, this.config.FORCE_MOVE_TO_APPLICATIONS_PROMPT);
     }

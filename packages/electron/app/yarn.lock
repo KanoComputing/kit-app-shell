@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@kano/common/-/common-1.0.2.tgz#84f12d7e924a0b20434bc2d27ee8690b208777a3"
   integrity sha512-D0k6UzNWkHQel5MpBbOXpJcAHKPHDumwaELlaJUm8VBqgURP6iYPPO7SX6E6Q0vGqKnkZX0xvFvazrf6oulG9w==
 
-"@kano/desktop-shell@^1.0.11":
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/@kano/desktop-shell/-/desktop-shell-1.0.11.tgz#65c7dfca80db36aeedbf5e59db9090a694ce4b6b"
-  integrity sha512-h2G0HdKFdA2HT7CZ8W4hWfk8Q3J5fmOklHI9jBqDUUopgnupPmk1tRLekC5hHFeoxIXN4dPMO6Gs5wj9XwAt+g==
+"@kano/desktop-shell@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@kano/desktop-shell/-/desktop-shell-1.1.0.tgz#a1cfd23690cf3dc33077760ff2aa40424c8cc47a"
+  integrity sha512-4Cc+qMwI75P+72EWpsg42jgkwwB82D8BY4jetYckW1MSieLyzuvH6OJaGlh89GZbrkol62XBmEhkBGYBAmk6LA==
   dependencies:
     bunyan "^1.8.12"
     bunyan-debug-stream "^1.0.8"
