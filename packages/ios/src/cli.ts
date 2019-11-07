@@ -26,6 +26,11 @@ const iosCli : ICli = {
             desc: 'Code Sign Identity',
             defaultValue: 'iPhone Developer',
         });
+        sywac.option('--provisioning-profile [provisioningProfile]', {
+            aliases: ['provisioning-profile', 'provisioningProfile'],
+            type: 'string',
+            desc: 'UUID of the provisioning profile to use for manual provisioning',
+        });
     },
 };
 
