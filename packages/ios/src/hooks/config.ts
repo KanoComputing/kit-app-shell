@@ -52,7 +52,18 @@ export = (context) => {
         throw new Error(`Could not build iOS app: Missing 'codeSignIdentity' key in config. Run ${chalk.cyan('kash configure ios')} to fix this`);
     }
 
-    const { developmentTeam, codeSignIdentity } = opts;
+    const { developmentTeam, codeSignIdentity, provisioningProfile } = opts;
+
+    const automaticProvisioning = !provisioningProfile;
+
+    const buildFlag = [
+        '-UseModernBuildSystem=0',
+        '-quiet',
+    ];
+
+    if (automaticProvisioning) {
+        buildFlag.push('-allowProvisioningUpdates');
+    }
 
     fs.writeFileSync(path.join(projectRoot, 'build.json'), JSON.stringify({
         ios: {
@@ -60,24 +71,18 @@ export = (context) => {
                 // TODO: See if we can move that to build options
                 codeSignIdentity,
                 developmentTeam,
-                automaticProvisioning: true,
+                automaticProvisioning,
+                provisioningProfile,
                 packageType: 'development',
-                buildFlag: [
-                    '-UseModernBuildSystem=0',
-                    '-allowProvisioningUpdates',
-                    '-quiet',
-                ],
+                buildFlag,
             },
             release: {
                 codeSignIdentity,
                 developmentTeam,
-                automaticProvisioning: true,
+                automaticProvisioning,
+                provisioningProfile,
                 packageType: 'app-store',
-                buildFlag: [
-                    '-UseModernBuildSystem=0',
-                    '-allowProvisioningUpdates',
-                    '-quiet',
-                ],
+                buildFlag,
             },
         },
     }));
