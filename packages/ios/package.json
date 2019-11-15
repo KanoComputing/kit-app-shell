@@ -1,6 +1,6 @@
 {
   "name": "@kano/kit-app-shell-ios",
-  "version": "0.0.3-alpha.83",
+  "version": "0.0.3-alpha.84",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
