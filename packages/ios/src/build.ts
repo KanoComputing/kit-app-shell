@@ -11,6 +11,7 @@ import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 import { PREFERENCE_MAPPING, DEFAULT_PREFERENCES } from './preferences';
 import { ICordovaBuildOptions } from '@kano/kit-app-shell-cordova/lib/types';
 import { openXcodeProject } from './open-xcode';
+const webView = require('cordova-plugin-ionic-webview/package.json');
 
 const glob = promisify(globCb);
 const mkdirp = promisify(mkdirpCb);
@@ -18,7 +19,7 @@ const rename = promisify(fs.rename);
 
 const iosBuild : IBuild = (opts : ICordovaBuildOptions) => {
     collectPreferences(opts, PREFERENCE_MAPPING, DEFAULT_PREFERENCES);
-    opts.config.UI_ROOT = 'ionic://localhost/www/';
+    opts.config.UI_ROOT = webView.version === '2.5.3' ? 'http://localhost:8080/www/' : 'ionic://localhost/www/';
     return build({
         ...opts,
         cacheId: 'ios',
