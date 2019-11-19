@@ -4,12 +4,17 @@ const { platform } = require('os');
 const { readFileSync, writeFileSync } = require('fs');
 
 const APP_PATH = resolve('./app');
-const BUILD_PARAMS = '--arch=x64 --target_arch=x64 --target=3.1.0 --runtime=electron --dist-url=https://atom.io/download/electron';
 const packagesToRebuild = [];
 
 function runYarn() {
     execSync('yarn', { cwd: APP_PATH, stdio: 'inherit' });
 }
+
+writeFileSync(join(APP_PATH, '.npmrc'), `
+runtime = electron
+target = 3.1.0
+disturl = https://atom.io/download/atom-shell
+`);
 
 if (platform() === 'darwin') {
     /* Add an extra resollution for xpc-connection to resolve an issue with noble on macOS Mojave */
@@ -28,15 +33,6 @@ if (platform() === 'darwin') {
      */
     packagesToRebuild.push('xpc-connection');
     execSync(`yarn electron-rebuild -o ${packagesToRebuild.join(',')}`, { cwd: APP_PATH, stdio: 'inherit' });
-} else if (platform() === 'win32') {
-    runYarn();
-
-    /**
-     * On Windows, noble-uwp needs rebuilding to match electron version.
-     * We use npm rebuild because electron-rebuild doesn't work properly on Windows
-     */
-    packagesToRebuild.push('noble-uwp');
-    execSync(`npm rebuild ${packagesToRebuild.join(' ')} ${BUILD_PARAMS}`, { cwd: APP_PATH, stdio: 'inherit' });
 } else {
     runYarn();
 }
