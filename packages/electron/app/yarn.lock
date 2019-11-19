@@ -24,12 +24,13 @@
   resolved "https://registry.yarnpkg.com/@kano/devices-sdk-core/-/devices-sdk-core-1.0.0-alpha.12.tgz#6595a3a10e0a34e3a1583588351e5043922fd1a6"
   integrity sha512-NI1Ym6Domwqh9hVKWXa7NS6ZWoPQoQeKnBM7fkLcKKbLehCIwBtfSyxmsLsL3GZ1u14F1uDpO70OaC0Z3+ZGXw==
 
-"@kano/devices-sdk-node@^1.0.0-alpha.13":
-  version "1.0.0-alpha.13"
-  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-node/-/devices-sdk-node-1.0.0-alpha.13.tgz#f1c66b1bf3927b05270635049a9d0490e2ae82fd"
-  integrity sha512-bae8gS2X2+Ddd4DGNZuAR1pNF3jZA2Vmj5i3/uAuuSBXSXtMq/S7TULn50Oay4I0U6OjJUePO+UQS6hmsmvy5A==
+"@kano/devices-sdk-node@^1.0.0-alpha.14":
+  version "1.0.0-alpha.14"
+  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-node/-/devices-sdk-node-1.0.0-alpha.14.tgz#9759e9ed3db7f7350e20877fe5f74048b3bba904"
+  integrity sha512-TKihoLcbzwN1cavWnZ05sKIKHLcOPeWlwnr4cUBcz36wTQ9eUWSqJfPdtuMkBVvVbEC4nAy/Lc6Rj36BvQQ9ig==
   dependencies:
     "@kano/devices-sdk-core" "^1.0.0-alpha.12"
+    "@kano/noble-uwp" "^0.6.4"
     "@kano/web-bus" "^1.0.0-alpha.14"
     jszip "^3.1.5"
   optionalDependencies:
@@ -47,6 +48,15 @@
   integrity sha512-vUpuJgD1S3UBpoXBYyDbqkYlQEd5w7m6gvY72euh2uXxJJD/HWBrth/07hhRWOPDVhq8LmxDXThWZi8KjBg32Q==
   dependencies:
     resolve "^1.7.1"
+
+"@kano/noble-uwp@^0.6.4":
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/@kano/noble-uwp/-/noble-uwp-0.6.4.tgz#b04abc178c365f20c26189661b175c1b4232fedb"
+  integrity sha512-LM7yMyZ0RtIIYQQzxVSPhKcZeEp465j0usqFI9w8iFuHD/pEf+GDz3xJOHIUHx8qdIRfbQj3YnkbU9NaHlY3yQ==
+  dependencies:
+    debug "^2.6.0"
+    noble "^1.7.0"
+    node-pre-gyp "^0.14.0"
 
 "@kano/web-bus@^1.0.0-alpha.14":
   version "1.0.0-alpha.14"
@@ -1046,12 +1056,27 @@ minipass@^2.2.1, minipass@^2.3.4:
     safe-buffer "^5.1.2"
     yallist "^3.0.0"
 
+minipass@^2.8.6, minipass@^2.9.0:
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/minipass/-/minipass-2.9.0.tgz#e713762e7d3e32fed803115cf93e04bca9fcc9a6"
+  integrity sha512-wxfUjg9WebH+CUDX/CdbRlh5SmfZiy/hpkxaRI16Y9W56Pa75sWgd/rvFilSgrauD9NyFymP/+JFV3KwzIsJeg==
+  dependencies:
+    safe-buffer "^5.1.2"
+    yallist "^3.0.0"
+
 minizlib@^1.1.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/minizlib/-/minizlib-1.2.1.tgz#dd27ea6136243c7c880684e8672bb3a45fd9b614"
   integrity sha512-7+4oTUOWKg7AuL3vloEWekXY2/D20cevzsrNT2kGWm+39J9hGTCBv8VI5Pm5lXZ/o3/mdR4f8rflAPhnQb8mPA==
   dependencies:
     minipass "^2.2.1"
+
+minizlib@^1.2.1:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/minizlib/-/minizlib-1.3.3.tgz#2290de96818a34c29551c8a8d301216bd65a861d"
+  integrity sha512-6ZYMOEnmVsdCeTJVE0W9ZD+pVnE8h9Hma/iOwwRDsdQoePpoX56/8B6z3P9VNwppJuBKNRuFDRNRqRWexT9G9Q==
+  dependencies:
+    minipass "^2.9.0"
 
 mkdirp@0.5.1, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.1:
   version "0.5.1"
@@ -1123,7 +1148,7 @@ nice-try@^1.0.4:
     node-addon-api "^1.1.0"
     node-pre-gyp "^0.10.0"
 
-noble-uwp@^0.6.1, noble-uwp@^0.6.2:
+noble-uwp@^0.6.1:
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/noble-uwp/-/noble-uwp-0.6.2.tgz#73623f4869479994851fa50f19c070239d6925d7"
   integrity sha512-fjznIngH26NDke15f2JPoh0a8FUhh2vgSn2LcFU6bPQia6tVcBQLNyRnezIgmoG0wKI4mQhJs43/Zkfy9lQ+AA==
@@ -1224,6 +1249,22 @@ node-pre-gyp@^0.12.0:
     rimraf "^2.6.1"
     semver "^5.3.0"
     tar "^4"
+
+node-pre-gyp@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.14.0.tgz#9a0596533b877289bcad4e143982ca3d904ddc83"
+  integrity sha512-+CvDC7ZttU/sSt9rFjix/P05iS43qHCOOGzcr3Ry99bXG7VX953+vFyEuph/tfqoYu8dttBkE86JSKBO2OzcxA==
+  dependencies:
+    detect-libc "^1.0.2"
+    mkdirp "^0.5.1"
+    needle "^2.2.1"
+    nopt "^4.0.1"
+    npm-packlist "^1.1.6"
+    npmlog "^4.0.2"
+    rc "^1.2.7"
+    rimraf "^2.6.1"
+    semver "^5.3.0"
+    tar "^4.4.2"
 
 "nopt@2 || 3":
   version "3.0.6"
@@ -1902,6 +1943,19 @@ tar@^4:
     safe-buffer "^5.1.2"
     yallist "^3.0.2"
 
+tar@^4.4.2:
+  version "4.4.13"
+  resolved "https://registry.yarnpkg.com/tar/-/tar-4.4.13.tgz#43b364bc52888d555298637b10d60790254ab525"
+  integrity sha512-w2VwSrBoHa5BsSyH+KxEqeQBAllHhccyMFVHtGtdMpF4W7IRWfZjFiQceJPChOeTsSDVUpER2T8FA93pr0L+QA==
+  dependencies:
+    chownr "^1.1.1"
+    fs-minipass "^1.2.5"
+    minipass "^2.8.6"
+    minizlib "^1.2.1"
+    mkdirp "^0.5.0"
+    safe-buffer "^5.1.2"
+    yallist "^3.0.3"
+
 throttleit@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/throttleit/-/throttleit-0.0.2.tgz#cfedf88e60c00dd9697b61fdd2a8343a9b680eaf"
@@ -2071,6 +2125,11 @@ yallist@^3.0.0, yallist@^3.0.2:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.0.3.tgz#b4b049e314be545e3ce802236d6cd22cd91c3de9"
   integrity sha512-S+Zk8DEWE6oKpV+vI3qWkaK+jSbIK86pCwe2IF/xwIpQ8jEuxpw9NyaGjmp9+BoJv5FV2piqCDcoCtStppiq2A==
+
+yallist@^3.0.3:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.1.1.tgz#dbb7daf9bfd8bac9ab45ebf602b8cbad0d5d08fd"
+  integrity sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==
 
 yargs-parser@^11.1.1:
   version "11.1.1"
