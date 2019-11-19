@@ -24,10 +24,10 @@
   resolved "https://registry.yarnpkg.com/@kano/devices-sdk-core/-/devices-sdk-core-1.0.0-alpha.12.tgz#6595a3a10e0a34e3a1583588351e5043922fd1a6"
   integrity sha512-NI1Ym6Domwqh9hVKWXa7NS6ZWoPQoQeKnBM7fkLcKKbLehCIwBtfSyxmsLsL3GZ1u14F1uDpO70OaC0Z3+ZGXw==
 
-"@kano/devices-sdk-node@^1.0.0-alpha.14":
-  version "1.0.0-alpha.14"
-  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-node/-/devices-sdk-node-1.0.0-alpha.14.tgz#9759e9ed3db7f7350e20877fe5f74048b3bba904"
-  integrity sha512-TKihoLcbzwN1cavWnZ05sKIKHLcOPeWlwnr4cUBcz36wTQ9eUWSqJfPdtuMkBVvVbEC4nAy/Lc6Rj36BvQQ9ig==
+"@kano/devices-sdk-node@^1.0.0-alpha.15":
+  version "1.0.0-alpha.15"
+  resolved "https://registry.yarnpkg.com/@kano/devices-sdk-node/-/devices-sdk-node-1.0.0-alpha.15.tgz#b72ae608375d39aa32b6d60e34e8fa46bc377f47"
+  integrity sha512-LOASL3VymHdGGfQ4V1wD9Z9NoD7sR4WqBdnu7Nx8WDNOIbokkvZSl63IuVKWOJboaD3chmyVyihBgo0I63fQdQ==
   dependencies:
     "@kano/devices-sdk-core" "^1.0.0-alpha.12"
     "@kano/noble-uwp" "^0.6.4"
