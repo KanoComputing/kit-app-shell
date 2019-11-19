@@ -1,6 +1,6 @@
 {
   "name": "@kano/kit-app-shell-electron",
-  "version": "0.0.3-alpha.82",
+  "version": "0.0.3-alpha.85",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
