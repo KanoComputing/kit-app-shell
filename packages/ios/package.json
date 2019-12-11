@@ -22,7 +22,7 @@
   },
   "gitHead": "285f3d6c085905a2351aee3a93f650883ca6dfcf",
   "optionalDependencies": {
-    "ios-deploy": "^1.9.4"
+    "ios-deploy": "^1.10.0"
   },
   "devDependencies": {
     "@types/node": "^12.7.2",
