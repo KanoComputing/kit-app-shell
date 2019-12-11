@@ -1,4 +1,5 @@
 import { util } from '@kano/kit-app-shell-core/lib/util';
+import { copyResources } from '@kano/kit-app-shell-core/lib/util/resource';
 import { IBuild } from '@kano/kit-app-shell-core/lib/types';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import { Bundler } from '@kano/kit-app-shell-core/lib/bundler';
@@ -88,6 +89,11 @@ const build : IBuild = (opts : ICordovaBuildOptions) => {
                             },
                         ))
                     .then((bundle) => Bundler.write(bundle, wwwPath))
+                    .then(() => {
+                        if (opts.additionalResources) {
+                            return copyResources(opts.additionalResources, wwwPath, opts.app);
+                        }
+                    })
                     .then(() => projectPath);
             }))
         .then((projectPath) => {

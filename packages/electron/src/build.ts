@@ -5,6 +5,7 @@ import * as mkdirpCb from 'mkdirp';
 import * as globCb from 'glob';
 import { processState } from '@kano/kit-app-shell-core/lib/process-state';
 import { copy } from '@kano/kit-app-shell-core/lib/util/fs';
+import { copyResources } from '@kano/kit-app-shell-core/lib/util/resource';
 import { Bundler } from '@kano/kit-app-shell-core/lib/bundler';
 import { ElectronBuildOptions } from './types';
 import { IBuild } from '@kano/kit-app-shell-core/lib/types';
@@ -170,6 +171,7 @@ const electronBuild : IBuild = function build(opts : ElectronBuildOptions) {
     const tasks = [
         copyElectronApp(patterns, out),
         createConfig(config, out),
+        opts.additionalResources && copyResources(opts.additionalResources, out, opts.app),
         Bundler.bundle(
             path.join(__dirname, '../app/index.html'),
             path.join(__dirname, '../app/index.js'),
