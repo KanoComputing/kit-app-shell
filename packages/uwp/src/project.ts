@@ -9,6 +9,7 @@ import { IKashConfig } from '@kano/kit-app-shell-core/lib/types';
 import { generateIconsWithScale } from '@kano/kit-app-shell-windows-store/lib/icons';
 import { extensions } from './extensions';
 import { IExtensionDefinition } from './extensions/extension';
+import { copyResources, IResources } from '@kano/kit-app-shell-core/lib/util/resource';
 
 const rimraf = promisify(rimrafCb);
 const mkdirp = promisify(mkdirpCb);
@@ -23,9 +24,22 @@ export interface IProjectOptions {
     config : IKashConfig;
     certificates : { [K : string] : string };
     capabilities? : string[];
+    additionalResources? : IResources;
 }
 
 const defaultCapabilities = ['bluetooth'];
+
+function generateContentInclude(resources : IResources) {
+    return resources.map((res) => {
+        let relSrc = '';
+        if (typeof res === 'string') {
+            relSrc = res;
+        } else {
+            relSrc = res.src;
+        }
+        return `<Content Include="${path.basename(relSrc)}" />`;
+    }).join('')
+}
 
 export function generateProject(
     tlpDir : string, options : IProjectOptions, certPath : string) : Promise<ISolutionPaths> {
@@ -71,6 +85,10 @@ export function generateProject(
         }
     }
 
+    if (options.additionalResources) {
+        data.EXTRA_CONTENT = generateContentInclude(options.additionalResources);
+    }
+
     if (!config.APP_DESCRIPTION) {
         throw new Error('Cannot create UWP project: Missing APP_DESCRIPTION in config');
     }
@@ -83,6 +101,11 @@ export function generateProject(
     const imagesDir = path.join(projectDir, 'images');
 
     return rimraf(TMP_DIR)
+        .then(() => {
+            if (options.additionalResources) {
+                return copyResources(options.additionalResources, projectDir, options.app);
+            }
+        })
         .then(() => fromTemplate(path.join(tlpDir, '_Solution.sln'), solutionFilename, data))
         .then(() => fromTemplate(path.join(tlpDir, '_Project/_Project.jsproj'), jsprojFilename, data))
         .then(() => fromTemplate(path.join(tlpDir, '_Project/package.appxmanifest'), appxmanifestFilename, data))

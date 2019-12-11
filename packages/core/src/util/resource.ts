@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as mkdirpCb from 'mkdirp';
 import { promisify } from 'util';
+import { copy } from './fs';
 
 const mkdirp = promisify(mkdirpCb);
 
@@ -37,4 +38,23 @@ export function getPathOrDownload(urlOrPath : string, tmpPath : string) {
     const dest = path.join(tmpPath, parsed.pathname);
     return download(urlOrPath, dest)
         .then(() => dest);
+}
+
+export type IResources = Array<string | { src : string, dest : string }>;
+
+export function copyResources(resources : IResources, dest : string, basePath : string) {
+    const tasks = resources.map((res) => {
+        let relativeSrc;
+        let relativeDest;
+
+        if (typeof res === 'string') {
+            relativeSrc = res;
+            relativeDest = res;
+        } else {
+            relativeSrc = res.src;
+            relativeDest = res.dest;
+        }
+        return copy(path.join(basePath, relativeSrc), path.join(dest, relativeDest));
+    });
+    return Promise.all(tasks);
 }
