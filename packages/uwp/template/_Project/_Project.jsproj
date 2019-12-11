@@ -79,6 +79,7 @@
     <Content Include="msapp-error.css" />
     <Content Include="msapp-error.html" />
     <Content Include="www\**\*.*" />
+    ${EXTRA_CONTENT}
     <None Include="${CERTIFICATE}" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).targets" />
