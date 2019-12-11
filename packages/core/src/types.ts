@@ -1,6 +1,7 @@
 import { IReplaceOptions } from './plugins/replace';
 import { ICheck } from './check';
 import * as rollup from 'rollup';
+import { IResources } from './util/resource';
 
 export interface IBundleHtmlOptions {
     replacements? : {
@@ -77,6 +78,7 @@ export interface IOptions {
     config : IKashConfig;
     out : string;
     tmpdir? : string;
+    additionalResources? : IResources;
     [propName : string] : any;
 }
 
