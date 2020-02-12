@@ -91,6 +91,8 @@ class App {
 
         app.on('before-quit', this._onBeforeQuit.bind(this));
 
+        app.commandLine.appendSwitch('ignore-gpu-blacklist');
+
         app.on('ready', this._onReady.bind(this));
 
         this.shell.on('window-created', this._onWindowCreated.bind(this));
