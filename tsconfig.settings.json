@@ -1,14 +1,12 @@
 {
+    "exclude": ["node_modules", "dist", "lib", "__tests__", "**/*.test*", "**/*.spec*", "**/*.test.ts"],
     "compilerOptions": {
-        "composite": true,
         "module": "commonjs",
-        "declaration": true,
         "removeComments": true,
         "noLib": false,
         "noUnusedLocals": true,
         "forceConsistentCasingInFileNames": true,
         "target": "es5",
-        "sourceMap": true,
         "lib": [
             "es6",
             "es2017",
@@ -23,11 +21,11 @@
         "rootDir": ".",
         "outDir": "lib",
         "baseUrl": ".",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true
     },
-    "exclude": [
-        "node_modules",
-        "**/*.test.ts"
-    ],
     "typeRoots": [
         "/node_modules/@types",
         "/types"

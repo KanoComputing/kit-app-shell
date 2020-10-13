@@ -1,11 +1,12 @@
 {
-    "extends": "../../tsconfig.settings.json",
+    "extends": "../../tsconfig.json",
     "compilerOptions": {
         "outDir": "lib",
         "rootDir": "src",
         "baseUrl": "."
     },
     "exclude": ["lib"],
+    "include": ["src"],
     "references": [{
         "path": "../cordova"
     }]
