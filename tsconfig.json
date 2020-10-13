@@ -5,7 +5,7 @@
     //       "@kano/*": ["packages/*/src"]
     //     }
     // },
-    // "files": [],
+    "files": [],
     "references": [{
         "path": "packages/core"
     }, {
