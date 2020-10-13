@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as rollup from 'rollup';
 import * as path from 'path';
+// @ts-ignore
 import * as nodeResolve from 'rollup-plugin-node-resolve';
 import * as mkdirpCb from 'mkdirp';
 import * as commonjs from 'rollup-plugin-commonjs';
@@ -58,6 +59,7 @@ export function bundle(input : string, opts : IBundleOptions) {
         input,
         plugins: [
             json(),
+            // @ts-ignore
             nodeResolve({
                 preferBuiltins: false,
             }),

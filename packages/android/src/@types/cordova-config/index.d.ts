@@ -1,3 +1,4 @@
+// @ts-ignore
 declare class Config {
     constructor(cfg : string);
     addHook(type : string, path : string) : void;
@@ -10,5 +11,6 @@ declare class Config {
 }
 
 declare module "cordova-config" {
+    // @ts-ignore
     export = Config;
 }

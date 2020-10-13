@@ -9,7 +9,7 @@ export = (context) => {
     if (!shell) {
         return null;
     }
-    const cfg = new CordovaConfig(path.join(projectRoot, 'config.xml'));
+    const cfg = new CordovaConfig(path.join(projectRoot, 'config.xml')) as any;
 
     if (shell.config.APP_DESCRIPTION) {
         cfg.setDescription(shell.config.APP_DESCRIPTION);
