@@ -7,6 +7,7 @@ out
 coverage
 .DS_Store
 eslint.xml
+tsconfig.tsbuildinfo
 
 packages/cli/lib
 packages/core/lib
