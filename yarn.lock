@@ -3887,7 +3887,7 @@ cordova-fetch@^2.0.0:
     semver "^5.6.0"
     which "^1.3.1"
 
-cordova-ios@^4.5.5:
+cordova-ios@4.5.5:
   version "4.5.5"
   resolved "https://registry.yarnpkg.com/cordova-ios/-/cordova-ios-4.5.5.tgz#af73dab0650ea8a38fff0e7863fde5fc7bad753c"
   integrity sha512-3+30m2dZ2yii7kg+H7cgpdpkXpMj54zoX5imjGGG4Z7dPXKmalTLc/9rLq+Iaa+Q1BqyOrUFaHopWOODRU6vCg==
@@ -3952,15 +3952,15 @@ cordova-plugin-device@^2.0.2:
   resolved "https://registry.yarnpkg.com/cordova-plugin-device/-/cordova-plugin-device-2.0.2.tgz#fc08f3722e67eef7b6c67bfc99a83df6add0baba"
   integrity sha1-/Ajzci5n7ve2xnv8mag99q3Quro=
 
-cordova-plugin-inappbrowser@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-inappbrowser/-/cordova-plugin-inappbrowser-3.1.0.tgz#61520b8de3eb75b37842d2340f5d90a84a073747"
-  integrity sha512-YqrZfYgbGTS20SFID0mrRxud312VH072QVlFonCAkPgtGg1Svy7lELOCNFd+KU7t4mVtZeTEjZPEeefvjaetwQ==
+cordova-plugin-inappbrowser@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-inappbrowser/-/cordova-plugin-inappbrowser-4.0.0.tgz#081e125b3ece05e30dd00e5f9396160926832a2a"
+  integrity sha512-w2LZzdF3R4G/EqVZ9aWch9Pksk76uw6/S5wFP1sgn7zjsSDpJBb/JhazLnioN1NZmZiCUBbROv1S4+9JCkeCgA==
 
-cordova-plugin-ionic-webview@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-ionic-webview/-/cordova-plugin-ionic-webview-4.1.1.tgz#7bdfbfaa498f6bd0f92db4cb51ce0c486ac07233"
-  integrity sha512-y8drBhMdkHKUr0zu+UGkFGsDrkCsxjbCd3RzzlyDxcEzdHWvasRM5gyDiKBHkziT2iHYzEAjXwkT1ZXKU3OY9Q==
+cordova-plugin-ionic-webview@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-ionic-webview/-/cordova-plugin-ionic-webview-5.0.0.tgz#d58741af85754d80da82c7f673842a3e71bde630"
+  integrity sha512-Wq0kCanxubK/JroTW4Mp5soayScnRyiY1eCkbwiz1Dyt1xHOiOW/v+1miqtBHtnZhcXw25TulCKAVJzkNBdmyg==
 
 cordova-plugin-ios-ble-permissions@^1.0.1:
   version "1.0.1"
@@ -11626,7 +11626,12 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@3.2.2, typescript@^2.9.2, typescript@^3.2.2:
+typescript@^2.9.2:
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
+  integrity sha512-Gr4p6nFNaoufRIY4NMdpQRNmgxVIGMs4Fcu/ujdYk3nAZqk7supzBE9idmvfZIlH/Cuj//dvi+019qEue9lV0w==
+
+typescript@^3.2.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.2.2.tgz#fe8101c46aa123f8353523ebdcf5730c2ae493e5"
   integrity sha512-VCj5UiSyHBjwfYacmDuc/NOk4QQixbE+Wn7MFJuS0nRuPQbof132Pw4u53dm264O8LPc2MVsc7RJNml5szurkg==
@@ -11731,7 +11736,12 @@ universalify@^0.1.0:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
 
-unorm@^1.3.3, unorm@^1.4.1:
+unorm@^1.3.3:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/unorm/-/unorm-1.6.0.tgz#029b289661fba714f1a9af439eb51d9b16c205af"
+  integrity sha512-b2/KCUlYZUeA7JFUuRJZPUtr4gZvBh7tavtv4fvk4+KV9pfGiR6CQAQAWl49ZpR3ts2dk4FYkP7EIgDJoiOLDA==
+
+unorm@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/unorm/-/unorm-1.4.1.tgz#364200d5f13646ca8bcd44490271335614792300"
   integrity sha1-NkIA1fE2RsqLzURJAnEzVhR5IwA=

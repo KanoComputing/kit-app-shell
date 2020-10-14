@@ -19,6 +19,7 @@ const rename = promisify(fs.rename);
 
 const iosBuild : IBuild = (opts : ICordovaBuildOptions) => {
     collectPreferences(opts, PREFERENCE_MAPPING, DEFAULT_PREFERENCES);
+    console.log('webView.version', webView.version);
     opts.config.UI_ROOT = webView.version === '2.5.3' ? 'http://localhost:8080/www/' : 'ionic://localhost/www/';
     return build({
         ...opts,

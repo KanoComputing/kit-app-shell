@@ -23,7 +23,7 @@ const build : IBuild = (opts : ICordovaBuildOptions) => {
     // TODO: Find a console UI to display these logs and any subprocess logs
     // in parrallel of the spinner
     cordova.on('log', () => {
-        // console.log(...args);
+        console.log('TEST');
     });
     cordova.on('error', (e) => {
         processState.setFailure(e);
