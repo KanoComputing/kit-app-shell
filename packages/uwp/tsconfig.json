@@ -3,6 +3,11 @@
     "references": [{
         "path": "../core"
     }],
-    "exclude": ["lib", "Kash"],
-    "include": ["src"]
+    // "exclude": ["lib", "Kash"],
+    "compilerOptions": {
+        "outDir": "lib",
+        "rootDir": "src",
+        "baseUrl": "."
+    },
+    // "include": ["src"]
 }

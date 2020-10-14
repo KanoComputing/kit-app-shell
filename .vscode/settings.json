@@ -1,8 +1,5 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "files.exclude": {
-        "packages/*/lib": true // set this to true to hide the "lib" folder with the compiled JS files
-    },
     "search.exclude": {
         "packages/*/lib": true // set this to false to include "lib" folder in search results
     },

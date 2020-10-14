@@ -1,8 +1,7 @@
 {
     "extends": "../../tsconfig.settings.json",
-    "exclude": ["lib"],
     "compilerOptions": {
-        "outDir": "./dist"
+        "outDir": "./lib"
     },
     "include": ["src"]
 }

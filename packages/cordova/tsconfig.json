@@ -1,11 +1,12 @@
 {
+    // "exclude": ["node_modules", "lib"],
     "extends": "../../tsconfig.settings.json",
     "references": [{
         "path": "../core"
     }],
-    "exclude": ["lib"],
     "compilerOptions": {
-        "outDir": "./dist"
+        "outDir": "lib",
+        // "rootDir": "src",
+        // "baseUrl": "."
     },
-    "include": ["src"]
 }

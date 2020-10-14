@@ -6,33 +6,39 @@
     //     }
     // },
     "files": [],
-    "references": [{
-        "path": "packages/core"
-    }, {
-        "path": "packages/cli"
-    }, {
-        "path": "packages/cordova"
-    }, {
-        "path": "packages/android"
-    }, {
-        "path": "packages/android-legacy"
-    }, {
-        "path": "packages/test"
-    }, {
-        "path": "packages/electron"
-    }, {
-        "path": "packages/ios"
-    }, {
-        "path": "packages/kano"
-    }, {
-        "path": "packages/macos"
-    }, {
-        "path": "packages/web"
-    }, {
-        "path": "packages/windows"
-    }, {
-        "path": "packages/windows-store"
-    }, {
-        "path": "packages/uwp"
-    }]
+    "references": [
+        {
+            "path": "packages/core"
+        }, 
+        // {
+        //     "path": "packages/cli"
+        // }, 
+        {
+            "path": "packages/cordova"
+        }, 
+        // {
+        //     "path": "packages/android"
+        // }, {
+        //     "path": "packages/android-legacy"
+        // }, {
+        //     "path": "packages/test"
+        // }, {
+        //     "path": "packages/electron"
+        // }, {
+        //     "path": "packages/ios"
+        // }, {
+        //     "path": "packages/kano"
+        // }, {
+        //     "path": "packages/macos"
+        // }, {
+        //     "path": "packages/web"
+        // }, {
+        //     "path": "packages/windows"
+        // }, {
+        //     "path": "packages/windows-store"
+        // }, 
+        // {
+        //     "path": "packages/uwp"
+        // }
+    ]
 }
