@@ -3987,16 +3987,6 @@ cordova-plugin-splashscreen@^5.0.3:
   resolved "https://registry.yarnpkg.com/cordova-plugin-splashscreen/-/cordova-plugin-splashscreen-5.0.3.tgz#02820472771c3e10b43ceedd54b0a1e4674efa6d"
   integrity sha512-rnoDXMDfzoeHDBvsnu6JmzDE/pV5YJCAfc5hYX/Mb2BIXGgSjFJheByt0tU6kp3Wl40tSyFX4pYfBwFblBGyRg==
 
-cordova-plugin-wkwebview-file-xhr@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-wkwebview-file-xhr/-/cordova-plugin-wkwebview-file-xhr-3.0.0.tgz#97faccbf2bc0a0fb75c9a94b6943613bcc7e869b"
-  integrity sha512-ACg8BI/EeH1JMzzQ3YEj/PkdFrwycP/2yUwIPMMQ556qROiQUK0w/PnRlZ4/67Y+FvrU0nqL31WjFZIf9m2b5A==
-
-cordova-plugin-wkwebviewxhrfix@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/cordova-plugin-wkwebviewxhrfix/-/cordova-plugin-wkwebviewxhrfix-0.1.0.tgz#062472496af46bff180a249eccbcd53a8b6a8d4e"
-  integrity sha512-G8k6haZIrxQ01ixbpFNUYzw1sumqhlyS0FRVmbQyb33XD9uRNoDE8a8hvzDnZgYTZRVnsmjRhlxHgEYSERK27A==
-
 cordova-registry-mapper@^1.1.8:
   version "1.1.15"
   resolved "https://registry.yarnpkg.com/cordova-registry-mapper/-/cordova-registry-mapper-1.1.15.tgz#e244b9185b8175473bff6079324905115f83dc7c"
@@ -11670,12 +11660,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^2.9.2:
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
-  integrity sha512-Gr4p6nFNaoufRIY4NMdpQRNmgxVIGMs4Fcu/ujdYk3nAZqk7supzBE9idmvfZIlH/Cuj//dvi+019qEue9lV0w==
-
-typescript@^3.2.2:
+typescript@3.2.2, typescript@^2.9.2, typescript@^3.2.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.2.2.tgz#fe8101c46aa123f8353523ebdcf5730c2ae493e5"
   integrity sha512-VCj5UiSyHBjwfYacmDuc/NOk4QQixbE+Wn7MFJuS0nRuPQbof132Pw4u53dm264O8LPc2MVsc7RJNml5szurkg==
