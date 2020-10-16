@@ -5,6 +5,7 @@ import { updaterBus } from './lib/bus/updater.js';
 import { AuthServer } from './lib/bus/auth.js';
 import { IABServer } from './lib/bus/iab.js';
 import { Context } from '@kano/kit-app-shell-core/www/index.js';
+import { OscillatorNode } from 'standardized-audio-context';
 
 const logger = {};
 
@@ -22,6 +23,10 @@ const auth = new AuthServer(bus);
 const iab = new IABServer(bus);
 
 window.NativeBus = bus;
+
+// Fix for ios14 which doesn't provide the OscillatorNode constructor in the window by default (consumed by Tone.js) and throws error blocking require.js main thread to render app.
+// https://developer.mozilla.org/en-US/docs/Web/API/OscillatorNode/OscillatorNode
+window.OscillatorNode = OscillatorNode;
 
 window.Shell = {
     defined: false,
