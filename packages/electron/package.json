@@ -12,7 +12,7 @@
   "dependencies": {
     "@kano/kit-app-shell-core": "^0.0.3-alpha.90",
     "chromedriver": "2.37",
-    "electron": "3.1.0",
+    "electron": "7.2.4",
     "electron-link": "^0.3.2",
     "electron-mksnapshot": "^3.0.10",
     "glob": "^7.1.3",
