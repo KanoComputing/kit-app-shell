@@ -27,7 +27,7 @@
     "mkdirp": "^0.5.1",
     "pascal-case": "^2.0.1",
     "rimraf": "^2.6.3",
-    "sharp": "^0.22.1",
+    "sharp": "^0.30.5",
     "text-encoding": "^0.7.0"
   },
   "gitHead": "285f3d6c085905a2351aee3a93f650883ca6dfcf",
